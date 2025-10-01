@@ -43,10 +43,9 @@ jobs:
           }
 
           if (payload.type === 'init_password') {
-            // Initialize password and store PAT
+            // Initialize password (PAT is NOT stored for security)
             data.auth = {
               passwordHash: payload.data.passwordHash,
-              pat: payload.data.pat,
               initialized: true,
               initDate: payload.data.initDate
             };

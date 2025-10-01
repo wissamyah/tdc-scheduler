@@ -68,7 +68,21 @@ export default function ScheduleForm() {
       };
 
       setStatus('Submitting to GitHub...');
-      await saveMemberSchedule(memberData);
+
+      // Get PAT from sessionStorage (stored during setup)
+      let pat = sessionStorage.getItem('tdc_temp_pat');
+
+      // If no PAT, prompt user for it
+      if (!pat) {
+        pat = prompt('Enter GitHub Personal Access Token (needed for first submission this session):');
+        if (!pat) {
+          throw new Error('PAT is required to submit schedules');
+        }
+        // Store for this session
+        sessionStorage.setItem('tdc_temp_pat', pat);
+      }
+
+      await saveMemberSchedule(memberData, pat);
 
       setStatus('Waiting for GitHub to process changes (10 seconds)...');
       await new Promise(resolve => setTimeout(resolve, 10000));

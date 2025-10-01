@@ -92,10 +92,12 @@ export async function initializePassword(pat, passwordHash) {
     type: 'init_password',
     data: {
       passwordHash,
-      pat: pat, // Store PAT for future member updates
       initDate: new Date().toISOString()
     }
   };
+
+  // Store PAT in sessionStorage for this session only (never in repo)
+  sessionStorage.setItem('tdc_temp_pat', pat);
 
   return await updateData(pat, payload);
 }
@@ -103,17 +105,10 @@ export async function initializePassword(pat, passwordHash) {
 /**
  * Add or update a member's schedule
  * @param {Object} memberData - Member information and availability
+ * @param {string} pat - GitHub Personal Access Token
  * @returns {Promise<boolean>} True if successful
  */
-export async function saveMemberSchedule(memberData) {
-  // Fetch the stored PAT from data.json
-  const data = await fetchData();
-  const pat = data.auth?.pat;
-
-  if (!pat) {
-    throw new Error('PAT not found. Please re-initialize the application.');
-  }
-
+export async function saveMemberSchedule(memberData, pat) {
   const payload = {
     type: 'update_member',
     data: {
