@@ -1,0 +1,74 @@
+name: Sync Data to Data Repository
+
+on:
+  repository_dispatch:
+    types: [update_data]
+
+jobs:
+  sync-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout data repository
+        uses: actions/checkout@v4
+        with:
+          repository: wissamyah/tdc-scheduler-data
+          token: ${{ secrets.DATA_REPO_PAT }}
+          path: data-repo
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Update data.json
+        working-directory: data-repo
+        run: |
+          # Create data.json if it doesn't exist
+          if [ ! -f data.json ]; then
+            echo '{"auth":{"passwordHash":null,"initialized":false,"initDate":null},"members":[]}' > data.json
+          fi
+
+          # Extract payload data
+          PAYLOAD_TYPE="${{ github.event.client_payload.type }}"
+
+          # Use Node.js to update the JSON file
+          node << 'EOF'
+          const fs = require('fs');
+          const payload = ${{ toJson(github.event.client_payload) }};
+
+          // Read existing data
+          let data = { auth: { passwordHash: null, initialized: false, initDate: null }, members: [] };
+          if (fs.existsSync('data.json')) {
+            data = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+          }
+
+          if (payload.type === 'init_password') {
+            // Initialize password
+            data.auth = {
+              passwordHash: payload.data.passwordHash,
+              initialized: true,
+              initDate: payload.data.initDate
+            };
+          } else if (payload.type === 'update_member') {
+            // Add or update member
+            const memberIndex = data.members.findIndex(m => m.username === payload.data.username);
+            if (memberIndex >= 0) {
+              // Update existing member
+              data.members[memberIndex] = payload.data;
+            } else {
+              // Add new member
+              data.members.push(payload.data);
+            }
+          }
+
+          // Write updated data
+          fs.writeFileSync('data.json', JSON.stringify(data, null, 2));
+          EOF
+
+      - name: Commit and push changes
+        working-directory: data-repo
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add data.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update data via GitHub Actions" && git push)
