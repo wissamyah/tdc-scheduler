@@ -17,12 +17,7 @@ export async function fetchData() {
     // Add cache-busting timestamp to prevent stale data
     const cacheBuster = `?t=${Date.now()}`;
     const url = `https://raw.githubusercontent.com/${DATA_REPO_OWNER}/${DATA_REPO_NAME}/main/${DATA_FILE_PATH}${cacheBuster}`;
-    const response = await fetch(url, {
-      cache: 'no-store', // Disable browser caching
-      headers: {
-        'Cache-Control': 'no-cache'
-      }
-    });
+    const response = await fetch(url);
 
     if (!response.ok) {
       // If file doesn't exist, return initial structure
