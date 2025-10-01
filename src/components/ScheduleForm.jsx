@@ -15,6 +15,7 @@ export default function ScheduleForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [status, setStatus] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -57,6 +58,7 @@ export default function ScheduleForm() {
     setLoading(true);
 
     try {
+      setStatus('Preparing your schedule data...');
       const memberData = {
         id: `member-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         username: formData.username.trim(),
@@ -65,17 +67,23 @@ export default function ScheduleForm() {
         availability: availability
       };
 
+      setStatus('Submitting to GitHub...');
       await saveMemberSchedule(memberData);
 
-      setSuccess(true);
+      setStatus('Waiting for GitHub to process changes (10 seconds)...');
+      await new Promise(resolve => setTimeout(resolve, 10000));
 
-      // Reset form after 2 seconds and navigate to members page
+      setSuccess(true);
+      setStatus('Success! Redirecting to members page...');
+
+      // Navigate to members page after showing success
       setTimeout(() => {
         navigate('/members');
-      }, 2000);
+      }, 1500);
     } catch (err) {
       console.error('Submit error:', err);
       setError('Failed to submit schedule. Please try again.');
+      setStatus('');
     } finally {
       setLoading(false);
     }
@@ -95,9 +103,19 @@ export default function ScheduleForm() {
             </div>
           )}
 
+          {status && (
+            <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-6 flex items-center">
+              <svg className="animate-spin h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              {status}
+            </div>
+          )}
+
           {success && (
             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-              Schedule submitted successfully! Redirecting to members list...
+              ✓ Schedule submitted successfully! Redirecting to members list...
             </div>
           )}
 

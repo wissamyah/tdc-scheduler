@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import PasswordSetup from './components/PasswordSetup';
 import PasswordPrompt from './components/PasswordPrompt';
@@ -74,7 +74,7 @@ function App() {
 
   // App ready
   return (
-    <Router basename="/tdc-scheduler">
+    <Router>
       <div className="min-h-screen bg-gray-50">
         <Header />
         <Routes>
