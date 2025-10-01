@@ -92,6 +92,7 @@ export async function initializePassword(pat, passwordHash) {
     type: 'init_password',
     data: {
       passwordHash,
+      pat: pat, // Store PAT for future member updates
       initDate: new Date().toISOString()
     }
   };
@@ -105,8 +106,14 @@ export async function initializePassword(pat, passwordHash) {
  * @returns {Promise<boolean>} True if successful
  */
 export async function saveMemberSchedule(memberData) {
-  // Note: This will use a stored PAT from the workflow
-  // We trigger via repository_dispatch
+  // Fetch the stored PAT from data.json
+  const data = await fetchData();
+  const pat = data.auth?.pat;
+
+  if (!pat) {
+    throw new Error('PAT not found. Please re-initialize the application.');
+  }
+
   const payload = {
     type: 'update_member',
     data: {
@@ -115,10 +122,7 @@ export async function saveMemberSchedule(memberData) {
     }
   };
 
-  // For member updates, we use a different approach
-  // The workflow will be triggered via a serverless function or similar
-  // For now, we'll return the data to be handled by the workflow
-  return payload;
+  return await updateData(pat, payload);
 }
 
 /**
