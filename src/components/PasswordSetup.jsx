@@ -8,6 +8,7 @@ export default function PasswordSetup({ onSetupComplete }) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [status, setStatus] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,26 +34,37 @@ export default function PasswordSetup({ onSetupComplete }) {
 
     try {
       // Verify PAT
+      setStatus('Verifying GitHub token...');
       const isValid = await verifyPAT(pat);
       if (!isValid) {
         setError('Invalid GitHub Personal Access Token. Please check and try again.');
         setLoading(false);
+        setStatus('');
         return;
       }
 
       // Hash password
+      setStatus('Creating password hash...');
       const passwordHash = await hashPassword(password);
 
       // Initialize password in data.json
+      setStatus('Saving password to data repository...');
       await initializePassword(pat, passwordHash);
 
+      // Wait for GitHub Actions to process
+      setStatus('Waiting for GitHub to process changes (10 seconds)...');
+      await new Promise(resolve => setTimeout(resolve, 10000));
+
       // Success
-      onSetupComplete();
+      setStatus('Setup complete! Redirecting...');
+      setTimeout(() => {
+        onSetupComplete();
+      }, 1000);
     } catch (err) {
       console.error('Setup error:', err);
       setError('Failed to initialize password. Please try again.');
-    } finally {
       setLoading(false);
+      setStatus('');
     }
   };
 
@@ -71,6 +83,12 @@ export default function PasswordSetup({ onSetupComplete }) {
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
+          </div>
+        )}
+
+        {status && (
+          <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
+            {status}
           </div>
         )}
 
