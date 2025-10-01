@@ -14,8 +14,15 @@ const APP_REPO_NAME = 'tdc-scheduler';
  */
 export async function fetchData() {
   try {
-    const url = `https://raw.githubusercontent.com/${DATA_REPO_OWNER}/${DATA_REPO_NAME}/main/${DATA_FILE_PATH}`;
-    const response = await fetch(url);
+    // Add cache-busting timestamp to prevent stale data
+    const cacheBuster = `?t=${Date.now()}`;
+    const url = `https://raw.githubusercontent.com/${DATA_REPO_OWNER}/${DATA_REPO_NAME}/main/${DATA_FILE_PATH}${cacheBuster}`;
+    const response = await fetch(url, {
+      cache: 'no-store', // Disable browser caching
+      headers: {
+        'Cache-Control': 'no-cache'
+      }
+    });
 
     if (!response.ok) {
       // If file doesn't exist, return initial structure
