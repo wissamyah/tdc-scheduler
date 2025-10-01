@@ -1,3 +1,4 @@
+import { Info } from 'lucide-react';
 import { DAYS_OF_WEEK, getDayDisplayName, generateTimeSlots } from '../utils/timeSlots';
 
 export default function TimeSlotPicker({ availability, onChange }) {
@@ -22,18 +23,26 @@ export default function TimeSlotPicker({ availability, onChange }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-blue-50 p-4 rounded-lg">
-        <p className="text-sm text-blue-800">
-          <strong>Instructions:</strong> Select all time slots when you are available to play.
-          You can select multiple slots per day.
-        </p>
+      {/* Instructions */}
+      <div className="bg-creed-base border-l-4 border-creed-accent p-4 rounded-lg">
+        <div className="flex gap-3">
+          <Info className="w-5 h-5 text-creed-accent flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-creed-text font-body">
+            <strong className="text-creed-accent font-display uppercase tracking-wide">Mission Brief:</strong>{' '}
+            Select all time slots when you are available for operations. Multiple slots per day can be selected.
+          </p>
+        </div>
       </div>
 
+      {/* Day Slots */}
       {DAYS_OF_WEEK.map(day => (
-        <div key={day} className="border border-gray-200 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">
-            {getDayDisplayName(day)}
-          </h3>
+        <div key={day} className="bg-creed-base border border-creed-lighter rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-1 h-6 bg-creed-primary rounded-full"></div>
+            <h3 className="text-lg font-display font-bold text-creed-text uppercase tracking-wide">
+              {getDayDisplayName(day)}
+            </h3>
+          </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {timeSlots.map(slot => (
@@ -41,9 +50,10 @@ export default function TimeSlotPicker({ availability, onChange }) {
                 key={slot.value}
                 className={`
                   flex items-center justify-center p-3 rounded-lg cursor-pointer transition-all
+                  font-display font-semibold text-xs uppercase tracking-wide
                   ${isSlotSelected(day, slot.value)
-                    ? 'bg-purple-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-creed-primary to-creed-secondary text-white shadow-glow-primary'
+                    : 'bg-creed-lighter text-creed-muted hover:bg-creed-light hover:text-creed-text border border-creed-base'
                   }
                 `}
               >
@@ -53,7 +63,7 @@ export default function TimeSlotPicker({ availability, onChange }) {
                   onChange={() => handleToggleSlot(day, slot.value)}
                   className="sr-only"
                 />
-                <span className="text-xs font-medium text-center">
+                <span className="text-center">
                   {slot.label}
                 </span>
               </label>

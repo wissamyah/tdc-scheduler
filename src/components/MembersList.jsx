@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
+import { Users, RefreshCw, Loader2, AlertCircle, Filter } from 'lucide-react';
 import MemberCard from './MemberCard';
 import { fetchData } from '../services/github';
+import { showToast } from '../utils/toast';
 
 export default function MembersList() {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [sortBy, setSortBy] = useState('username'); // username, carPower, towerLevel
 
   useEffect(() => {
@@ -19,9 +20,21 @@ export default function MembersList() {
       setMembers(data.members || []);
     } catch (err) {
       console.error('Error loading members:', err);
-      setError('Failed to load members. Please refresh the page.');
+      showToast.error('Failed to load members roster');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    const toastId = showToast.loading('Refreshing roster data...');
+    try {
+      await loadMembers();
+      showToast.dismiss(toastId);
+      showToast.success('Roster updated successfully');
+    } catch (err) {
+      showToast.dismiss(toastId);
+      showToast.error('Refresh failed');
     }
   };
 
@@ -39,101 +52,101 @@ export default function MembersList() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading members...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg max-w-md">
-          {error}
+          <Loader2 className="w-16 h-16 text-creed-primary animate-spin mx-auto mb-4" />
+          <p className="text-creed-text font-display font-semibold uppercase tracking-wide">
+            Loading Alliance Roster...
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Alliance Members</h1>
-              <p className="text-gray-600">
-                Total Members: <span className="font-semibold">{members.length}</span>
+              <div className="flex items-center gap-3 mb-2">
+                <Users className="w-8 h-8 text-creed-primary" />
+                <h1 className="text-4xl font-display font-bold text-creed-text uppercase tracking-wide">
+                  Alliance Roster
+                </h1>
+              </div>
+              <div className="h-0.5 w-48 bg-gradient-to-r from-creed-primary to-transparent mb-2"></div>
+              <p className="text-creed-muted font-body">
+                Total Operatives:{' '}
+                <span className="font-display font-bold text-creed-accent">{members.length}</span>
               </p>
             </div>
             <button
-              onClick={loadMembers}
+              onClick={handleRefresh}
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400 transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5
+                       bg-creed-base border border-creed-lighter
+                       text-creed-text rounded-lg
+                       hover:border-creed-accent hover:shadow-glow-accent
+                       disabled:opacity-50 disabled:cursor-not-allowed
+                       transition-all font-display font-semibold uppercase tracking-wide"
             >
-              <svg className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              {loading ? 'Refreshing...' : 'Refresh'}
+              <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+              <span>{loading ? 'Refreshing' : 'Refresh'}</span>
             </button>
           </div>
         </div>
 
         {members.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <svg
-              className="mx-auto h-12 w-12 text-gray-400 mb-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No members yet</h3>
-            <p className="text-gray-600">Be the first to submit your schedule!</p>
+          <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical p-12 text-center">
+            <AlertCircle className="mx-auto h-16 w-16 text-creed-muted mb-4" />
+            <h3 className="text-xl font-display font-bold text-creed-text uppercase tracking-wide mb-2">
+              No Operatives Registered
+            </h3>
+            <p className="text-creed-muted font-body">Be the first to submit your schedule</p>
           </div>
         ) : (
           <>
             {/* Sort Controls */}
-            <div className="mb-6 flex items-center space-x-4">
-              <span className="text-sm font-medium text-gray-700">Sort by:</span>
-              <div className="flex space-x-2">
+            <div className="mb-6 flex items-center flex-wrap gap-4">
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-creed-muted" />
+                <span className="text-sm font-display font-semibold text-creed-muted uppercase tracking-wide">
+                  Sort By:
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setSortBy('username')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    sortBy === 'username'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-white text-gray-700 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                           transition-all ${
+                             sortBy === 'username'
+                               ? 'bg-gradient-to-r from-creed-primary to-creed-secondary text-white shadow-glow-primary'
+                               : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-primary'
+                           }`}
                 >
                   Username
                 </button>
                 <button
                   onClick={() => setSortBy('carPower')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    sortBy === 'carPower'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-white text-gray-700 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                           transition-all ${
+                             sortBy === 'carPower'
+                               ? 'bg-gradient-to-r from-creed-primary to-creed-secondary text-white shadow-glow-primary'
+                               : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-primary'
+                           }`}
                 >
                   Car Power
                 </button>
                 <button
                   onClick={() => setSortBy('towerLevel')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    sortBy === 'towerLevel'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-white text-gray-700 hover:bg-gray-100'
-                  }`}
+                  className={`px-4 py-2 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                           transition-all ${
+                             sortBy === 'towerLevel'
+                               ? 'bg-gradient-to-r from-creed-primary to-creed-secondary text-white shadow-glow-primary'
+                               : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-primary'
+                           }`}
                 >
                   Tower Level
                 </button>

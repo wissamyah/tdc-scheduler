@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
 import PasswordSetup from './components/PasswordSetup';
 import PasswordPrompt from './components/PasswordPrompt';
@@ -7,6 +8,7 @@ import ScheduleForm from './components/ScheduleForm';
 import MembersList from './components/MembersList';
 import { fetchData } from './services/github';
 import { isAuthenticated } from './utils/auth';
+import { Loader2 } from 'lucide-react';
 
 function App() {
   const [appState, setAppState] = useState('loading'); // loading, setup, auth, ready
@@ -53,10 +55,10 @@ function App() {
   // Loading state
   if (appState === 'loading') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+      <div className="min-h-screen bg-creed-darker flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500 mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading...</p>
+          <Loader2 className="w-16 h-16 text-creed-accent animate-spin mx-auto mb-4" />
+          <p className="text-creed-text text-lg font-display tracking-wide">INITIALIZING SYSTEM...</p>
         </div>
       </div>
     );
@@ -75,7 +77,8 @@ function App() {
   // App ready
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-creed-dark">
+        <Toaster position="top-right" />
         <Header />
         <Routes>
           <Route path="/" element={<ScheduleForm />} />

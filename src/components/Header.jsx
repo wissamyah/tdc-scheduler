@@ -1,31 +1,67 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { Shield, Users, Calendar } from 'lucide-react';
 
 export default function Header() {
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
+
   return (
-    <header className="bg-gradient-to-r from-purple-900 to-indigo-900 text-white shadow-lg">
-      <div className="container mx-auto px-4 py-6">
+    <header className="bg-creed-darker border-b border-creed-lighter shadow-tactical">
+      <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="text-3xl font-bold">
-              <span className="text-purple-300">The Dark Creed</span>
+          {/* Logo/Branding */}
+          <div className="flex items-center space-x-3">
+            <div className="relative">
+              <Shield className="w-10 h-10 text-creed-primary" strokeWidth={2} />
+              <div className="absolute inset-0 bg-creed-primary opacity-20 blur-xl"></div>
             </div>
-            <div className="hidden md:block text-sm text-purple-200">
-              Alliance Scheduler
+            <div>
+              <h1 className="text-2xl font-display font-bold text-creed-text tracking-wide">
+                THE DARK CREED
+              </h1>
+              <p className="text-xs text-creed-muted font-display tracking-widest">
+                ALLIANCE COMMAND CENTER
+              </p>
             </div>
           </div>
 
-          <nav className="flex space-x-6">
+          {/* Navigation */}
+          <nav className="flex space-x-2">
             <Link
               to="/"
-              className="hover:text-purple-300 transition-colors font-medium"
+              className={`
+                flex items-center space-x-2 px-4 py-2 rounded-lg font-display font-semibold
+                transition-all duration-200 relative overflow-hidden group
+                ${isActive('/')
+                  ? 'bg-creed-primary text-white shadow-glow-primary'
+                  : 'text-creed-text hover:bg-creed-lighter hover:text-creed-primary'
+                }
+              `}
             >
-              Submit Schedule
+              <Calendar className="w-4 h-4" />
+              <span>SUBMIT SCHEDULE</span>
+              {isActive('/') && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"></div>
+              )}
             </Link>
+
             <Link
               to="/members"
-              className="hover:text-purple-300 transition-colors font-medium"
+              className={`
+                flex items-center space-x-2 px-4 py-2 rounded-lg font-display font-semibold
+                transition-all duration-200 relative overflow-hidden group
+                ${isActive('/members')
+                  ? 'bg-creed-accent text-creed-darker shadow-glow-accent'
+                  : 'text-creed-text hover:bg-creed-lighter hover:text-creed-accent'
+                }
+              `}
             >
-              View Members
+              <Users className="w-4 h-4" />
+              <span>VIEW ROSTER</span>
+              {isActive('/members') && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-creed-darker"></div>
+              )}
             </Link>
           </nav>
         </div>
