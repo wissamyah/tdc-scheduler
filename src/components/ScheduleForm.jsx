@@ -122,7 +122,7 @@ export default function ScheduleForm() {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label htmlFor="username" className="block text-xs font-display font-semibold text-creed-muted mb-2 uppercase tracking-wide">
+                  <label htmlFor="username" className="block text-xs font-display font-semibold text-creed-text mb-2 uppercase tracking-wide">
                     In-Game Username *
                   </label>
                   <div className="relative">
@@ -144,7 +144,7 @@ export default function ScheduleForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="carPower" className="block text-xs font-display font-semibold text-creed-muted mb-2 uppercase tracking-wide">
+                  <label htmlFor="carPower" className="block text-xs font-display font-semibold text-creed-text mb-2 uppercase tracking-wide">
                     Car Power (M) *
                   </label>
                   <div className="relative">
@@ -168,7 +168,7 @@ export default function ScheduleForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="towerLevel" className="block text-xs font-display font-semibold text-creed-muted mb-2 uppercase tracking-wide">
+                  <label htmlFor="towerLevel" className="block text-xs font-display font-semibold text-creed-text mb-2 uppercase tracking-wide">
                     Tower Level (1-33) *
                   </label>
                   <div className="relative">

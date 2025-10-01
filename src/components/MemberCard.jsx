@@ -38,14 +38,14 @@ export default function MemberCard({ member }) {
         <div className="bg-creed-base border border-creed-lighter rounded-lg p-3">
           <div className="flex items-center gap-2 mb-1">
             <Zap className="w-3 h-3 text-creed-primary" />
-            <div className="text-xs text-creed-muted font-display uppercase tracking-wide">Car Power</div>
+            <div className="text-xs text-creed-text font-display uppercase tracking-wide">Car Power</div>
           </div>
           <div className="text-lg font-display font-bold text-creed-primary">{member.carPower}M</div>
         </div>
         <div className="bg-creed-base border border-creed-lighter rounded-lg p-3">
           <div className="flex items-center gap-2 mb-1">
             <Building2 className="w-3 h-3 text-creed-accent" />
-            <div className="text-xs text-creed-muted font-display uppercase tracking-wide">Tower</div>
+            <div className="text-xs text-creed-text font-display uppercase tracking-wide">Tower</div>
           </div>
           <div className="text-lg font-display font-bold text-creed-accent">{member.towerLevel}</div>
         </div>

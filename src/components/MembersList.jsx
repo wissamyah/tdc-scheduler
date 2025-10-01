@@ -111,8 +111,8 @@ export default function MembersList() {
             {/* Sort Controls */}
             <div className="mb-6 flex items-center flex-wrap gap-4">
               <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-creed-muted" />
-                <span className="text-sm font-display font-semibold text-creed-muted uppercase tracking-wide">
+                <Filter className="w-4 h-4 text-creed-text" />
+                <span className="text-sm font-display font-semibold text-creed-text uppercase tracking-wide">
                   Sort By:
                 </span>
               </div>

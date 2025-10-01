@@ -14,7 +14,7 @@ export default {
           dark: '#0f1419',
           base: '#151a21',
           light: '#1a2129',
-          lighter: '#232b36',
+          lighter: '#2d3748',
           // Accent colors - Military/Tactical
           primary: '#ff6b35', // Warning orange/red
           secondary: '#f7931e', // Amber alert
@@ -22,9 +22,10 @@ export default {
           success: '#4ade80', // Mission success green
           danger: '#ef4444', // Critical red
           warning: '#facc15', // Caution yellow
-          // Text colors
-          muted: '#6b7280',
-          text: '#e5e7eb',
+          // Text colors - Enhanced for better contrast
+          muted: '#9ca3af', // Lighter gray for better readability
+          text: '#f3f4f6', // Brighter white for primary text
+          'text-bright': '#ffffff', // Pure white for emphasis
         },
       },
       fontFamily: {

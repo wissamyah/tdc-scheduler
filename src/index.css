@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /* Ensure proper text contrast on dark backgrounds */
+  body {
+    @apply antialiased;
+  }
+
+  /* Better input contrast */
+  input::placeholder {
+    @apply text-creed-muted opacity-60;
+  }
+
+  /* Focus states with better visibility */
+  input:focus,
+  button:focus,
+  select:focus {
+    @apply outline-none;
+  }
+}
