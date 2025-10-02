@@ -153,6 +153,14 @@ export const translations = {
       failedToUpdateCarPower: 'Failed to update car power',
       failedToUpdateTowerLevel: 'Failed to update tower level',
       couldNotVerifyUpdate: 'Could not verify update. Please refresh manually.',
+
+      // Delete member
+      deleteMember: 'Delete member',
+      deletingMember: 'Deleting member...',
+      verifyingDeletion: 'Verifying deletion...',
+      memberDeleted: 'Member deleted successfully!',
+      failedToDeleteMember: 'Failed to delete member',
+      couldNotVerifyDeletion: 'Could not verify deletion. Please refresh manually.',
     },
 
     // Members List
@@ -193,6 +201,20 @@ export const translations = {
       incorrectPassword: 'Incorrect password. Deletion cancelled.',
       cancel: 'Cancel',
       deleteAll: 'Delete All',
+    },
+
+    // Delete Member Modal
+    deleteMemberModal: {
+      criticalWarning: 'Critical Warning',
+      youAreAboutToDelete: 'You are about to delete',
+      fromRoster: 'from the alliance roster.',
+      cannotBeUndone: 'This action CANNOT be undone!',
+      enterPasswordToConfirm: 'Enter Password to Confirm Deletion',
+      enterPasswordPlaceholder: 'Enter password...',
+      typeRequired: 'Type the required password to authorize this critical operation',
+      incorrectPassword: 'Incorrect password. Deletion cancelled.',
+      cancel: 'Cancel',
+      deleteMember: 'Delete Member',
     },
 
     // Optimal Schedule Calendar
@@ -386,6 +408,14 @@ export const translations = {
       failedToUpdateCarPower: 'Échec de la mise à jour de la puissance de voiture',
       failedToUpdateTowerLevel: 'Échec de la mise à jour du niveau de tour',
       couldNotVerifyUpdate: 'Impossible de vérifier la mise à jour. Veuillez actualiser manuellement.',
+
+      // Delete member
+      deleteMember: 'Supprimer le membre',
+      deletingMember: 'Suppression du membre...',
+      verifyingDeletion: 'Vérification de la suppression...',
+      memberDeleted: 'Membre supprimé avec succès !',
+      failedToDeleteMember: 'Échec de la suppression du membre',
+      couldNotVerifyDeletion: 'Impossible de vérifier la suppression. Veuillez actualiser manuellement.',
     },
 
     // Members List
@@ -426,6 +456,20 @@ export const translations = {
       incorrectPassword: 'Mot de passe incorrect. Suppression annulée.',
       cancel: 'Annuler',
       deleteAll: 'Tout Supprimer',
+    },
+
+    // Delete Member Modal
+    deleteMemberModal: {
+      criticalWarning: 'Avertissement Critique',
+      youAreAboutToDelete: 'Vous êtes sur le point de supprimer',
+      fromRoster: 'de la liste de l\'alliance.',
+      cannotBeUndone: 'Cette action NE PEUT PAS être annulée !',
+      enterPasswordToConfirm: 'Entrez le Mot de Passe pour Confirmer la Suppression',
+      enterPasswordPlaceholder: 'Entrez le mot de passe...',
+      typeRequired: 'Saisissez le mot de passe requis pour autoriser cette opération critique',
+      incorrectPassword: 'Mot de passe incorrect. Suppression annulée.',
+      cancel: 'Annuler',
+      deleteMember: 'Supprimer le Membre',
     },
 
     // Optimal Schedule Calendar
@@ -619,6 +663,14 @@ export const translations = {
       failedToUpdateCarPower: 'Fahrzeugmacht-Aktualisierung fehlgeschlagen',
       failedToUpdateTowerLevel: 'Turmstufen-Aktualisierung fehlgeschlagen',
       couldNotVerifyUpdate: 'Aktualisierung konnte nicht überprüft werden. Bitte manuell aktualisieren.',
+
+      // Delete member
+      deleteMember: 'Mitglied löschen',
+      deletingMember: 'Mitglied wird gelöscht...',
+      verifyingDeletion: 'Löschung wird überprüft...',
+      memberDeleted: 'Mitglied erfolgreich gelöscht!',
+      failedToDeleteMember: 'Mitglied-Löschung fehlgeschlagen',
+      couldNotVerifyDeletion: 'Löschung konnte nicht überprüft werden. Bitte manuell aktualisieren.',
     },
 
     // Members List
@@ -659,6 +711,20 @@ export const translations = {
       incorrectPassword: 'Falsches Passwort. Löschung abgebrochen.',
       cancel: 'Abbrechen',
       deleteAll: 'Alle Löschen',
+    },
+
+    // Delete Member Modal
+    deleteMemberModal: {
+      criticalWarning: 'Kritische Warnung',
+      youAreAboutToDelete: 'Sie sind dabei zu löschen',
+      fromRoster: 'aus der Allianz-Mitgliederliste.',
+      cannotBeUndone: 'Diese Aktion KANN NICHT rückgängig gemacht werden!',
+      enterPasswordToConfirm: 'Passwort zur Bestätigung der Löschung Eingeben',
+      enterPasswordPlaceholder: 'Passwort eingeben...',
+      typeRequired: 'Geben Sie das erforderliche Passwort ein, um diesen kritischen Vorgang zu autorisieren',
+      incorrectPassword: 'Falsches Passwort. Löschung abgebrochen.',
+      cancel: 'Abbrechen',
+      deleteMember: 'Mitglied Löschen',
     },
 
     // Optimal Schedule Calendar
@@ -852,6 +918,14 @@ export const translations = {
       failedToUpdateCarPower: 'Error al actualizar poder del vehículo',
       failedToUpdateTowerLevel: 'Error al actualizar nivel de torre',
       couldNotVerifyUpdate: 'No se pudo verificar la actualización. Actualice manualmente.',
+
+      // Delete member
+      deleteMember: 'Eliminar miembro',
+      deletingMember: 'Eliminando miembro...',
+      verifyingDeletion: 'Verificando eliminación...',
+      memberDeleted: '¡Miembro eliminado exitosamente!',
+      failedToDeleteMember: 'Error al eliminar miembro',
+      couldNotVerifyDeletion: 'No se pudo verificar la eliminación. Actualice manualmente.',
     },
 
     // Members List
@@ -892,6 +966,20 @@ export const translations = {
       incorrectPassword: 'Contraseña incorrecta. Eliminación cancelada.',
       cancel: 'Cancelar',
       deleteAll: 'Eliminar Todo',
+    },
+
+    // Delete Member Modal
+    deleteMemberModal: {
+      criticalWarning: 'Advertencia Crítica',
+      youAreAboutToDelete: 'Está a punto de eliminar',
+      fromRoster: 'de la lista de la alianza.',
+      cannotBeUndone: '¡Esta acción NO se puede deshacer!',
+      enterPasswordToConfirm: 'Ingrese la Contraseña para Confirmar la Eliminación',
+      enterPasswordPlaceholder: 'Ingrese la contraseña...',
+      typeRequired: 'Escriba la contraseña requerida para autorizar esta operación crítica',
+      incorrectPassword: 'Contraseña incorrecta. Eliminación cancelada.',
+      cancel: 'Cancelar',
+      deleteMember: 'Eliminar Miembro',
     },
 
     // Optimal Schedule Calendar
@@ -1085,6 +1173,14 @@ export const translations = {
       failedToUpdateCarPower: 'Falha ao atualizar poder do veículo',
       failedToUpdateTowerLevel: 'Falha ao atualizar nível da torre',
       couldNotVerifyUpdate: 'Não foi possível verificar a atualização. Atualize manualmente.',
+
+      // Delete member
+      deleteMember: 'Eliminar membro',
+      deletingMember: 'Eliminando membro...',
+      verifyingDeletion: 'Verificando eliminação...',
+      memberDeleted: 'Membro eliminado com sucesso!',
+      failedToDeleteMember: 'Falha ao eliminar membro',
+      couldNotVerifyDeletion: 'Não foi possível verificar a eliminação. Atualize manualmente.',
     },
 
     // Members List
@@ -1125,6 +1221,20 @@ export const translations = {
       incorrectPassword: 'Senha incorreta. Eliminação cancelada.',
       cancel: 'Cancelar',
       deleteAll: 'Eliminar Tudo',
+    },
+
+    // Delete Member Modal
+    deleteMemberModal: {
+      criticalWarning: 'Aviso Crítico',
+      youAreAboutToDelete: 'Está prestes a eliminar',
+      fromRoster: 'da lista da aliança.',
+      cannotBeUndone: 'Esta ação NÃO pode ser desfeita!',
+      enterPasswordToConfirm: 'Digite a Senha para Confirmar a Eliminação',
+      enterPasswordPlaceholder: 'Digite a senha...',
+      typeRequired: 'Digite a senha necessária para autorizar esta operação crítica',
+      incorrectPassword: 'Senha incorreta. Eliminação cancelada.',
+      cancel: 'Cancelar',
+      deleteMember: 'Eliminar Membro',
     },
 
     // Optimal Schedule Calendar
@@ -1317,6 +1427,14 @@ export const translations = {
       failedToUpdateCarPower: 'Aggiornamento potenza veicolo fallito',
       failedToUpdateTowerLevel: 'Aggiornamento livello torre fallito',
       couldNotVerifyUpdate: 'Impossibile verificare l\'aggiornamento. Aggiorna manualmente.',
+
+      // Delete member
+      deleteMember: 'Elimina membro',
+      deletingMember: 'Eliminazione membro...',
+      verifyingDeletion: 'Verifica eliminazione...',
+      memberDeleted: 'Membro eliminato con successo!',
+      failedToDeleteMember: 'Eliminazione membro fallita',
+      couldNotVerifyDeletion: 'Impossibile verificare l\'eliminazione. Aggiorna manualmente.',
     },
 
     // Members List
@@ -1357,6 +1475,20 @@ export const translations = {
       incorrectPassword: 'Password errata. Eliminazione annullata.',
       cancel: 'Annulla',
       deleteAll: 'Elimina Tutto',
+    },
+
+    // Delete Member Modal
+    deleteMemberModal: {
+      criticalWarning: 'Avviso Critico',
+      youAreAboutToDelete: 'Stai per eliminare',
+      fromRoster: 'dalla lista dell\'alleanza.',
+      cannotBeUndone: 'Questa azione NON può essere annullata!',
+      enterPasswordToConfirm: 'Inserisci la Password per Confermare l\'Eliminazione',
+      enterPasswordPlaceholder: 'Inserisci la password...',
+      typeRequired: 'Digita la password richiesta per autorizzare questa operazione critica',
+      incorrectPassword: 'Password errata. Eliminazione annullata.',
+      cancel: 'Annulla',
+      deleteMember: 'Elimina Membro',
     },
 
     // Optimal Schedule Calendar

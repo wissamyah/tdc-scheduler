@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { User, Zap, Building2, ChevronDown, Calendar, Clock, Globe, Edit2, Check, X, Loader2 } from 'lucide-react';
+import { User, Zap, Building2, ChevronDown, Calendar, Clock, Globe, Edit2, Check, X, Loader2, Trash2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { DAYS_OF_WEEK, getDayDisplayName, getTimeSlotLabel } from '../utils/timeSlots';
 import { getTimezoneDisplay } from '../utils/timezone';
-import { saveMemberSchedule, fetchDataFromAPI } from '../services/github';
+import { saveMemberSchedule, fetchDataFromAPI, deleteMember } from '../services/github';
 import { showToast } from '../utils/toast';
+import DeleteMemberModal from './DeleteMemberModal';
 
 export default function MemberCard({ member, onUpdate }) {
   const { t } = useLanguage();
@@ -16,6 +17,8 @@ export default function MemberCard({ member, onUpdate }) {
   const [isEditingTowerLevel, setIsEditingTowerLevel] = useState(false);
   const [editedTowerLevel, setEditedTowerLevel] = useState(member.towerLevel);
   const [isSaving, setIsSaving] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const hasAvailability = Object.values(member.availability || {}).some(
     slots => slots && slots.length > 0
@@ -334,11 +337,129 @@ export default function MemberCard({ member, onUpdate }) {
     }
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setShowDeleteModal(false);
+    setIsDeleting(true);
+
+    const toastId = showToast.loading(t('memberCard.deletingMember'));
+
+    try {
+      const pat = localStorage.getItem('tdc_pat');
+
+      if (!pat) {
+        showToast.dismiss(toastId);
+        showToast.error(t('auth.authRequired'));
+        setIsDeleting(false);
+        return;
+      }
+
+      await deleteMember(pat, member.username);
+
+      showToast.loading(t('memberCard.verifyingDeletion'), { id: toastId });
+
+      // Verify deletion by polling
+      const maxAttempts = 10;
+      let attempts = 0;
+      let deletionVerified = false;
+
+      // Add initial delay before first verification
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      while (attempts < maxAttempts && !deletionVerified) {
+        attempts++;
+
+        try {
+          const data = await fetchDataFromAPI(pat);
+          const memberStillExists = data.members.find(m => m.username === member.username);
+
+          if (!memberStillExists) {
+            deletionVerified = true;
+            break;
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        } catch (error) {
+          console.error('Error verifying deletion:', error);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
+
+      if (!deletionVerified) {
+        showToast.dismiss(toastId);
+        showToast.error(t('memberCard.couldNotVerifyDeletion'));
+        setIsDeleting(false);
+        return;
+      }
+
+      showToast.success(t('memberCard.memberDeleted'), { id: toastId });
+
+      // Notify parent to refresh data
+      if (onUpdate) {
+        onUpdate();
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      showToast.dismiss(toastId);
+      showToast.error(t('memberCard.failedToDeleteMember'));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+  };
+
   return (
-    <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical hover:border-creed-primary hover:shadow-glow-primary transition-all p-6">
-      {/* Tactical corner accents */}
-      <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-creed-accent opacity-50"></div>
-      <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-creed-accent opacity-50"></div>
+    <>
+      {/* Delete Confirmation Modal */}
+      <DeleteMemberModal
+        isOpen={showDeleteModal}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        memberUsername={member.username}
+      />
+
+      {/* Deleting Overlay - Prevents all interaction during deletion */}
+      {isDeleting && (
+        <div className="fixed inset-0 bg-creed-darker/95 backdrop-blur-md z-50 flex items-center justify-center pointer-events-auto">
+          <div className="text-center">
+            <Loader2 className="w-16 h-16 text-creed-danger animate-spin mx-auto mb-4" />
+            <p className="text-creed-text font-display font-semibold uppercase tracking-wide text-xl">
+              {t('memberCard.deletingMember')}
+            </p>
+            <p className="text-creed-muted font-body mt-2">
+              {t('scheduleForm.doNotClose')}
+            </p>
+            <div className="mt-4 px-4 py-2 bg-creed-base/50 rounded-lg border border-creed-danger/30">
+              <p className="text-xs text-creed-danger font-body">
+                {t('membersList.criticalOperation')}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical hover:border-creed-primary hover:shadow-glow-primary transition-all p-6 relative">
+        {/* Tactical corner accents */}
+        <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-creed-accent opacity-50"></div>
+        <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-creed-accent opacity-50"></div>
+
+        {/* Delete Button - Top Right */}
+        <button
+          onClick={handleDeleteClick}
+          disabled={isSaving || isDeleting}
+          className="absolute top-4 right-4 p-2 rounded bg-creed-base border border-creed-danger/30
+                   hover:bg-creed-danger hover:border-creed-danger hover:shadow-glow-primary
+                   transition-all group disabled:opacity-50 disabled:cursor-not-allowed z-10"
+          title={t('memberCard.deleteMember')}
+        >
+          <Trash2 className="w-4 h-4 text-creed-danger group-hover:text-white transition-colors" />
+        </button>
 
       {/* Member Info */}
       <div className="flex items-center justify-between mb-4">
@@ -630,6 +751,7 @@ export default function MemberCard({ member, onUpdate }) {
           <p className="text-creed-muted text-sm font-body">{t('memberCard.noAvailability')}</p>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }

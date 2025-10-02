@@ -333,6 +333,85 @@ export async function deleteAllMembers(pat) {
 }
 
 /**
+ * Delete a specific member from the alliance
+ * @param {string} pat - GitHub Personal Access Token
+ * @param {string} username - Username of the member to delete
+ * @returns {Promise<boolean>} True if successful
+ */
+export async function deleteMember(pat, username) {
+  try {
+    // First, fetch the current file to get its SHA and current data
+    const fileUrl = `https://api.github.com/repos/${DATA_REPO_OWNER}/${DATA_REPO_NAME}/contents/${DATA_FILE_PATH}`;
+    const cacheBustUrl = `${fileUrl}?ref=main&_t=${Date.now()}`;
+
+    const getResponse = await fetch(cacheBustUrl, {
+      headers: {
+        'Authorization': `token ${pat}`,
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      cache: 'no-store'
+    });
+
+    if (!getResponse.ok) {
+      throw new Error(`Failed to fetch current data: ${getResponse.statusText}`);
+    }
+
+    const fileData = await getResponse.json();
+    const currentSha = fileData.sha;
+
+    // Decode base64 content with proper UTF-8 support
+    const base64 = fileData.content.replace(/\n/g, '');
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const content = new TextDecoder('utf-8').decode(bytes);
+    const currentData = JSON.parse(content);
+
+    // Filter out the member with the specified username
+    const updatedData = {
+      auth: currentData.auth,
+      members: currentData.members.filter(m => m.username !== username)
+    };
+
+    // Encode the updated content as base64 with proper UTF-8 support
+    const jsonString = JSON.stringify(updatedData, null, 2);
+    const encoder = new TextEncoder();
+    const encodedBytes = encoder.encode(jsonString);
+    const encodedBinaryString = Array.from(encodedBytes, byte => String.fromCharCode(byte)).join('');
+    const updatedContent = btoa(encodedBinaryString);
+
+    // Update the file
+    const updateResponse = await fetch(fileUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${pat}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: `Delete member: ${username}`,
+        content: updatedContent,
+        sha: currentSha,
+        branch: 'main'
+      })
+    });
+
+    if (!updateResponse.ok) {
+      const errorData = await updateResponse.json();
+      console.error('Failed to update file:', errorData);
+      throw new Error(`Failed to update file: ${errorData.message || updateResponse.statusText}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error deleting member:', error);
+    throw error;
+  }
+}
+
+/**
  * Verify GitHub PAT has correct permissions
  * @param {string} pat - GitHub Personal Access Token
  * @returns {Promise<boolean>} True if PAT is valid
