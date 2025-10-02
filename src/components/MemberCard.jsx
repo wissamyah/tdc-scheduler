@@ -9,6 +9,8 @@ export default function MemberCard({ member, onUpdate }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingCarPower, setIsEditingCarPower] = useState(false);
   const [editedCarPower, setEditedCarPower] = useState(member.carPower);
+  const [isEditingTowerLevel, setIsEditingTowerLevel] = useState(false);
+  const [editedTowerLevel, setEditedTowerLevel] = useState(member.towerLevel);
   const [isSaving, setIsSaving] = useState(false);
 
   const hasAvailability = Object.values(member.availability || {}).some(
@@ -116,6 +118,107 @@ export default function MemberCard({ member, onUpdate }) {
     }
   };
 
+  const handleEditTowerLevel = () => {
+    setEditedTowerLevel(member.towerLevel);
+    setIsEditingTowerLevel(true);
+  };
+
+  const handleCancelEditTower = () => {
+    setEditedTowerLevel(member.towerLevel);
+    setIsEditingTowerLevel(false);
+  };
+
+  const handleSaveTowerLevel = async () => {
+    const newTowerLevel = parseInt(editedTowerLevel, 10);
+
+    // Validation
+    if (isNaN(newTowerLevel) || newTowerLevel <= 0 || newTowerLevel > 35) {
+      showToast.error('Invalid tower level (1-35)');
+      return;
+    }
+
+    if (newTowerLevel === member.towerLevel) {
+      setIsEditingTowerLevel(false);
+      return;
+    }
+
+    setIsSaving(true);
+    const toastId = showToast.loading('Updating tower level...');
+
+    try {
+      const pat = localStorage.getItem('tdc_pat');
+
+      if (!pat) {
+        showToast.dismiss(toastId);
+        showToast.error('Authentication required. Please refresh the page.');
+        setIsSaving(false);
+        return;
+      }
+
+      // Update member data with new tower level
+      const updatedMemberData = {
+        ...member,
+        towerLevel: newTowerLevel,
+        lastUpdated: new Date().toISOString()
+      };
+
+      await saveMemberSchedule(updatedMemberData, pat);
+
+      showToast.loading('Verifying update...', { id: toastId });
+
+      // Verify update by polling
+      const maxAttempts = 10;
+      let attempts = 0;
+      let updateVerified = false;
+
+      // Add initial delay before first verification
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      while (attempts < maxAttempts && !updateVerified) {
+        attempts++;
+
+        try {
+          const data = await fetchDataFromAPI(pat);
+          const updatedMember = data.members.find(m => m.username === member.username);
+
+          if (updatedMember && updatedMember.towerLevel === newTowerLevel) {
+            updateVerified = true;
+            break;
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        } catch (error) {
+          console.error('Error verifying update:', error);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
+
+      if (!updateVerified) {
+        showToast.dismiss(toastId);
+        showToast.error('Could not verify update. Please refresh manually.');
+        setIsSaving(false);
+        setEditedTowerLevel(member.towerLevel);
+        setIsEditingTowerLevel(false);
+        return;
+      }
+
+      showToast.success('Tower level updated successfully!', { id: toastId });
+      setIsEditingTowerLevel(false);
+
+      // Notify parent to refresh data
+      if (onUpdate) {
+        onUpdate();
+      }
+    } catch (err) {
+      console.error('Update error:', err);
+      showToast.dismiss(toastId);
+      showToast.error('Failed to update tower level');
+      setEditedTowerLevel(member.towerLevel);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical hover:shadow-glow-primary transition-all p-6">
       {/* Tactical corner accents */}
@@ -208,12 +311,72 @@ export default function MemberCard({ member, onUpdate }) {
             </div>
           )}
         </div>
-        <div className="bg-creed-base border border-creed-lighter rounded-lg p-3">
+        <div className="bg-creed-base border border-creed-lighter rounded-lg p-3 relative">
           <div className="flex items-center gap-2 mb-1">
             <Building2 className="w-3 h-3 text-creed-accent" />
             <div className="text-xs text-creed-text font-display uppercase tracking-wide">Tower</div>
           </div>
-          <div className="text-lg font-display font-bold text-creed-accent">{member.towerLevel}</div>
+
+          {!isEditingTowerLevel ? (
+            <div className="flex items-center justify-between">
+              <div className="text-lg font-display font-bold text-creed-accent">{member.towerLevel}</div>
+              <button
+                onClick={handleEditTowerLevel}
+                disabled={isSaving}
+                className="p-1.5 rounded bg-creed-lighter hover:bg-creed-accent/20
+                         border border-creed-accent/30 hover:border-creed-accent
+                         transition-all group disabled:opacity-50"
+                title="Edit tower level"
+              >
+                <Edit2 className="w-3.5 h-3.5 text-creed-accent group-hover:scale-110 transition-transform" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                step="1"
+                min="1"
+                max="35"
+                value={editedTowerLevel}
+                onChange={(e) => setEditedTowerLevel(e.target.value)}
+                disabled={isSaving}
+                className="w-full px-2 py-1 bg-creed-dark border border-creed-accent
+                         rounded text-creed-text font-display font-bold text-sm
+                         focus:ring-2 focus:ring-creed-accent focus:outline-none
+                         disabled:opacity-50"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSaveTowerLevel();
+                  if (e.key === 'Escape') handleCancelEditTower();
+                }}
+              />
+              <div className="flex gap-1">
+                <button
+                  onClick={handleSaveTowerLevel}
+                  disabled={isSaving}
+                  className="p-1.5 rounded bg-creed-accent hover:bg-creed-accent/80
+                           transition-all disabled:opacity-50"
+                  title="Save"
+                >
+                  {isSaving ? (
+                    <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
+                  ) : (
+                    <Check className="w-3.5 h-3.5 text-white" />
+                  )}
+                </button>
+                <button
+                  onClick={handleCancelEditTower}
+                  disabled={isSaving}
+                  className="p-1.5 rounded bg-creed-danger hover:bg-creed-danger/80
+                           transition-all disabled:opacity-50"
+                  title="Cancel"
+                >
+                  <X className="w-3.5 h-3.5 text-white" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

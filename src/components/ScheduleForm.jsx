@@ -56,8 +56,8 @@ export default function ScheduleForm() {
     }
 
     const towerLevel = parseInt(formData.towerLevel);
-    if (isNaN(towerLevel) || towerLevel < 1 || towerLevel > 33) {
-      showToast.error('Tower level must be between 1 and 33');
+    if (isNaN(towerLevel) || towerLevel < 1 || towerLevel > 35) {
+      showToast.error('Tower level must be between 1 and 35');
       return;
     }
 
@@ -289,7 +289,7 @@ export default function ScheduleForm() {
 
                 <div>
                   <label htmlFor="towerLevel" className="block text-xs font-display font-semibold text-creed-text mb-2 uppercase tracking-wide">
-                    Tower Level (1-33) *
+                    Tower Level (1-35) *
                   </label>
                   <div className="relative">
                     <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-creed-muted" />
@@ -300,7 +300,7 @@ export default function ScheduleForm() {
                       value={formData.towerLevel}
                       onChange={handleInputChange}
                       min="1"
-                      max="33"
+                      max="35"
                       className="w-full pl-10 pr-4 py-2.5 bg-creed-base border border-creed-lighter rounded-lg
                                focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
                                text-creed-text placeholder-creed-muted font-body
