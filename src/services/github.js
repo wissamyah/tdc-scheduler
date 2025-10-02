@@ -299,9 +299,9 @@ export async function deleteAllMembers(pat) {
     // Encode the updated content as base64 with proper UTF-8 support
     const jsonString = JSON.stringify(updatedData, null, 2);
     const encoder = new TextEncoder();
-    const bytes = encoder.encode(jsonString);
-    const binaryString = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
-    const updatedContent = btoa(binaryString);
+    const encodedBytes = encoder.encode(jsonString);
+    const encodedBinaryString = Array.from(encodedBytes, byte => String.fromCharCode(byte)).join('');
+    const updatedContent = btoa(encodedBinaryString);
 
     // Update the file
     const updateResponse = await fetch(fileUrl, {
