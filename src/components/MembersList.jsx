@@ -1,17 +1,43 @@
-import { useState, useEffect } from 'react';
-import { Users, RefreshCw, Loader2, AlertCircle, Filter } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Users, RefreshCw, Loader2, AlertCircle, Filter, Trash2 } from 'lucide-react';
 import MemberCard from './MemberCard';
-import { fetchData } from '../services/github';
+import DeleteConfirmModal from './DeleteConfirmModal';
+import { fetchData, fetchDataFromAPI, deleteAllMembers } from '../services/github';
 import { showToast } from '../utils/toast';
 
 export default function MembersList() {
+  const location = useLocation();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [sortBy, setSortBy] = useState('username'); // username, carPower, towerLevel
+  const previousLocationKey = useRef(location.key);
 
   useEffect(() => {
-    loadMembers();
+    loadMembersFromAPI();
+
+    // Reload members when window regains focus - ALWAYS use API fetch for fresh data
+    const handleFocus = () => {
+      loadMembersFromAPI();
+    };
+
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
+
+  // Reload whenever location changes (e.g., navigating back to this page)
+  // ALWAYS use API fetch to ensure fresh data, never use CDN cache
+  useEffect(() => {
+    if (previousLocationKey.current !== location.key) {
+      previousLocationKey.current = location.key;
+      loadMembersFromAPI();
+    }
+  }, [location]);
 
   const loadMembers = async () => {
     try {
@@ -26,16 +52,115 @@ export default function MembersList() {
     }
   };
 
+  const loadMembersFromAPI = async () => {
+    try {
+      setLoading(true);
+      const pat = localStorage.getItem('tdc_pat');
+      const data = await fetchDataFromAPI(pat);
+      setMembers(data.members || []);
+    } catch (err) {
+      console.error('Error loading members from API:', err);
+      // Fallback to CDN fetch
+      loadMembers();
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleRefresh = async () => {
     const toastId = showToast.loading('Refreshing roster data...');
     try {
-      await loadMembers();
+      await loadMembersFromAPI();
       showToast.dismiss(toastId);
       showToast.success('Roster updated successfully');
     } catch (err) {
       showToast.dismiss(toastId);
       showToast.error('Refresh failed');
     }
+  };
+
+  const handleDeleteAllClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteAllConfirm = async () => {
+    setShowDeleteModal(false);
+    setDeleting(true);
+
+    // Scroll to center
+    window.scrollTo({
+      top: document.documentElement.scrollHeight / 2,
+      behavior: 'smooth'
+    });
+
+    const toastId = showToast.loading('Deleting all members...');
+
+    try {
+      // Get PAT from localStorage
+      let pat = localStorage.getItem('tdc_pat');
+
+      if (!pat) {
+        showToast.dismiss(toastId);
+        showToast.error('Authentication required. Please refresh the page.');
+        setDeleting(false);
+        return;
+      }
+
+      await deleteAllMembers(pat);
+
+      showToast.loading('Verifying deletion...', { id: toastId });
+
+      // Verify deletion by polling
+      const maxAttempts = 10;
+      let attempts = 0;
+      let deletionVerified = false;
+
+      // Add initial delay before first verification to allow GitHub to propagate
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      let verifiedData = null;
+
+      while (attempts < maxAttempts && !deletionVerified) {
+        attempts++;
+
+        try {
+          const data = await fetchDataFromAPI(pat);
+
+          if (data.members.length === 0) {
+            verifiedData = data;
+            deletionVerified = true;
+            break;
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        } catch (error) {
+          console.error('Error verifying deletion:', error);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
+
+      if (!deletionVerified || !verifiedData) {
+        showToast.dismiss(toastId);
+        showToast.error('Could not verify deletion. Please refresh manually.');
+        setDeleting(false);
+        return;
+      }
+
+      // Update UI with verified empty data
+      setMembers(verifiedData.members);
+
+      showToast.success('All members deleted successfully!', { id: toastId });
+    } catch (err) {
+      console.error('Delete error:', err);
+      showToast.dismiss(toastId);
+      showToast.error('Failed to delete members - Try again');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleDeleteAllCancel = () => {
+    setShowDeleteModal(false);
   };
 
   const sortedMembers = [...members].sort((a, b) => {
@@ -64,7 +189,35 @@ export default function MembersList() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base py-8">
+    <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base py-8 relative">
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={showDeleteModal}
+        onConfirm={handleDeleteAllConfirm}
+        onCancel={handleDeleteAllCancel}
+        memberCount={members.length}
+      />
+
+      {/* Deleting Overlay - Prevents all interaction during deletion */}
+      {deleting && (
+        <div className="fixed inset-0 bg-creed-darker/95 backdrop-blur-md z-50 flex items-center justify-center pointer-events-auto">
+          <div className="text-center">
+            <Loader2 className="w-16 h-16 text-creed-danger animate-spin mx-auto mb-4" />
+            <p className="text-creed-text font-display font-semibold uppercase tracking-wide text-xl">
+              Deleting All Members...
+            </p>
+            <p className="text-creed-muted font-body mt-2">
+              Please do not close this window
+            </p>
+            <div className="mt-4 px-4 py-2 bg-creed-base/50 rounded-lg border border-creed-danger/30">
+              <p className="text-xs text-creed-danger font-body">
+                Critical operation in progress...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -82,19 +235,36 @@ export default function MembersList() {
                 <span className="font-display font-bold text-creed-accent">{members.length}</span>
               </p>
             </div>
-            <button
-              onClick={handleRefresh}
-              disabled={loading}
-              className="flex items-center gap-2 px-4 py-2.5
-                       bg-creed-base border border-creed-lighter
-                       text-creed-text rounded-lg
-                       hover:border-creed-accent hover:shadow-glow-accent
-                       disabled:opacity-50 disabled:cursor-not-allowed
-                       transition-all font-display font-semibold uppercase tracking-wide"
-            >
-              <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-              <span>{loading ? 'Refreshing' : 'Refresh'}</span>
-            </button>
+            <div className="flex items-center gap-3">
+              {members.length > 0 && (
+                <button
+                  onClick={handleDeleteAllClick}
+                  disabled={loading || deleting}
+                  className="flex items-center gap-2 px-4 py-2.5
+                           bg-creed-base border border-creed-danger
+                           text-creed-danger rounded-lg
+                           hover:bg-creed-danger hover:text-white hover:shadow-glow-primary
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-all font-display font-semibold uppercase tracking-wide"
+                >
+                  <Trash2 className="w-5 h-5" />
+                  <span>Delete All</span>
+                </button>
+              )}
+              <button
+                onClick={handleRefresh}
+                disabled={loading || deleting}
+                className="flex items-center gap-2 px-4 py-2.5
+                         bg-creed-base border border-creed-lighter
+                         text-creed-text rounded-lg
+                         hover:border-creed-accent hover:shadow-glow-accent
+                         disabled:opacity-50 disabled:cursor-not-allowed
+                         transition-all font-display font-semibold uppercase tracking-wide"
+              >
+                <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+                <span>{loading ? 'Refreshing' : 'Refresh'}</span>
+              </button>
+            </div>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Users, Calendar } from 'lucide-react';
+import { Shield, Users, Calendar, TrendingUp } from 'lucide-react';
 
 export default function Header() {
   const location = useLocation();
@@ -60,6 +60,24 @@ export default function Header() {
               <Users className="w-4 h-4" />
               <span>VIEW ROSTER</span>
               {isActive('/members') && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-creed-darker"></div>
+              )}
+            </Link>
+
+            <Link
+              to="/optimal"
+              className={`
+                flex items-center space-x-2 px-4 py-2 rounded-lg font-display font-semibold
+                transition-all duration-200 relative overflow-hidden group
+                ${isActive('/optimal')
+                  ? 'bg-creed-secondary text-creed-darker shadow-glow-primary'
+                  : 'text-creed-text hover:bg-creed-lighter hover:text-creed-secondary'
+                }
+              `}
+            >
+              <TrendingUp className="w-4 h-4" />
+              <span>OPTIMAL SCHEDULE</span>
+              {isActive('/optimal') && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-creed-darker"></div>
               )}
             </Link>

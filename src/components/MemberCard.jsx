@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { User, Zap, Building2, ChevronDown, Calendar, Clock } from 'lucide-react';
+import { User, Zap, Building2, ChevronDown, Calendar, Clock, Globe } from 'lucide-react';
 import { DAYS_OF_WEEK, getDayDisplayName, getTimeSlotLabel } from '../utils/timeSlots';
+import { getTimezoneDisplay } from '../utils/timezone';
 
 export default function MemberCard({ member }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -51,6 +52,18 @@ export default function MemberCard({ member }) {
         </div>
       </div>
 
+      {/* Timezone Info */}
+      {member.timezone && (
+        <div className="mb-4 px-3 py-2 bg-creed-base border border-creed-accent/30 rounded-lg">
+          <div className="flex items-center gap-2">
+            <Globe className="w-3 h-3 text-creed-accent" />
+            <span className="text-xs text-creed-muted font-body">
+              Timezone: <span className="text-creed-text font-semibold">{getTimezoneDisplay(member.timezone)}</span>
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Availability Toggle */}
       {hasAvailability && (
         <div>
@@ -76,6 +89,12 @@ export default function MemberCard({ member }) {
           {/* Availability Details */}
           {isExpanded && (
             <div className="mt-4 space-y-3 bg-creed-base rounded-lg p-4 border border-creed-lighter">
+              <div className="mb-3 px-3 py-2 bg-creed-accent/10 border border-creed-accent/30 rounded">
+                <p className="text-xs text-creed-muted font-body">
+                  <Globe className="w-3 h-3 text-creed-accent inline mr-1" />
+                  Times shown in <strong className="text-creed-accent">Server Time (UTC-2)</strong>
+                </p>
+              </div>
               {DAYS_OF_WEEK.map(day => {
                 const daySlots = member.availability[day] || [];
                 if (daySlots.length === 0) return null;

@@ -2,17 +2,14 @@ import { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
-import PasswordSetup from './components/PasswordSetup';
-import PasswordPrompt from './components/PasswordPrompt';
+import PATPrompt from './components/PATPrompt';
 import ScheduleForm from './components/ScheduleForm';
 import MembersList from './components/MembersList';
-import { fetchData } from './services/github';
-import { isAuthenticated } from './utils/auth';
+import OptimalScheduleCalendar from './components/OptimalScheduleCalendar';
 import { Loader2 } from 'lucide-react';
 
 function App() {
-  const [appState, setAppState] = useState('loading'); // loading, setup, auth, ready
-  const [passwordHash, setPasswordHash] = useState(null);
+  const [appState, setAppState] = useState('loading'); // loading, auth, ready
 
   useEffect(() => {
     initializeApp();
@@ -20,32 +17,19 @@ function App() {
 
   const initializeApp = async () => {
     try {
-      const data = await fetchData();
+      // Check if PAT is stored in localStorage
+      const pat = localStorage.getItem('tdc_pat');
 
-      if (!data.auth || !data.auth.initialized || !data.auth.passwordHash) {
-        // Password not initialized - show setup
-        setAppState('setup');
-      } else {
-        // Password exists
-        setPasswordHash(data.auth.passwordHash);
-
-        // Check if already authenticated
-        if (isAuthenticated()) {
-          setAppState('ready');
-        } else {
-          setAppState('auth');
-        }
+      if (!pat) {
+        setAppState('auth');
+        return;
       }
+
+      setAppState('ready');
     } catch (error) {
       console.error('Error initializing app:', error);
-      // Default to setup if there's an error
-      setAppState('setup');
+      setAppState('auth');
     }
-  };
-
-  const handleSetupComplete = () => {
-    // Reload app to get the new password hash
-    initializeApp();
   };
 
   const handleAuthenticated = () => {
@@ -64,14 +48,9 @@ function App() {
     );
   }
 
-  // First-time setup
-  if (appState === 'setup') {
-    return <PasswordSetup onSetupComplete={handleSetupComplete} />;
-  }
-
   // Authentication required
   if (appState === 'auth') {
-    return <PasswordPrompt passwordHash={passwordHash} onAuthenticated={handleAuthenticated} />;
+    return <PATPrompt onAuthenticated={handleAuthenticated} />;
   }
 
   // App ready
@@ -83,6 +62,7 @@ function App() {
         <Routes>
           <Route path="/" element={<ScheduleForm />} />
           <Route path="/members" element={<MembersList />} />
+          <Route path="/optimal" element={<OptimalScheduleCalendar />} />
         </Routes>
       </div>
     </Router>
