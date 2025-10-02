@@ -1,14 +1,120 @@
 import { useState } from 'react';
-import { User, Zap, Building2, ChevronDown, Calendar, Clock, Globe } from 'lucide-react';
+import { User, Zap, Building2, ChevronDown, Calendar, Clock, Globe, Edit2, Check, X, Loader2 } from 'lucide-react';
 import { DAYS_OF_WEEK, getDayDisplayName, getTimeSlotLabel } from '../utils/timeSlots';
 import { getTimezoneDisplay } from '../utils/timezone';
+import { saveMemberSchedule, fetchDataFromAPI } from '../services/github';
+import { showToast } from '../utils/toast';
 
-export default function MemberCard({ member }) {
+export default function MemberCard({ member, onUpdate }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isEditingCarPower, setIsEditingCarPower] = useState(false);
+  const [editedCarPower, setEditedCarPower] = useState(member.carPower);
+  const [isSaving, setIsSaving] = useState(false);
 
   const hasAvailability = Object.values(member.availability || {}).some(
     slots => slots && slots.length > 0
   );
+
+  const handleEditCarPower = () => {
+    setEditedCarPower(member.carPower);
+    setIsEditingCarPower(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEditedCarPower(member.carPower);
+    setIsEditingCarPower(false);
+  };
+
+  const handleSaveCarPower = async () => {
+    const newCarPower = parseFloat(editedCarPower);
+
+    // Validation
+    if (isNaN(newCarPower) || newCarPower <= 0) {
+      showToast.error('Invalid car power value');
+      return;
+    }
+
+    if (newCarPower === member.carPower) {
+      setIsEditingCarPower(false);
+      return;
+    }
+
+    setIsSaving(true);
+    const toastId = showToast.loading('Updating car power...');
+
+    try {
+      const pat = localStorage.getItem('tdc_pat');
+
+      if (!pat) {
+        showToast.dismiss(toastId);
+        showToast.error('Authentication required. Please refresh the page.');
+        setIsSaving(false);
+        return;
+      }
+
+      // Update member data with new car power
+      const updatedMemberData = {
+        ...member,
+        carPower: newCarPower,
+        lastUpdated: new Date().toISOString()
+      };
+
+      await saveMemberSchedule(updatedMemberData, pat);
+
+      showToast.loading('Verifying update...', { id: toastId });
+
+      // Verify update by polling (similar to submit and delete flows)
+      const maxAttempts = 10;
+      let attempts = 0;
+      let updateVerified = false;
+
+      // Add initial delay before first verification
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      while (attempts < maxAttempts && !updateVerified) {
+        attempts++;
+
+        try {
+          const data = await fetchDataFromAPI(pat);
+          const updatedMember = data.members.find(m => m.username === member.username);
+
+          if (updatedMember && updatedMember.carPower === newCarPower) {
+            updateVerified = true;
+            break;
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        } catch (error) {
+          console.error('Error verifying update:', error);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
+
+      if (!updateVerified) {
+        showToast.dismiss(toastId);
+        showToast.error('Could not verify update. Please refresh manually.');
+        setIsSaving(false);
+        setEditedCarPower(member.carPower);
+        setIsEditingCarPower(false);
+        return;
+      }
+
+      showToast.success('Car power updated successfully!', { id: toastId });
+      setIsEditingCarPower(false);
+
+      // Notify parent to refresh data
+      if (onUpdate) {
+        onUpdate();
+      }
+    } catch (err) {
+      console.error('Update error:', err);
+      showToast.dismiss(toastId);
+      showToast.error('Failed to update car power');
+      setEditedCarPower(member.carPower);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical hover:shadow-glow-primary transition-all p-6">
@@ -36,12 +142,71 @@ export default function MemberCard({ member }) {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-creed-base border border-creed-lighter rounded-lg p-3">
+        <div className="bg-creed-base border border-creed-lighter rounded-lg p-3 relative">
           <div className="flex items-center gap-2 mb-1">
             <Zap className="w-3 h-3 text-creed-primary" />
             <div className="text-xs text-creed-text font-display uppercase tracking-wide">Car Power</div>
           </div>
-          <div className="text-lg font-display font-bold text-creed-primary">{member.carPower}M</div>
+
+          {!isEditingCarPower ? (
+            <div className="flex items-center justify-between">
+              <div className="text-lg font-display font-bold text-creed-primary">{member.carPower}M</div>
+              <button
+                onClick={handleEditCarPower}
+                disabled={isSaving}
+                className="p-1.5 rounded bg-creed-lighter hover:bg-creed-primary/20
+                         border border-creed-primary/30 hover:border-creed-primary
+                         transition-all group disabled:opacity-50"
+                title="Edit car power"
+              >
+                <Edit2 className="w-3.5 h-3.5 text-creed-primary group-hover:scale-110 transition-transform" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                value={editedCarPower}
+                onChange={(e) => setEditedCarPower(e.target.value)}
+                disabled={isSaving}
+                className="w-full px-2 py-1 bg-creed-dark border border-creed-primary
+                         rounded text-creed-text font-display font-bold text-sm
+                         focus:ring-2 focus:ring-creed-primary focus:outline-none
+                         disabled:opacity-50"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSaveCarPower();
+                  if (e.key === 'Escape') handleCancelEdit();
+                }}
+              />
+              <div className="flex gap-1">
+                <button
+                  onClick={handleSaveCarPower}
+                  disabled={isSaving}
+                  className="p-1.5 rounded bg-creed-primary hover:bg-creed-primary/80
+                           transition-all disabled:opacity-50"
+                  title="Save"
+                >
+                  {isSaving ? (
+                    <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
+                  ) : (
+                    <Check className="w-3.5 h-3.5 text-white" />
+                  )}
+                </button>
+                <button
+                  onClick={handleCancelEdit}
+                  disabled={isSaving}
+                  className="p-1.5 rounded bg-creed-danger hover:bg-creed-danger/80
+                           transition-all disabled:opacity-50"
+                  title="Cancel"
+                >
+                  <X className="w-3.5 h-3.5 text-white" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
         <div className="bg-creed-base border border-creed-lighter rounded-lg p-3">
           <div className="flex items-center gap-2 mb-1">

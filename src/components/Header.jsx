@@ -9,24 +9,25 @@ export default function Header() {
   return (
     <header className="bg-creed-darker border-b border-creed-lighter shadow-tactical">
       <div className="container mx-auto px-4 py-4">
-        {/* Logo/Branding */}
-        <div className="flex items-center justify-center lg:justify-start space-x-3 mb-4">
-          <div className="relative flex-shrink-0">
-            <Shield className="w-10 h-10 sm:w-12 sm:h-12 text-creed-primary" strokeWidth={2} />
-            <div className="absolute inset-0 bg-creed-primary opacity-20 blur-xl"></div>
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          {/* Logo/Branding */}
+          <div className="flex items-center justify-center lg:justify-start space-x-3">
+            <div className="relative flex-shrink-0">
+              <Shield className="w-10 h-10 sm:w-12 sm:h-12 text-creed-primary" strokeWidth={2} />
+              <div className="absolute inset-0 bg-creed-primary opacity-20 blur-xl"></div>
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-display font-bold text-creed-text tracking-wide">
+                THE DARK CREED
+              </h1>
+              <p className="text-xs sm:text-sm text-creed-muted font-display tracking-widest">
+                ALLIANCE COMMAND CENTER
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-display font-bold text-creed-text tracking-wide">
-              THE DARK CREED
-            </h1>
-            <p className="text-xs sm:text-sm text-creed-muted font-display tracking-widest">
-              ALLIANCE COMMAND CENTER
-            </p>
-          </div>
-        </div>
 
-        {/* Navigation */}
-        <nav className="flex flex-row gap-2 lg:justify-start">
+          {/* Navigation */}
+          <nav className="flex flex-row gap-2">
           <Link
             to="/"
             className={`
@@ -40,8 +41,8 @@ export default function Header() {
             `}
           >
             <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden xs:inline sm:inline">SUBMIT SCHEDULE</span>
-            <span className="xs:hidden">SUBMIT</span>
+            <span className="hidden sm:inline">SUBMIT SCHEDULE</span>
+            <span className="sm:hidden">SUBMIT</span>
             {isActive('/') && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"></div>
             )}
@@ -60,8 +61,8 @@ export default function Header() {
             `}
           >
             <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden xs:inline sm:inline">VIEW ROSTER</span>
-            <span className="xs:hidden">ROSTER</span>
+            <span className="hidden sm:inline">VIEW ROSTER</span>
+            <span className="sm:hidden">ROSTER</span>
             {isActive('/members') && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-creed-darker"></div>
             )}
@@ -80,13 +81,14 @@ export default function Header() {
             `}
           >
             <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden xs:inline sm:inline">OPTIMAL SCHEDULE</span>
-            <span className="xs:hidden">OPTIMAL</span>
+            <span className="hidden sm:inline">OPTIMAL SCHEDULE</span>
+            <span className="sm:hidden">OPTIMAL</span>
             {isActive('/optimal') && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-creed-darker"></div>
             )}
           </Link>
         </nav>
+        </div>
       </div>
     </header>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Zap, Building2, Send, Loader2, Calendar, Globe } from 'lucide-react';
 import TimeSlotPicker from './TimeSlotPicker';
@@ -15,6 +15,7 @@ import {
 
 export default function ScheduleForm() {
   const navigate = useNavigate();
+  const formRef = useRef(null);
   const [formData, setFormData] = useState({
     username: '',
     carPower: '',
@@ -67,13 +68,18 @@ export default function ScheduleForm() {
       return;
     }
 
-    // Scroll to center of form
-    window.scrollTo({
-      top: document.documentElement.scrollHeight / 2,
-      behavior: 'smooth'
-    });
-
     setLoading(true);
+
+    // Scroll to center of form after state update
+    setTimeout(() => {
+      if (formRef.current) {
+        formRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'nearest'
+        });
+      }
+    }, 100);
     const toastId = showToast.loading('Submitting schedule...');
 
     try {
@@ -150,7 +156,7 @@ export default function ScheduleForm() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base py-8">
       <div className="container mx-auto px-4 max-w-4xl">
-        <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical p-6 md:p-8 relative">
+        <div ref={formRef} className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical p-6 md:p-8 relative">
           {/* Loading Overlay - Prevents all interaction during submission */}
           {loading && (
             <div className="absolute inset-0 bg-creed-darker/95 backdrop-blur-md z-50 rounded-lg flex items-center justify-center pointer-events-auto">

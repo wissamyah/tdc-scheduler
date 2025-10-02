@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Users, RefreshCw, Loader2, AlertCircle, Filter, Trash2 } from 'lucide-react';
+import { Users, Loader2, AlertCircle, Filter, Trash2 } from 'lucide-react';
 import MemberCard from './MemberCard';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import { fetchData, fetchDataFromAPI, deleteAllMembers } from '../services/github';
@@ -64,18 +64,6 @@ export default function MembersList() {
       loadMembers();
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleRefresh = async () => {
-    const toastId = showToast.loading('Refreshing roster data...');
-    try {
-      await loadMembersFromAPI();
-      showToast.dismiss(toastId);
-      showToast.success('Roster updated successfully');
-    } catch (err) {
-      showToast.dismiss(toastId);
-      showToast.error('Refresh failed');
     }
   };
 
@@ -235,36 +223,21 @@ export default function MembersList() {
                 <span className="font-display font-bold text-creed-accent">{members.length}</span>
               </p>
             </div>
-            <div className="flex items-center gap-3">
-              {members.length > 0 && (
-                <button
-                  onClick={handleDeleteAllClick}
-                  disabled={loading || deleting}
-                  className="flex items-center gap-2 px-4 py-2.5
-                           bg-creed-base border border-creed-danger
-                           text-creed-danger rounded-lg
-                           hover:bg-creed-danger hover:text-white hover:shadow-glow-primary
-                           disabled:opacity-50 disabled:cursor-not-allowed
-                           transition-all font-display font-semibold uppercase tracking-wide"
-                >
-                  <Trash2 className="w-5 h-5" />
-                  <span>Delete All</span>
-                </button>
-              )}
+            {members.length > 0 && (
               <button
-                onClick={handleRefresh}
+                onClick={handleDeleteAllClick}
                 disabled={loading || deleting}
                 className="flex items-center gap-2 px-4 py-2.5
-                         bg-creed-base border border-creed-lighter
-                         text-creed-text rounded-lg
-                         hover:border-creed-accent hover:shadow-glow-accent
+                         bg-creed-base border border-creed-danger
+                         text-creed-danger rounded-lg
+                         hover:bg-creed-danger hover:text-white hover:shadow-glow-primary
                          disabled:opacity-50 disabled:cursor-not-allowed
                          transition-all font-display font-semibold uppercase tracking-wide"
               >
-                <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-                <span>{loading ? 'Refreshing' : 'Refresh'}</span>
+                <Trash2 className="w-5 h-5" />
+                <span>Delete All</span>
               </button>
-            </div>
+            )}
           </div>
         </div>
 
@@ -326,7 +299,7 @@ export default function MembersList() {
             {/* Members Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedMembers.map(member => (
-                <MemberCard key={member.id} member={member} />
+                <MemberCard key={member.id} member={member} onUpdate={loadMembersFromAPI} />
               ))}
             </div>
           </>
