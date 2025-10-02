@@ -47,8 +47,14 @@ export async function fetchDataFromAPI(pat = null) {
     }
 
     const fileData = await response.json();
-    // Decode base64 content
-    const content = atob(fileData.content.replace(/\n/g, ''));
+    // Decode base64 content with proper UTF-8 support
+    const base64 = fileData.content.replace(/\n/g, '');
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const content = new TextDecoder('utf-8').decode(bytes);
     const data = JSON.parse(content);
 
     return data;
@@ -143,8 +149,14 @@ export async function updateData(pat, payload) {
         const fileData = await getResponse.json();
         currentSha = fileData.sha;
 
-        // Decode base64 content
-        const content = atob(fileData.content.replace(/\n/g, ''));
+        // Decode base64 content with proper UTF-8 support
+        const base64 = fileData.content.replace(/\n/g, '');
+        const binaryString = atob(base64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const content = new TextDecoder('utf-8').decode(bytes);
         currentData = JSON.parse(content);
       }
     } catch (err) {
@@ -167,9 +179,12 @@ export async function updateData(pat, payload) {
       }
     }
 
-    // Encode the updated content as base64
+    // Encode the updated content as base64 with proper UTF-8 support
     const jsonString = JSON.stringify(currentData, null, 2);
-    const updatedContent = btoa(jsonString);
+    const encoder = new TextEncoder();
+    const bytes = encoder.encode(jsonString);
+    const binaryString = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
+    const updatedContent = btoa(binaryString);
 
     // Create or update the file
     const updateResponse = await fetch(fileUrl, {
@@ -265,8 +280,14 @@ export async function deleteAllMembers(pat) {
     const fileData = await getResponse.json();
     const currentSha = fileData.sha;
 
-    // Decode base64 content
-    const content = atob(fileData.content.replace(/\n/g, ''));
+    // Decode base64 content with proper UTF-8 support
+    const base64 = fileData.content.replace(/\n/g, '');
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const content = new TextDecoder('utf-8').decode(bytes);
     const currentData = JSON.parse(content);
 
     // Keep auth data, clear members array
@@ -275,9 +296,12 @@ export async function deleteAllMembers(pat) {
       members: []
     };
 
-    // Encode the updated content as base64
+    // Encode the updated content as base64 with proper UTF-8 support
     const jsonString = JSON.stringify(updatedData, null, 2);
-    const updatedContent = btoa(jsonString);
+    const encoder = new TextEncoder();
+    const bytes = encoder.encode(jsonString);
+    const binaryString = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
+    const updatedContent = btoa(binaryString);
 
     // Update the file
     const updateResponse = await fetch(fileUrl, {
