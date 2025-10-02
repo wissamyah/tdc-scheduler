@@ -46,9 +46,6 @@ export default function Header() {
             <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">{t('nav.submitSchedule')}</span>
             <span className="sm:hidden">{t('nav.submitScheduleShort')}</span>
-            {isActive('/') && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"></div>
-            )}
           </Link>
 
           <Link
@@ -66,9 +63,6 @@ export default function Header() {
             <Users className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">{t('nav.viewRoster')}</span>
             <span className="sm:hidden">{t('nav.viewRosterShort')}</span>
-            {isActive('/members') && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-creed-darker"></div>
-            )}
           </Link>
 
           <Link
@@ -86,9 +80,6 @@ export default function Header() {
             <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">{t('nav.optimalSchedule')}</span>
             <span className="sm:hidden">{t('nav.optimalScheduleShort')}</span>
-            {isActive('/optimal') && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-creed-darker"></div>
-            )}
           </Link>
 
           {/* Language Toggle */}
