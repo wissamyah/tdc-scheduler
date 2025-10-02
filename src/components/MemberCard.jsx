@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { User, Zap, Building2, ChevronDown, Calendar, Clock, Globe, Edit2, Check, X, Loader2 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 import { DAYS_OF_WEEK, getDayDisplayName, getTimeSlotLabel } from '../utils/timeSlots';
 import { getTimezoneDisplay } from '../utils/timezone';
 import { saveMemberSchedule, fetchDataFromAPI } from '../services/github';
 import { showToast } from '../utils/toast';
 
 export default function MemberCard({ member, onUpdate }) {
+  const { t } = useLanguage();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingCarPower, setIsEditingCarPower] = useState(false);
   const [editedCarPower, setEditedCarPower] = useState(member.carPower);
@@ -32,7 +34,7 @@ export default function MemberCard({ member, onUpdate }) {
 
     // Validation
     if (isNaN(newCarPower) || newCarPower <= 0) {
-      showToast.error('Invalid car power value');
+      showToast.error(t('memberCard.invalidCarPower'));
       return;
     }
 
@@ -42,14 +44,14 @@ export default function MemberCard({ member, onUpdate }) {
     }
 
     setIsSaving(true);
-    const toastId = showToast.loading('Updating car power...');
+    const toastId = showToast.loading(t('memberCard.updatingCarPower'));
 
     try {
       const pat = localStorage.getItem('tdc_pat');
 
       if (!pat) {
         showToast.dismiss(toastId);
-        showToast.error('Authentication required. Please refresh the page.');
+        showToast.error(t('auth.authRequired'));
         setIsSaving(false);
         return;
       }
@@ -63,7 +65,7 @@ export default function MemberCard({ member, onUpdate }) {
 
       await saveMemberSchedule(updatedMemberData, pat);
 
-      showToast.loading('Verifying update...', { id: toastId });
+      showToast.loading(t('memberCard.verifyingUpdate'), { id: toastId });
 
       // Verify update by polling (similar to submit and delete flows)
       const maxAttempts = 10;
@@ -94,14 +96,14 @@ export default function MemberCard({ member, onUpdate }) {
 
       if (!updateVerified) {
         showToast.dismiss(toastId);
-        showToast.error('Could not verify update. Please refresh manually.');
+        showToast.error(t('memberCard.couldNotVerifyUpdate'));
         setIsSaving(false);
         setEditedCarPower(member.carPower);
         setIsEditingCarPower(false);
         return;
       }
 
-      showToast.success('Car power updated successfully!', { id: toastId });
+      showToast.success(t('memberCard.carPowerUpdated'), { id: toastId });
       setIsEditingCarPower(false);
 
       // Notify parent to refresh data
@@ -111,7 +113,7 @@ export default function MemberCard({ member, onUpdate }) {
     } catch (err) {
       console.error('Update error:', err);
       showToast.dismiss(toastId);
-      showToast.error('Failed to update car power');
+      showToast.error(t('memberCard.failedToUpdateCarPower'));
       setEditedCarPower(member.carPower);
     } finally {
       setIsSaving(false);
@@ -133,7 +135,7 @@ export default function MemberCard({ member, onUpdate }) {
 
     // Validation
     if (isNaN(newTowerLevel) || newTowerLevel <= 0 || newTowerLevel > 35) {
-      showToast.error('Invalid tower level (1-35)');
+      showToast.error(t('memberCard.invalidTowerLevel'));
       return;
     }
 
@@ -143,14 +145,14 @@ export default function MemberCard({ member, onUpdate }) {
     }
 
     setIsSaving(true);
-    const toastId = showToast.loading('Updating tower level...');
+    const toastId = showToast.loading(t('memberCard.updatingTowerLevel'));
 
     try {
       const pat = localStorage.getItem('tdc_pat');
 
       if (!pat) {
         showToast.dismiss(toastId);
-        showToast.error('Authentication required. Please refresh the page.');
+        showToast.error(t('auth.authRequired'));
         setIsSaving(false);
         return;
       }
@@ -164,7 +166,7 @@ export default function MemberCard({ member, onUpdate }) {
 
       await saveMemberSchedule(updatedMemberData, pat);
 
-      showToast.loading('Verifying update...', { id: toastId });
+      showToast.loading(t('memberCard.verifyingUpdate'), { id: toastId });
 
       // Verify update by polling
       const maxAttempts = 10;
@@ -195,14 +197,14 @@ export default function MemberCard({ member, onUpdate }) {
 
       if (!updateVerified) {
         showToast.dismiss(toastId);
-        showToast.error('Could not verify update. Please refresh manually.');
+        showToast.error(t('memberCard.couldNotVerifyUpdate'));
         setIsSaving(false);
         setEditedTowerLevel(member.towerLevel);
         setIsEditingTowerLevel(false);
         return;
       }
 
-      showToast.success('Tower level updated successfully!', { id: toastId });
+      showToast.success(t('memberCard.towerLevelUpdated'), { id: toastId });
       setIsEditingTowerLevel(false);
 
       // Notify parent to refresh data
@@ -212,7 +214,7 @@ export default function MemberCard({ member, onUpdate }) {
     } catch (err) {
       console.error('Update error:', err);
       showToast.dismiss(toastId);
-      showToast.error('Failed to update tower level');
+      showToast.error(t('memberCard.failedToUpdateTowerLevel'));
       setEditedTowerLevel(member.towerLevel);
     } finally {
       setIsSaving(false);
@@ -237,7 +239,7 @@ export default function MemberCard({ member, onUpdate }) {
               {member.username}
             </h3>
             <p className="text-xs text-creed-muted font-body">
-              {member.lastUpdated && `Updated: ${new Date(member.lastUpdated).toLocaleDateString()}`}
+              {member.lastUpdated && `${t('memberCard.updated')} ${new Date(member.lastUpdated).toLocaleDateString()}`}
             </p>
           </div>
         </div>
@@ -248,7 +250,7 @@ export default function MemberCard({ member, onUpdate }) {
         <div className="bg-creed-base border border-creed-lighter rounded-lg p-3 relative">
           <div className="flex items-center gap-2 mb-1">
             <Zap className="w-3 h-3 text-creed-primary" />
-            <div className="text-xs text-creed-text font-display uppercase tracking-wide">Car Power</div>
+            <div className="text-xs text-creed-text font-display uppercase tracking-wide">{t('memberCard.carPower')}</div>
           </div>
 
           {!isEditingCarPower ? (
@@ -260,7 +262,7 @@ export default function MemberCard({ member, onUpdate }) {
                 className="p-1.5 rounded bg-creed-lighter hover:bg-creed-primary/20
                          border border-creed-primary/30 hover:border-creed-primary
                          transition-all group disabled:opacity-50"
-                title="Edit car power"
+                title={t('memberCard.editCarPower')}
               >
                 <Edit2 className="w-3.5 h-3.5 text-creed-primary group-hover:scale-110 transition-transform" />
               </button>
@@ -290,7 +292,7 @@ export default function MemberCard({ member, onUpdate }) {
                   disabled={isSaving}
                   className="p-1.5 rounded bg-creed-primary hover:bg-creed-primary/80
                            transition-all disabled:opacity-50"
-                  title="Save"
+                  title={t('memberCard.save')}
                 >
                   {isSaving ? (
                     <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
@@ -303,7 +305,7 @@ export default function MemberCard({ member, onUpdate }) {
                   disabled={isSaving}
                   className="p-1.5 rounded bg-creed-danger hover:bg-creed-danger/80
                            transition-all disabled:opacity-50"
-                  title="Cancel"
+                  title={t('memberCard.cancel')}
                 >
                   <X className="w-3.5 h-3.5 text-white" />
                 </button>
@@ -314,7 +316,7 @@ export default function MemberCard({ member, onUpdate }) {
         <div className="bg-creed-base border border-creed-lighter rounded-lg p-3 relative">
           <div className="flex items-center gap-2 mb-1">
             <Building2 className="w-3 h-3 text-creed-accent" />
-            <div className="text-xs text-creed-text font-display uppercase tracking-wide">Tower</div>
+            <div className="text-xs text-creed-text font-display uppercase tracking-wide">{t('memberCard.tower')}</div>
           </div>
 
           {!isEditingTowerLevel ? (
@@ -326,7 +328,7 @@ export default function MemberCard({ member, onUpdate }) {
                 className="p-1.5 rounded bg-creed-lighter hover:bg-creed-accent/20
                          border border-creed-accent/30 hover:border-creed-accent
                          transition-all group disabled:opacity-50"
-                title="Edit tower level"
+                title={t('memberCard.editTowerLevel')}
               >
                 <Edit2 className="w-3.5 h-3.5 text-creed-accent group-hover:scale-110 transition-transform" />
               </button>
@@ -357,7 +359,7 @@ export default function MemberCard({ member, onUpdate }) {
                   disabled={isSaving}
                   className="p-1.5 rounded bg-creed-accent hover:bg-creed-accent/80
                            transition-all disabled:opacity-50"
-                  title="Save"
+                  title={t('memberCard.save')}
                 >
                   {isSaving ? (
                     <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
@@ -370,7 +372,7 @@ export default function MemberCard({ member, onUpdate }) {
                   disabled={isSaving}
                   className="p-1.5 rounded bg-creed-danger hover:bg-creed-danger/80
                            transition-all disabled:opacity-50"
-                  title="Cancel"
+                  title={t('memberCard.cancel')}
                 >
                   <X className="w-3.5 h-3.5 text-white" />
                 </button>
@@ -386,7 +388,7 @@ export default function MemberCard({ member, onUpdate }) {
           <div className="flex items-center gap-2">
             <Globe className="w-3 h-3 text-creed-accent" />
             <span className="text-xs text-creed-muted font-body">
-              Timezone: <span className="text-creed-text font-semibold">{getTimezoneDisplay(member.timezone)}</span>
+              {t('memberCard.timezone')} <span className="text-creed-text font-semibold">{getTimezoneDisplay(member.timezone)}</span>
             </span>
           </div>
         </div>
@@ -404,7 +406,7 @@ export default function MemberCard({ member, onUpdate }) {
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-creed-muted group-hover:text-creed-primary transition-colors" />
               <span className="font-display font-semibold text-creed-text uppercase tracking-wide text-sm">
-                {isExpanded ? 'Hide' : 'Show'} Schedule
+                {isExpanded ? t('memberCard.hideSchedule') : t('memberCard.showSchedule')} {t('memberCard.schedule')}
               </span>
             </div>
             <ChevronDown
@@ -420,7 +422,7 @@ export default function MemberCard({ member, onUpdate }) {
               <div className="mb-3 px-3 py-2 bg-creed-accent/10 border border-creed-accent/30 rounded">
                 <p className="text-xs text-creed-muted font-body">
                   <Globe className="w-3 h-3 text-creed-accent inline mr-1" />
-                  Times shown in <strong className="text-creed-accent">Server Time (UTC-2)</strong>
+                  {t('memberCard.timesInServerTime')} <strong className="text-creed-accent">{t('memberCard.serverTimeUTC2')}</strong>
                 </p>
               </div>
               {DAYS_OF_WEEK.map(day => {
@@ -430,7 +432,7 @@ export default function MemberCard({ member, onUpdate }) {
                 return (
                   <div key={day} className="border-l-2 border-creed-primary pl-3">
                     <h4 className="font-display font-bold text-creed-text uppercase tracking-wide text-sm mb-2">
-                      {getDayDisplayName(day)}
+                      {getDayDisplayName(day, t)}
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {daySlots.map(slot => (
@@ -456,7 +458,7 @@ export default function MemberCard({ member, onUpdate }) {
 
       {!hasAvailability && (
         <div className="text-center py-4 border border-creed-lighter rounded-lg bg-creed-base">
-          <p className="text-creed-muted text-sm font-body">No availability data</p>
+          <p className="text-creed-muted text-sm font-body">{t('memberCard.noAvailability')}</p>
         </div>
       )}
     </div>

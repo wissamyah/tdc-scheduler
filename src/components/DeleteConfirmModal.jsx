@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { AlertTriangle, X, Trash2 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function DeleteConfirmModal({ isOpen, onConfirm, onCancel, memberCount }) {
+  const { t } = useLanguage();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -11,7 +13,7 @@ export default function DeleteConfirmModal({ isOpen, onConfirm, onCancel, member
     e.preventDefault();
 
     if (password !== 'R5') {
-      setError('Incorrect password. Deletion cancelled.');
+      setError(t('deleteModal.incorrectPassword'));
       return;
     }
 
@@ -40,7 +42,7 @@ export default function DeleteConfirmModal({ isOpen, onConfirm, onCancel, member
           <div className="flex items-center gap-3">
             <AlertTriangle className="w-8 h-8 text-creed-danger animate-pulse" />
             <h2 className="text-2xl font-display font-bold text-creed-danger uppercase tracking-wide">
-              Critical Warning
+              {t('deleteModal.criticalWarning')}
             </h2>
           </div>
           <button
@@ -55,10 +57,10 @@ export default function DeleteConfirmModal({ isOpen, onConfirm, onCancel, member
         <div className="p-6">
           <div className="bg-creed-danger/10 border border-creed-danger/30 rounded-lg p-4 mb-6">
             <p className="text-creed-text font-body text-center">
-              You are about to <span className="font-bold text-creed-danger">DELETE ALL {memberCount} MEMBERS</span> from the alliance roster.
+              {t('deleteModal.youAreAboutToDelete')} <span className="font-bold text-creed-danger">{t('deleteModal.deleteAllMembers')} {memberCount} {t('deleteModal.members')}</span> {t('deleteModal.fromRoster')}
             </p>
             <p className="text-creed-danger font-display font-bold text-center mt-2 uppercase tracking-wide">
-              This action CANNOT be undone!
+              {t('deleteModal.cannotBeUndone')}
             </p>
           </div>
 
@@ -68,7 +70,7 @@ export default function DeleteConfirmModal({ isOpen, onConfirm, onCancel, member
                 htmlFor="delete-password"
                 className="block text-sm font-display font-semibold text-creed-text mb-2 uppercase tracking-wide"
               >
-                Enter Password to Confirm Deletion
+                {t('deleteModal.enterPasswordToConfirm')}
               </label>
               <input
                 type="text"
@@ -82,7 +84,7 @@ export default function DeleteConfirmModal({ isOpen, onConfirm, onCancel, member
                          focus:ring-2 focus:ring-creed-danger focus:border-creed-danger
                          text-creed-text placeholder-creed-muted font-mono text-lg
                          transition-all duration-200"
-                placeholder="Enter password..."
+                placeholder={t('deleteModal.enterPasswordPlaceholder')}
                 autoFocus
               />
               {error && (
@@ -91,7 +93,7 @@ export default function DeleteConfirmModal({ isOpen, onConfirm, onCancel, member
                 </p>
               )}
               <p className="text-creed-muted text-xs font-body mt-2">
-                Type the required password to authorize this critical operation
+                {t('deleteModal.typeRequired')}
               </p>
             </div>
 
@@ -105,7 +107,7 @@ export default function DeleteConfirmModal({ isOpen, onConfirm, onCancel, member
                          hover:border-creed-accent hover:shadow-glow-accent
                          transition-all font-display font-semibold uppercase tracking-wide"
               >
-                Cancel
+                {t('deleteModal.cancel')}
               </button>
               <button
                 type="submit"
@@ -116,7 +118,7 @@ export default function DeleteConfirmModal({ isOpen, onConfirm, onCancel, member
                          flex items-center justify-center gap-2"
               >
                 <Trash2 className="w-5 h-5" />
-                Delete All
+                {t('deleteModal.deleteAll')}
               </button>
             </div>
           </form>

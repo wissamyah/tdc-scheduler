@@ -1,11 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Calendar, Users, TrendingUp, Clock, Loader2, AlertCircle, Globe } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 import { fetchDataFromAPI } from '../services/github';
 import { DAYS_OF_WEEK, generateTimeSlots, getDayDisplayName } from '../utils/timeSlots';
 import { showToast } from '../utils/toast';
 import { getServerTimezoneDisplay } from '../utils/timezone';
 
 export default function OptimalScheduleCalendar() {
+  const { t } = useLanguage();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState(null);
@@ -22,7 +24,7 @@ export default function OptimalScheduleCalendar() {
       setMembers(data.members || []);
     } catch (err) {
       console.error('Error loading members:', err);
-      showToast.error('Failed to load member data');
+      showToast.error(t('membersList.failedToLoad'));
     } finally {
       setLoading(false);
     }
@@ -129,7 +131,7 @@ export default function OptimalScheduleCalendar() {
         <div className="text-center">
           <Loader2 className="w-16 h-16 text-creed-primary animate-spin mx-auto mb-4" />
           <p className="text-creed-text font-display font-semibold uppercase tracking-wide">
-            Analyzing Availability Data...
+            {t('optimalSchedule.analyzingData')}
           </p>
         </div>
       </div>
@@ -143,10 +145,10 @@ export default function OptimalScheduleCalendar() {
           <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical p-12 text-center">
             <AlertCircle className="mx-auto h-16 w-16 text-creed-muted mb-4" />
             <h3 className="text-xl font-display font-bold text-creed-text uppercase tracking-wide mb-2">
-              No Member Data Available
+              {t('optimalSchedule.noMemberData')}
             </h3>
             <p className="text-creed-muted font-body">
-              Members need to submit their schedules first
+              {t('optimalSchedule.submitSchedulesFirst')}
             </p>
           </div>
         </div>
@@ -162,19 +164,19 @@ export default function OptimalScheduleCalendar() {
           <div className="flex items-center gap-3 mb-2">
             <TrendingUp className="w-8 h-8 text-creed-primary" />
             <h1 className="text-4xl font-display font-bold text-creed-text uppercase tracking-wide">
-              Optimal Event Schedule
+              {t('optimalSchedule.optimalEventSchedule')}
             </h1>
           </div>
           <div className="h-0.5 w-64 bg-gradient-to-r from-creed-primary to-transparent mb-2"></div>
           <p className="text-creed-muted font-body">
-            Best time slots based on{' '}
+            {t('optimalSchedule.bestTimeSlotsBasedOn')}{' '}
             <span className="font-display font-bold text-creed-accent">{members.length}</span>{' '}
-            member{members.length !== 1 ? 's' : ''} availability
+            {members.length !== 1 ? t('optimalSchedule.members') : t('optimalSchedule.member')} {t('optimalSchedule.availability')}
           </p>
           <div className="mt-3 flex items-center gap-2 px-4 py-2 bg-creed-accent/10 border border-creed-accent/30 rounded-lg inline-block">
             <Globe className="w-4 h-4 text-creed-accent" />
             <p className="text-sm text-creed-text font-body">
-              All times shown in <strong className="text-creed-accent">{getServerTimezoneDisplay()}</strong>
+              {t('optimalSchedule.allTimesShownIn')} <strong className="text-creed-accent">{getServerTimezoneDisplay()}</strong>
             </p>
           </div>
         </div>
@@ -189,13 +191,13 @@ export default function OptimalScheduleCalendar() {
               </div>
               <div className="flex-1">
                 <h2 className="text-2xl font-display font-bold text-creed-text uppercase tracking-wide mb-2">
-                  Recommended Event Time
+                  {t('optimalSchedule.recommendedEventTime')}
                 </h2>
                 <div className="flex flex-wrap items-center gap-4 mb-3">
                   <div className="flex items-center gap-2">
                     <Clock className="w-5 h-5 text-creed-accent" />
                     <span className="text-xl font-display font-bold text-creed-accent">
-                      {getDayDisplayName(overallBestSlot.day)}
+                      {getDayDisplayName(overallBestSlot.day, t)}
                     </span>
                   </div>
                   <span className="text-creed-muted">•</span>
@@ -207,12 +209,12 @@ export default function OptimalScheduleCalendar() {
                   <div className="flex items-center gap-2">
                     <Users className="w-5 h-5 text-creed-success" />
                     <span className="text-lg font-display font-bold text-creed-success">
-                      {overallBestSlot.count} / {members.length} Members
+                      {overallBestSlot.count} / {members.length} {t('optimalSchedule.membersAvailable')}
                     </span>
                   </div>
                   <span className="px-3 py-1 bg-creed-success/20 border border-creed-success rounded-lg
                                text-creed-success font-display font-bold">
-                    {overallBestSlot.percentage}% Availability
+                    {overallBestSlot.percentage}% {t('optimalSchedule.availabilityPercentage')}
                   </span>
                 </div>
               </div>
@@ -223,28 +225,28 @@ export default function OptimalScheduleCalendar() {
         {/* Legend */}
         <div className="mb-6 bg-creed-light border border-creed-lighter rounded-lg shadow-tactical p-4">
           <h3 className="text-sm font-display font-semibold text-creed-text uppercase tracking-wide mb-3">
-            Availability Legend
+            {t('optimalSchedule.availabilityLegend')}
           </h3>
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-creed-success/20 border border-creed-success"></div>
-              <span className="text-xs font-body text-creed-muted">80%+ (Excellent)</span>
+              <span className="text-xs font-body text-creed-muted">80%+ ({t('optimalSchedule.excellent')})</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-creed-accent/20 border border-creed-accent"></div>
-              <span className="text-xs font-body text-creed-muted">60-79% (Good)</span>
+              <span className="text-xs font-body text-creed-muted">60-79% ({t('optimalSchedule.good')})</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-creed-warning/20 border border-creed-warning"></div>
-              <span className="text-xs font-body text-creed-muted">40-59% (Moderate)</span>
+              <span className="text-xs font-body text-creed-muted">40-59% ({t('optimalSchedule.moderate')})</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-creed-secondary/20 border border-creed-secondary"></div>
-              <span className="text-xs font-body text-creed-muted">20-39% (Low)</span>
+              <span className="text-xs font-body text-creed-muted">20-39% ({t('optimalSchedule.low')})</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-creed-lighter/20 border border-creed-lighter"></div>
-              <span className="text-xs font-body text-creed-muted">&lt;20% (Very Low)</span>
+              <span className="text-xs font-body text-creed-muted">&lt;20% ({t('optimalSchedule.veryLow')})</span>
             </div>
           </div>
         </div>
@@ -265,13 +267,13 @@ export default function OptimalScheduleCalendar() {
                 {/* Day Header */}
                 <div className="bg-gradient-to-r from-creed-base to-creed-dark p-4 border-b border-creed-lighter">
                   <h3 className="text-xl font-display font-bold text-creed-text uppercase tracking-wide">
-                    {getDayDisplayName(day)}
+                    {getDayDisplayName(day, t)}
                   </h3>
                   {bestSlot && bestSlot.count > 0 && (
                     <div className="mt-2 flex items-center gap-2">
                       <TrendingUp className="w-4 h-4 text-creed-accent" />
                       <span className="text-sm font-body text-creed-muted">
-                        Peak: {getSlotLabel(bestSlot.slotValue)} ({bestSlot.percentage}%)
+                        {t('optimalSchedule.peak')} {getSlotLabel(bestSlot.slotValue)} ({bestSlot.percentage}%)
                       </span>
                     </div>
                   )}

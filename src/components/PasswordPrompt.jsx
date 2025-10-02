@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Shield, Lock, Loader2 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 import { verifyPassword, setAuthToken } from '../utils/auth';
 import { showToast } from '../utils/toast';
 
 export default function PasswordPrompt({ passwordHash, onAuthenticated }) {
+  const { t } = useLanguage();
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -11,7 +13,7 @@ export default function PasswordPrompt({ passwordHash, onAuthenticated }) {
     e.preventDefault();
 
     if (!password.trim()) {
-      showToast.error('Please enter the password');
+      showToast.error(t('auth.enterPassword'));
       return;
     }
 
@@ -23,15 +25,15 @@ export default function PasswordPrompt({ passwordHash, onAuthenticated }) {
       if (isValid) {
         // Store auth token in session
         setAuthToken(passwordHash);
-        showToast.success('Access granted - Welcome to The Dark Creed');
+        showToast.success(t('auth.accessGranted'));
         onAuthenticated();
       } else {
-        showToast.error('Access denied - Invalid credentials');
+        showToast.error(t('auth.accessDenied'));
         setPassword('');
       }
     } catch (err) {
       console.error('Authentication error:', err);
-      showToast.error('Authentication system failure - Try again');
+      showToast.error(t('auth.authSystemFailure'));
     } finally {
       setLoading(false);
     }
@@ -56,11 +58,11 @@ export default function PasswordPrompt({ passwordHash, onAuthenticated }) {
             </div>
           </div>
           <h1 className="text-4xl font-display font-bold text-creed-text mb-2 tracking-wider uppercase">
-            The Dark Creed
+            {t('auth.theDarkCreed')}
           </h1>
           <div className="h-0.5 w-32 bg-gradient-to-r from-transparent via-creed-primary to-transparent mx-auto mb-4"></div>
           <p className="text-creed-muted font-body uppercase text-sm tracking-wide">
-            Restricted Access - Authorization Required
+            {t('auth.restrictedAccess')}
           </p>
         </div>
 
@@ -70,7 +72,7 @@ export default function PasswordPrompt({ passwordHash, onAuthenticated }) {
               htmlFor="password"
               className="block text-sm font-display font-semibold text-creed-text mb-2 uppercase tracking-wide"
             >
-              Alliance Password
+              {t('auth.alliancePassword')}
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-creed-muted" />
@@ -83,7 +85,7 @@ export default function PasswordPrompt({ passwordHash, onAuthenticated }) {
                          focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
                          text-creed-text placeholder-creed-muted font-body
                          transition-all duration-200"
-                placeholder="Enter access code"
+                placeholder={t('auth.enterAccessCode')}
                 disabled={loading}
                 autoFocus
               />
@@ -101,17 +103,17 @@ export default function PasswordPrompt({ passwordHash, onAuthenticated }) {
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                <span>Verifying Access</span>
+                <span>{t('auth.verifyingAccess')}</span>
               </>
             ) : (
-              <span>Access System</span>
+              <span>{t('auth.accessSystem')}</span>
             )}
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-creed-muted font-body">
-            Contact your alliance commander for credentials
+            {t('auth.contactCommander')}
           </p>
         </div>
       </div>

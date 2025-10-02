@@ -1,7 +1,9 @@
 import { Info } from 'lucide-react';
 import { DAYS_OF_WEEK, getDayDisplayName, generateTimeSlots } from '../utils/timeSlots';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function TimeSlotPicker({ availability, onChange }) {
+  const { t } = useLanguage();
   const timeSlots = generateTimeSlots();
 
   const handleToggleSlot = (day, slotValue) => {
@@ -28,8 +30,8 @@ export default function TimeSlotPicker({ availability, onChange }) {
         <div className="flex gap-3">
           <Info className="w-5 h-5 text-creed-accent flex-shrink-0 mt-0.5" />
           <p className="text-sm text-creed-text font-body">
-            <strong className="text-creed-accent font-display uppercase tracking-wide">Mission Brief:</strong>{' '}
-            Select all time slots when you are available for operations. Multiple slots per day can be selected.
+            <strong className="text-creed-accent font-display uppercase tracking-wide">{t('timeSlotPicker.missionBrief')}</strong>{' '}
+            {t('timeSlotPicker.instructions')}
           </p>
         </div>
       </div>
@@ -40,7 +42,7 @@ export default function TimeSlotPicker({ availability, onChange }) {
           <div className="flex items-center gap-2 mb-3">
             <div className="w-1 h-6 bg-creed-primary rounded-full"></div>
             <h3 className="text-lg font-display font-bold text-creed-text uppercase tracking-wide">
-              {getDayDisplayName(day)}
+              {getDayDisplayName(day, t)}
             </h3>
           </div>
 

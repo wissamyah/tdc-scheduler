@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Key, Shield, AlertCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 import { verifyPAT } from '../services/github';
 
 export default function PATPrompt({ onAuthenticated }) {
+  const { t } = useLanguage();
   const [pat, setPat] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -11,7 +13,7 @@ export default function PATPrompt({ onAuthenticated }) {
     e.preventDefault();
 
     if (!pat.trim()) {
-      setError('Access token is required');
+      setError(t('auth.authRequired'));
       return;
     }
 
@@ -25,7 +27,7 @@ export default function PATPrompt({ onAuthenticated }) {
       const isValid = await verifyPAT(pat.trim());
 
       if (!isValid) {
-        setError('Invalid access token. Please check your credentials.');
+        setError(t('auth.invalidToken'));
         setLoading(false);
         return;
       }
@@ -39,7 +41,7 @@ export default function PATPrompt({ onAuthenticated }) {
       onAuthenticated();
     } catch (err) {
       console.error('[PAT-PROMPT ERROR] Error verifying token:', err);
-      setError('Failed to verify credentials. Please try again.');
+      setError(t('auth.verificationFailed'));
       setLoading(false);
     }
   };
@@ -52,7 +54,7 @@ export default function PATPrompt({ onAuthenticated }) {
           <div className="flex items-center justify-center gap-3 mb-6">
             <Shield className="w-10 h-10 text-creed-accent" />
             <h1 className="text-3xl font-display font-bold text-creed-text uppercase tracking-wide">
-              Alliance Access
+              {t('auth.allianceAccess')}
             </h1>
           </div>
           <div className="h-0.5 w-full bg-gradient-to-r from-creed-accent via-creed-primary to-transparent mb-6"></div>
@@ -63,10 +65,10 @@ export default function PATPrompt({ onAuthenticated }) {
               <AlertCircle className="w-5 h-5 text-creed-accent flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-creed-text font-body text-sm mb-2">
-                  Enter your alliance access token to use the TDC Scheduler.
+                  {t('auth.enterTokenPrompt')}
                 </p>
                 <p className="text-creed-muted font-body text-xs">
-                  Your credentials will be stored locally for permanent access.
+                  {t('auth.credentialsStored')}
                 </p>
               </div>
             </div>
@@ -79,7 +81,7 @@ export default function PATPrompt({ onAuthenticated }) {
                 htmlFor="pat"
                 className="block text-sm font-display font-semibold text-creed-text mb-2 uppercase tracking-wide"
               >
-                Alliance Access Token
+                {t('auth.accessToken')}
               </label>
               <div className="relative">
                 <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-creed-muted" />
@@ -95,7 +97,7 @@ export default function PATPrompt({ onAuthenticated }) {
                            focus:ring-2 focus:ring-creed-accent focus:border-creed-accent
                            text-creed-text placeholder-gray-500 font-mono text-sm
                            transition-all duration-200"
-                  placeholder="Enter your access token..."
+                  placeholder={t('auth.enterToken')}
                   disabled={loading}
                   autoFocus
                 />
@@ -119,12 +121,12 @@ export default function PATPrompt({ onAuthenticated }) {
               {loading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Verifying...</span>
+                  <span>{t('auth.verifying')}</span>
                 </>
               ) : (
                 <>
                   <Shield className="w-5 h-5" />
-                  <span>Access Scheduler</span>
+                  <span>{t('auth.accessScheduler')}</span>
                 </>
               )}
             </button>
@@ -133,7 +135,7 @@ export default function PATPrompt({ onAuthenticated }) {
           {/* Footer Note */}
           <div className="mt-6 pt-6 border-t border-creed-lighter">
             <p className="text-creed-muted text-xs font-body text-center">
-              Contact your alliance leader to obtain an access token
+              {t('auth.contactLeader')}
             </p>
           </div>
         </div>

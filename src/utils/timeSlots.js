@@ -54,9 +54,13 @@ function formatHour(hour) {
 /**
  * Get display name for a day
  * @param {string} day - Day key (e.g., 'monday')
- * @returns {string} Capitalized day name
+ * @param {function} t - Translation function (optional)
+ * @returns {string} Capitalized day name or translated day name
  */
-export function getDayDisplayName(day) {
+export function getDayDisplayName(day, t = null) {
+  if (t) {
+    return t(`days.${day}`);
+  }
   return day.charAt(0).toUpperCase() + day.slice(1);
 }
 

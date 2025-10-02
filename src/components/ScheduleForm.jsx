@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Zap, Building2, Send, Loader2, Calendar, Globe } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 import TimeSlotPicker from './TimeSlotPicker';
 import { initializeAvailability } from '../utils/timeSlots';
 import { saveMemberSchedule } from '../services/github';
@@ -14,6 +15,7 @@ import {
 } from '../utils/timezone';
 
 export default function ScheduleForm() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const formRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -45,26 +47,26 @@ export default function ScheduleForm() {
 
     // Validation
     if (!formData.username.trim()) {
-      showToast.error('In-game username is required');
+      showToast.error(t('scheduleForm.usernameRequired'));
       return;
     }
 
     const carPower = parseFloat(formData.carPower);
     if (isNaN(carPower) || carPower <= 0) {
-      showToast.error('Valid car power is required (in millions)');
+      showToast.error(t('scheduleForm.validCarPowerRequired'));
       return;
     }
 
     const towerLevel = parseInt(formData.towerLevel);
     if (isNaN(towerLevel) || towerLevel < 1 || towerLevel > 35) {
-      showToast.error('Tower level must be between 1 and 35');
+      showToast.error(t('scheduleForm.towerLevelRange'));
       return;
     }
 
     // Check if at least one time slot is selected
     const hasSlots = Object.values(availability).some(daySlots => daySlots.length > 0);
     if (!hasSlots) {
-      showToast.error('Select at least one time slot');
+      showToast.error(t('scheduleForm.selectTimeSlot'));
       return;
     }
 
@@ -80,7 +82,7 @@ export default function ScheduleForm() {
         });
       }
     }, 100);
-    const toastId = showToast.loading('Submitting schedule...');
+    const toastId = showToast.loading(t('scheduleForm.submittingSchedule'));
 
     try {
       // Convert user's local availability to server time (UTC-2)
@@ -99,13 +101,13 @@ export default function ScheduleForm() {
       let pat = localStorage.getItem('tdc_pat');
 
       if (!pat) {
-        throw new Error('Authentication required. Please refresh the page.');
+        throw new Error(t('auth.authRequired'));
       }
 
       await saveMemberSchedule(memberData, pat);
 
       // Update single toast message
-      showToast.loading('Verifying data is saved...', { id: toastId });
+      showToast.loading(t('scheduleForm.verifyingData'), { id: toastId });
 
       // Poll until the member appears in the data (GitHub API is much faster now)
       const maxAttempts = 20; // 20 attempts = up to 40 seconds
@@ -133,12 +135,12 @@ export default function ScheduleForm() {
 
       if (!memberFound) {
         showToast.dismiss(toastId);
-        showToast.error('Could not verify data was saved. Please check the members list manually.');
+        showToast.error(t('scheduleForm.couldNotVerify'));
         setLoading(false);
         return;
       }
 
-      showToast.success('Schedule submitted and verified successfully!', { id: toastId });
+      showToast.success(t('scheduleForm.scheduleSubmitted'), { id: toastId });
 
       // Navigate to members page
       setTimeout(() => {
@@ -147,7 +149,7 @@ export default function ScheduleForm() {
     } catch (err) {
       console.error('Submit error:', err);
       showToast.dismiss(toastId);
-      showToast.error('Submission failed - Try again');
+      showToast.error(t('scheduleForm.submissionFailed'));
     } finally {
       setLoading(false);
     }
@@ -163,14 +165,14 @@ export default function ScheduleForm() {
               <div className="text-center">
                 <Loader2 className="w-16 h-16 text-creed-primary animate-spin mx-auto mb-4" />
                 <p className="text-creed-text font-display font-semibold uppercase tracking-wide text-xl">
-                  Processing Submission...
+                  {t('scheduleForm.processingSubmission')}
                 </p>
                 <p className="text-creed-muted font-body mt-2">
-                  Please do not close this window
+                  {t('scheduleForm.doNotClose')}
                 </p>
                 <div className="mt-4 px-4 py-2 bg-creed-base/50 rounded-lg border border-creed-lighter/30">
                   <p className="text-xs text-creed-muted font-body">
-                    Saving data and verifying...
+                    {t('scheduleForm.savingAndVerifying')}
                   </p>
                 </div>
               </div>
@@ -180,7 +182,7 @@ export default function ScheduleForm() {
           <div className="flex items-center gap-3 mb-6">
             <Calendar className="w-8 h-8 text-creed-primary" />
             <h2 className="text-3xl font-display font-bold text-creed-text uppercase tracking-wide">
-              Submit Schedule
+              {t('scheduleForm.submitSchedule')}
             </h2>
           </div>
           <div className="h-0.5 w-full bg-gradient-to-r from-creed-primary via-creed-accent to-transparent mb-8"></div>
@@ -189,19 +191,19 @@ export default function ScheduleForm() {
             {/* Timezone Selection */}
             <div>
               <h3 className="text-sm font-display font-semibold text-creed-text uppercase tracking-wide mb-4">
-                Timezone Configuration
+                {t('scheduleForm.timezoneConfig')}
               </h3>
               <div className="bg-creed-base border-l-4 border-creed-accent rounded-lg p-4 mb-4">
                 <div className="flex items-start gap-3">
                   <Globe className="w-5 h-5 text-creed-accent flex-shrink-0 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-sm text-creed-text font-body mb-2">
-                      <strong className="text-creed-accent font-display uppercase tracking-wide">Important:</strong>{' '}
-                      Select your local timezone. Times will be shown in your timezone, then converted to game server time (UTC-2) automatically.
+                      <strong className="text-creed-accent font-display uppercase tracking-wide">{t('scheduleForm.timezoneImportant')}</strong>{' '}
+                      {t('scheduleForm.timezoneDescription')}
                     </p>
                     <div className="mt-3">
                       <label htmlFor="timezone" className="block text-xs font-display font-semibold text-creed-text mb-2 uppercase tracking-wide">
-                        Your Timezone
+                        {t('scheduleForm.yourTimezone')}
                       </label>
                       <select
                         id="timezone"
@@ -212,7 +214,7 @@ export default function ScheduleForm() {
                                  text-creed-text font-body transition-all duration-200"
                         disabled={loading}
                       >
-                        <option value="">Detecting timezone...</option>
+                        <option value="">{t('scheduleForm.detectingTimezone')}</option>
                         {getCommonTimezones().map(tz => (
                           <option key={tz.value} value={tz.value}>
                             {tz.label} - {getTimezoneDisplay(tz.value)}
@@ -223,10 +225,10 @@ export default function ScheduleForm() {
                     {timezone && (
                       <div className="mt-3 px-3 py-2 bg-creed-lighter/30 rounded border border-creed-accent/30">
                         <p className="text-xs text-creed-muted font-body">
-                          <span className="text-creed-accent font-semibold">Selected:</span> {getTimezoneDisplay(timezone)}
+                          <span className="text-creed-accent font-semibold">{t('scheduleForm.selected')}</span> {getTimezoneDisplay(timezone)}
                         </p>
                         <p className="text-xs text-creed-muted font-body mt-1">
-                          <span className="text-creed-accent font-semibold">Server Time:</span> UTC-2 (Game Server)
+                          <span className="text-creed-accent font-semibold">{t('scheduleForm.serverTime')}</span> {t('scheduleForm.serverTimeValue')}
                         </p>
                       </div>
                     )}
@@ -238,12 +240,12 @@ export default function ScheduleForm() {
             {/* Basic Info Section */}
             <div>
               <h3 className="text-sm font-display font-semibold text-creed-text uppercase tracking-wide mb-4">
-                Operator Information
+                {t('scheduleForm.operatorInfo')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label htmlFor="username" className="block text-xs font-display font-semibold text-creed-text mb-2 uppercase tracking-wide">
-                    In-Game Username *
+                    {t('scheduleForm.inGameUsername')}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-creed-muted" />
@@ -257,7 +259,7 @@ export default function ScheduleForm() {
                                focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
                                text-creed-text placeholder-creed-muted font-body
                                transition-all duration-200"
-                      placeholder="Your callsign"
+                      placeholder={t('scheduleForm.yourCallsign')}
                       disabled={loading}
                     />
                   </div>
@@ -265,7 +267,7 @@ export default function ScheduleForm() {
 
                 <div>
                   <label htmlFor="carPower" className="block text-xs font-display font-semibold text-creed-text mb-2 uppercase tracking-wide">
-                    Car Power (M) *
+                    {t('scheduleForm.carPower')}
                   </label>
                   <div className="relative">
                     <Zap className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-creed-muted" />
@@ -281,7 +283,7 @@ export default function ScheduleForm() {
                                focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
                                text-creed-text placeholder-creed-muted font-body
                                transition-all duration-200"
-                      placeholder="e.g., 2.5"
+                      placeholder={t('scheduleForm.carPowerPlaceholder')}
                       disabled={loading}
                     />
                   </div>
@@ -289,7 +291,7 @@ export default function ScheduleForm() {
 
                 <div>
                   <label htmlFor="towerLevel" className="block text-xs font-display font-semibold text-creed-text mb-2 uppercase tracking-wide">
-                    Tower Level (1-35) *
+                    {t('scheduleForm.towerLevel')}
                   </label>
                   <div className="relative">
                     <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-creed-muted" />
@@ -305,7 +307,7 @@ export default function ScheduleForm() {
                                focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
                                text-creed-text placeholder-creed-muted font-body
                                transition-all duration-200"
-                      placeholder="e.g., 25"
+                      placeholder={t('scheduleForm.towerLevelPlaceholder')}
                       disabled={loading}
                     />
                   </div>
@@ -316,13 +318,13 @@ export default function ScheduleForm() {
             {/* Time Slots Section */}
             <div>
               <h3 className="text-sm font-display font-semibold text-creed-text uppercase tracking-wide mb-4">
-                Availability Schedule
+                {t('scheduleForm.availabilitySchedule')}
               </h3>
               <div className="mb-4 px-4 py-3 bg-creed-accent/10 border border-creed-accent/30 rounded-lg">
                 <p className="text-sm text-creed-text font-body">
                   <Globe className="w-4 h-4 text-creed-accent inline mr-2" />
-                  Times shown below are in <strong className="text-creed-accent">your local timezone</strong>.
-                  They will be automatically converted to server time (UTC-2) when saved.
+                  {t('scheduleForm.timesInLocalTimezone')} <strong className="text-creed-accent">{t('scheduleForm.yourLocalTimezone')}</strong>.
+                  {' '}{t('scheduleForm.autoConverted')}
                 </p>
               </div>
               <TimeSlotPicker availability={availability} onChange={setAvailability} />
@@ -341,12 +343,12 @@ export default function ScheduleForm() {
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Submitting</span>
+                    <span>{t('scheduleForm.submitting')}</span>
                   </>
                 ) : (
                   <>
                     <Send className="w-5 h-5" />
-                    <span>Submit Schedule</span>
+                    <span>{t('scheduleForm.submitSchedule')}</span>
                   </>
                 )}
               </button>

@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Users, Loader2, AlertCircle, Filter, Trash2 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 import MemberCard from './MemberCard';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import { fetchData, fetchDataFromAPI, deleteAllMembers } from '../services/github';
 import { showToast } from '../utils/toast';
 
 export default function MembersList() {
+  const { t } = useLanguage();
   const location = useLocation();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +48,7 @@ export default function MembersList() {
       setMembers(data.members || []);
     } catch (err) {
       console.error('Error loading members:', err);
-      showToast.error('Failed to load members roster');
+      showToast.error(t('membersList.failedToLoad'));
     } finally {
       setLoading(false);
     }
@@ -81,7 +83,7 @@ export default function MembersList() {
       behavior: 'smooth'
     });
 
-    const toastId = showToast.loading('Deleting all members...');
+    const toastId = showToast.loading(t('membersList.deletingMembers'));
 
     try {
       // Get PAT from localStorage
@@ -89,14 +91,14 @@ export default function MembersList() {
 
       if (!pat) {
         showToast.dismiss(toastId);
-        showToast.error('Authentication required. Please refresh the page.');
+        showToast.error(t('auth.authRequired'));
         setDeleting(false);
         return;
       }
 
       await deleteAllMembers(pat);
 
-      showToast.loading('Verifying deletion...', { id: toastId });
+      showToast.loading(t('membersList.verifyingDeletion'), { id: toastId });
 
       // Verify deletion by polling
       const maxAttempts = 10;
@@ -129,7 +131,7 @@ export default function MembersList() {
 
       if (!deletionVerified || !verifiedData) {
         showToast.dismiss(toastId);
-        showToast.error('Could not verify deletion. Please refresh manually.');
+        showToast.error(t('membersList.couldNotVerifyDeletion'));
         setDeleting(false);
         return;
       }
@@ -137,11 +139,11 @@ export default function MembersList() {
       // Update UI with verified empty data
       setMembers(verifiedData.members);
 
-      showToast.success('All members deleted successfully!', { id: toastId });
+      showToast.success(t('membersList.allMembersDeleted'), { id: toastId });
     } catch (err) {
       console.error('Delete error:', err);
       showToast.dismiss(toastId);
-      showToast.error('Failed to delete members - Try again');
+      showToast.error(t('membersList.deleteFailed'));
     } finally {
       setDeleting(false);
     }
@@ -169,7 +171,7 @@ export default function MembersList() {
         <div className="text-center">
           <Loader2 className="w-16 h-16 text-creed-primary animate-spin mx-auto mb-4" />
           <p className="text-creed-text font-display font-semibold uppercase tracking-wide">
-            Loading Alliance Roster...
+            {t('membersList.loadingRoster')}
           </p>
         </div>
       </div>
@@ -192,14 +194,14 @@ export default function MembersList() {
           <div className="text-center">
             <Loader2 className="w-16 h-16 text-creed-danger animate-spin mx-auto mb-4" />
             <p className="text-creed-text font-display font-semibold uppercase tracking-wide text-xl">
-              Deleting All Members...
+              {t('membersList.deletingAllMembers')}
             </p>
             <p className="text-creed-muted font-body mt-2">
-              Please do not close this window
+              {t('scheduleForm.doNotClose')}
             </p>
             <div className="mt-4 px-4 py-2 bg-creed-base/50 rounded-lg border border-creed-danger/30">
               <p className="text-xs text-creed-danger font-body">
-                Critical operation in progress...
+                {t('membersList.criticalOperation')}
               </p>
             </div>
           </div>
@@ -214,12 +216,12 @@ export default function MembersList() {
               <div className="flex items-center gap-3 mb-2">
                 <Users className="w-8 h-8 text-creed-primary" />
                 <h1 className="text-4xl font-display font-bold text-creed-text uppercase tracking-wide">
-                  Alliance Roster
+                  {t('membersList.allianceRoster')}
                 </h1>
               </div>
               <div className="h-0.5 w-48 bg-gradient-to-r from-creed-primary to-transparent mb-2"></div>
               <p className="text-creed-muted font-body">
-                Total Operatives:{' '}
+                {t('membersList.totalOperatives')}{' '}
                 <span className="font-display font-bold text-creed-accent">{members.length}</span>
               </p>
             </div>
@@ -235,7 +237,7 @@ export default function MembersList() {
                          transition-all font-display font-semibold uppercase tracking-wide"
               >
                 <Trash2 className="w-5 h-5" />
-                <span>Delete All</span>
+                <span>{t('membersList.deleteAll')}</span>
               </button>
             )}
           </div>
@@ -245,9 +247,9 @@ export default function MembersList() {
           <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical p-12 text-center">
             <AlertCircle className="mx-auto h-16 w-16 text-creed-muted mb-4" />
             <h3 className="text-xl font-display font-bold text-creed-text uppercase tracking-wide mb-2">
-              No Operatives Registered
+              {t('membersList.noOperatives')}
             </h3>
-            <p className="text-creed-muted font-body">Be the first to submit your schedule</p>
+            <p className="text-creed-muted font-body">{t('membersList.beFirstToSubmit')}</p>
           </div>
         ) : (
           <>
@@ -256,7 +258,7 @@ export default function MembersList() {
               <div className="flex items-center gap-2">
                 <Filter className="w-4 h-4 text-creed-text" />
                 <span className="text-sm font-display font-semibold text-creed-text uppercase tracking-wide">
-                  Sort By:
+                  {t('membersList.sortBy')}
                 </span>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -269,7 +271,7 @@ export default function MembersList() {
                                : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-primary'
                            }`}
                 >
-                  Username
+                  {t('membersList.username')}
                 </button>
                 <button
                   onClick={() => setSortBy('carPower')}
@@ -280,7 +282,7 @@ export default function MembersList() {
                                : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-primary'
                            }`}
                 >
-                  Car Power
+                  {t('membersList.carPower')}
                 </button>
                 <button
                   onClick={() => setSortBy('towerLevel')}
@@ -291,7 +293,7 @@ export default function MembersList() {
                                : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-primary'
                            }`}
                 >
-                  Tower Level
+                  {t('membersList.towerLevel')}
                 </button>
               </div>
             </div>

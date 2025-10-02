@@ -1,7 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Shield, Users, Calendar, TrendingUp } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageToggle from './LanguageToggle';
 
 export default function Header() {
+  const { t } = useLanguage();
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
@@ -18,16 +21,16 @@ export default function Header() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-display font-bold text-creed-text tracking-wide">
-                THE DARK CREED
+                {t('nav.title')}
               </h1>
               <p className="text-xs sm:text-sm text-creed-muted font-display tracking-widest">
-                ALLIANCE COMMAND CENTER
+                {t('nav.subtitle')}
               </p>
             </div>
           </div>
 
           {/* Navigation */}
-          <nav className="flex flex-row gap-2">
+          <nav className="flex flex-row gap-2 items-center">
           <Link
             to="/"
             className={`
@@ -41,8 +44,8 @@ export default function Header() {
             `}
           >
             <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">SUBMIT SCHEDULE</span>
-            <span className="sm:hidden">SUBMIT</span>
+            <span className="hidden sm:inline">{t('nav.submitSchedule')}</span>
+            <span className="sm:hidden">{t('nav.submitScheduleShort')}</span>
             {isActive('/') && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"></div>
             )}
@@ -61,8 +64,8 @@ export default function Header() {
             `}
           >
             <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">VIEW ROSTER</span>
-            <span className="sm:hidden">ROSTER</span>
+            <span className="hidden sm:inline">{t('nav.viewRoster')}</span>
+            <span className="sm:hidden">{t('nav.viewRosterShort')}</span>
             {isActive('/members') && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-creed-darker"></div>
             )}
@@ -81,13 +84,23 @@ export default function Header() {
             `}
           >
             <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">OPTIMAL SCHEDULE</span>
-            <span className="sm:hidden">OPTIMAL</span>
+            <span className="hidden sm:inline">{t('nav.optimalSchedule')}</span>
+            <span className="sm:hidden">{t('nav.optimalScheduleShort')}</span>
             {isActive('/optimal') && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-creed-darker"></div>
             )}
           </Link>
+
+          {/* Language Toggle */}
+          <div className="hidden sm:block ml-2">
+            <LanguageToggle />
+          </div>
         </nav>
+
+        {/* Language Toggle - Mobile (below navigation) */}
+        <div className="sm:hidden flex justify-center mt-2">
+          <LanguageToggle />
+        </div>
         </div>
       </div>
     </header>
