@@ -9,6 +9,8 @@ import { showToast } from '../utils/toast';
 export default function MemberCard({ member, onUpdate }) {
   const { t } = useLanguage();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [editedUsername, setEditedUsername] = useState(member.username);
   const [isEditingCarPower, setIsEditingCarPower] = useState(false);
   const [editedCarPower, setEditedCarPower] = useState(member.carPower);
   const [isEditingTowerLevel, setIsEditingTowerLevel] = useState(false);
@@ -18,6 +20,117 @@ export default function MemberCard({ member, onUpdate }) {
   const hasAvailability = Object.values(member.availability || {}).some(
     slots => slots && slots.length > 0
   );
+
+  const handleEditUsername = () => {
+    setEditedUsername(member.username);
+    setIsEditingUsername(true);
+  };
+
+  const handleCancelEditUsername = () => {
+    setEditedUsername(member.username);
+    setIsEditingUsername(false);
+  };
+
+  const handleSaveUsername = async () => {
+    const newUsername = editedUsername.trim();
+
+    // Validation
+    if (!newUsername || newUsername.length === 0) {
+      showToast.error(t('memberCard.invalidUsername'));
+      return;
+    }
+
+    if (newUsername.length > 50) {
+      showToast.error(t('memberCard.usernameTooLong'));
+      return;
+    }
+
+    if (newUsername === member.username) {
+      setIsEditingUsername(false);
+      return;
+    }
+
+    setIsSaving(true);
+    const toastId = showToast.loading(t('memberCard.updatingUsername'));
+
+    try {
+      const pat = localStorage.getItem('tdc_pat');
+
+      if (!pat) {
+        showToast.dismiss(toastId);
+        showToast.error(t('auth.authRequired'));
+        setIsSaving(false);
+        return;
+      }
+
+      // Store old username for verification
+      const oldUsername = member.username;
+
+      // Update member data with new username
+      const updatedMemberData = {
+        ...member,
+        username: newUsername,
+        lastUpdated: new Date().toISOString()
+      };
+
+      await saveMemberSchedule(updatedMemberData, pat);
+
+      showToast.loading(t('memberCard.verifyingUpdate'), { id: toastId });
+
+      // Verify update by polling
+      const maxAttempts = 10;
+      let attempts = 0;
+      let updateVerified = false;
+
+      // Add initial delay before first verification
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      while (attempts < maxAttempts && !updateVerified) {
+        attempts++;
+
+        try {
+          const data = await fetchDataFromAPI(pat);
+          // Check if new username exists and old username is gone
+          const updatedMember = data.members.find(m => m.username === newUsername);
+          const oldMemberExists = data.members.find(m => m.username === oldUsername);
+
+          if (updatedMember && !oldMemberExists) {
+            updateVerified = true;
+            break;
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        } catch (error) {
+          console.error('Error verifying update:', error);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
+
+      if (!updateVerified) {
+        showToast.dismiss(toastId);
+        showToast.error(t('memberCard.couldNotVerifyUpdate'));
+        setIsSaving(false);
+        setEditedUsername(member.username);
+        setIsEditingUsername(false);
+        return;
+      }
+
+      showToast.success(t('memberCard.usernameUpdated'), { id: toastId });
+      setIsEditingUsername(false);
+
+      // Notify parent to refresh data
+      if (onUpdate) {
+        onUpdate();
+      }
+    } catch (err) {
+      console.error('Update error:', err);
+      showToast.dismiss(toastId);
+      showToast.error(t('memberCard.failedToUpdateUsername'));
+      setEditedUsername(member.username);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleEditCarPower = () => {
     setEditedCarPower(member.carPower);
@@ -222,7 +335,7 @@ export default function MemberCard({ member, onUpdate }) {
   };
 
   return (
-    <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical hover:shadow-glow-primary transition-all p-6">
+    <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical hover:border-creed-primary hover:shadow-glow-primary transition-all p-6">
       {/* Tactical corner accents */}
       <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-creed-accent opacity-50"></div>
       <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-creed-accent opacity-50"></div>
@@ -234,11 +347,67 @@ export default function MemberCard({ member, onUpdate }) {
                         flex items-center justify-center shadow-glow-primary">
             <User className="w-5 h-5 text-white" />
           </div>
-          <div>
-            <h3 className="text-xl font-display font-bold text-creed-text uppercase tracking-wide">
-              {member.username}
-            </h3>
-            <p className="text-xs text-creed-muted font-body">
+          <div className="flex-1">
+            {!isEditingUsername ? (
+              <div className="flex items-center gap-2">
+                <h3 className="text-xl font-display font-bold text-creed-text uppercase tracking-wide">
+                  {member.username}
+                </h3>
+                <button
+                  onClick={handleEditUsername}
+                  disabled={isSaving}
+                  className="p-1 rounded bg-creed-lighter hover:bg-creed-primary/20
+                           border border-creed-primary/30 hover:border-creed-primary
+                           transition-all group disabled:opacity-50"
+                  title={t('memberCard.editUsername')}
+                >
+                  <Edit2 className="w-3 h-3 text-creed-primary group-hover:scale-110 transition-transform" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={editedUsername}
+                  onChange={(e) => setEditedUsername(e.target.value)}
+                  disabled={isSaving}
+                  className="flex-1 px-2 py-1 bg-creed-dark border border-creed-primary
+                           rounded text-creed-text font-display font-bold text-lg uppercase
+                           focus:ring-2 focus:ring-creed-primary focus:outline-none
+                           disabled:opacity-50"
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSaveUsername();
+                    if (e.key === 'Escape') handleCancelEditUsername();
+                  }}
+                />
+                <div className="flex gap-1">
+                  <button
+                    onClick={handleSaveUsername}
+                    disabled={isSaving}
+                    className="p-1.5 rounded bg-creed-primary hover:bg-creed-primary/80
+                             transition-all disabled:opacity-50"
+                    title={t('memberCard.save')}
+                  >
+                    {isSaving ? (
+                      <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
+                    ) : (
+                      <Check className="w-3.5 h-3.5 text-white" />
+                    )}
+                  </button>
+                  <button
+                    onClick={handleCancelEditUsername}
+                    disabled={isSaving}
+                    className="p-1.5 rounded bg-creed-danger hover:bg-creed-danger/80
+                             transition-all disabled:opacity-50"
+                    title={t('memberCard.cancel')}
+                  >
+                    <X className="w-3.5 h-3.5 text-white" />
+                  </button>
+                </div>
+              </div>
+            )}
+            <p className="text-xs text-creed-muted font-body mt-1">
               {member.lastUpdated && `${t('memberCard.updated')} ${new Date(member.lastUpdated).toLocaleDateString()}`}
             </p>
           </div>

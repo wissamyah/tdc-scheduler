@@ -14,7 +14,7 @@ export default function MembersList() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [sortBy, setSortBy] = useState('username'); // username, carPower, towerLevel
+  const [sortBy, setSortBy] = useState('carPower'); // username, carPower, towerLevel
   const previousLocationKey = useRef(location.key);
 
   useEffect(() => {

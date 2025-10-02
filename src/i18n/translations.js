@@ -216,6 +216,9 @@ export const translations = {
       noMemberData: 'No Member Data Available',
       submitSchedulesFirst: 'Members need to submit their schedules first',
       membersAvailable: 'Members',
+      availableMembers: 'Available Members',
+      available: 'available',
+      sortedByCarPower: 'Sorted by car power (highest to lowest)',
     },
 
     // Timezone
@@ -446,6 +449,9 @@ export const translations = {
       noMemberData: 'Aucune Donnée de Membre Disponible',
       submitSchedulesFirst: 'Les membres doivent d\'abord soumettre leurs horaires',
       membersAvailable: 'Membres',
+      availableMembers: 'Membres Disponibles',
+      available: 'disponibles',
+      sortedByCarPower: 'Trié par puissance de voiture (du plus élevé au plus bas)',
     },
 
     // Timezone
@@ -676,6 +682,9 @@ export const translations = {
       noMemberData: 'Keine Mitgliederdaten Verfügbar',
       submitSchedulesFirst: 'Mitglieder müssen zuerst ihre Zeitpläne einreichen',
       membersAvailable: 'Mitglieder',
+      availableMembers: 'Verfügbare Mitglieder',
+      available: 'verfügbar',
+      sortedByCarPower: 'Sortiert nach Fahrzeugmacht (höchste bis niedrigste)',
     },
 
     // Timezone
@@ -906,6 +915,9 @@ export const translations = {
       noMemberData: 'No Hay Datos de Miembros Disponibles',
       submitSchedulesFirst: 'Los miembros deben enviar sus horarios primero',
       membersAvailable: 'Miembros',
+      availableMembers: 'Miembros Disponibles',
+      available: 'disponibles',
+      sortedByCarPower: 'Ordenado por poder de vehículo (de mayor a menor)',
     },
 
     // Timezone
@@ -1136,6 +1148,9 @@ export const translations = {
       noMemberData: 'Sem Dados de Membros Disponíveis',
       submitSchedulesFirst: 'Os membros precisam enviar os seus horários primeiro',
       membersAvailable: 'Membros',
+      availableMembers: 'Membros Disponíveis',
+      available: 'disponíveis',
+      sortedByCarPower: 'Ordenado por poder de veículo (do mais alto ao mais baixo)',
     },
 
     // Timezone
@@ -1365,6 +1380,9 @@ export const translations = {
       noMemberData: 'Nessun Dato Membro Disponibile',
       submitSchedulesFirst: 'I membri devono prima inviare i loro orari',
       membersAvailable: 'Membri',
+      availableMembers: 'Membri Disponibili',
+      available: 'disponibili',
+      sortedByCarPower: 'Ordinato per potenza veicolo (dal più alto al più basso)',
     },
 
     // Timezone

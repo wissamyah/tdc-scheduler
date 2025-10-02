@@ -5,12 +5,15 @@ import { fetchDataFromAPI } from '../services/github';
 import { DAYS_OF_WEEK, generateTimeSlots, getDayDisplayName } from '../utils/timeSlots';
 import { showToast } from '../utils/toast';
 import { getServerTimezoneDisplay } from '../utils/timezone';
+import AvailableMembersModal from './AvailableMembersModal';
 
 export default function OptimalScheduleCalendar() {
   const { t } = useLanguage();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState({ members: [], dayName: '', timeSlot: '' });
 
   useEffect(() => {
     loadMembers();
@@ -55,7 +58,10 @@ export default function OptimalScheduleCalendar() {
         availability.forEach(slotValue => {
           if (slotCounts[slotValue]) {
             slotCounts[slotValue].count++;
-            slotCounts[slotValue].members.push(member.username);
+            slotCounts[slotValue].members.push({
+              username: member.username,
+              carPower: member.carPower || 0
+            });
           }
         });
       });
@@ -158,6 +164,15 @@ export default function OptimalScheduleCalendar() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base py-8">
+      {/* Available Members Modal */}
+      <AvailableMembersModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        members={modalData.members}
+        dayName={modalData.dayName}
+        timeSlot={modalData.timeSlot}
+      />
+
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -294,10 +309,12 @@ export default function OptimalScheduleCalendar() {
                                  ${isBest ? 'ring-2 ring-creed-accent shadow-glow-accent' : ''}`}
                         onClick={() => {
                           if (slotData.count > 0) {
-                            showToast.success(
-                              `${slotData.count} member${slotData.count !== 1 ? 's' : ''} available: ${slotData.members.join(', ')}`,
-                              { duration: 4000 }
-                            );
+                            setModalData({
+                              members: slotData.members,
+                              dayName: getDayDisplayName(day, t),
+                              timeSlot: slot.label
+                            });
+                            setModalOpen(true);
                           }
                         }}
                       >

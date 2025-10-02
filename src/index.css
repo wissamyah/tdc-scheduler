@@ -31,4 +31,52 @@
     -moz-appearance: textfield;
     appearance: textfield;
   }
+
+  /* Custom scrollbar styling for dark theme */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #2d3748 #0f1419;
+  }
+
+  /* Webkit browsers (Chrome, Safari, Edge) */
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #0f1419;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #2d3748;
+    border-radius: 5px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: #ff6b35;
+  }
+
+  /* Custom scrollbar for modal */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #2d3748 #0f1419;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #0f1419;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #2d3748;
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #ff6b35;
+  }
 }
