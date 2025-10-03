@@ -465,40 +465,34 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
   return (
     <div className={`bg-creed-base border rounded-lg p-4
                    ${isCurrentUser ? 'border-creed-accent' : 'border-creed-lighter'}`}>
-      <div className="flex flex-col gap-4">
-        {/* Header row with username, badges, and delete button (mobile) */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-2 flex-wrap">
-              <h3 className="text-lg font-display font-bold text-creed-text">
-                {user.username}
-                {isCurrentUser && (
-                  <span className="ml-2 text-xs text-creed-accent font-body">({t('admin.you')})</span>
-                )}
-              </h3>
-              <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
-                             bg-${roleDisplay.bgColor} border border-${roleDisplay.borderColor} text-${roleDisplay.color}`}>
-                {t(roleDisplay.labelKey)}
-              </span>
-              <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
-                             bg-${statusDisplay.bgColor} border border-${statusDisplay.borderColor} text-${statusDisplay.color}`}>
-                {t(statusDisplay.labelKey)}
-              </span>
-            </div>
-            <div className="flex items-center gap-4 text-xs text-creed-muted font-body flex-wrap">
-              <span>Joined: {new Date(user.createdAt).toLocaleDateString()}</span>
-              {user.lastLogin && <span>Last Login: {new Date(user.lastLogin).toLocaleDateString()}</span>}
-            </div>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        {/* User info section */}
+        <div className="flex-1">
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
+            <h3 className="text-lg font-display font-bold text-creed-text">
+              {user.username}
+              {isCurrentUser && (
+                <span className="ml-2 text-xs text-creed-accent font-body">({t('admin.you')})</span>
+              )}
+            </h3>
+            <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
+                           bg-${roleDisplay.bgColor} border border-${roleDisplay.borderColor} text-${roleDisplay.color}`}>
+              {t(roleDisplay.labelKey)}
+            </span>
+            <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
+                           bg-${statusDisplay.bgColor} border border-${statusDisplay.borderColor} text-${statusDisplay.color}`}>
+              {t(statusDisplay.labelKey)}
+            </span>
           </div>
-          {/* Delete button - visible on mobile only */}
-          <div className="md:hidden">
-            {deleteButton}
+          <div className="flex items-center gap-4 text-xs text-creed-muted font-body flex-wrap">
+            <span>Joined: {new Date(user.createdAt).toLocaleDateString()}</span>
+            {user.lastLogin && <span>Last Login: {new Date(user.lastLogin).toLocaleDateString()}</span>}
           </div>
         </div>
 
-        {/* Controls row - role select and delete button (desktop) */}
+        {/* Controls - role select and delete button */}
         {user.status === 'active' && (
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:justify-end">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             {/* Role Select */}
             <div className="flex items-center gap-2">
               {/* Role Info Tooltip */}
@@ -549,10 +543,8 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
                 <option value="admin">{t('roles.admin')}</option>
               </select>
             </div>
-            {/* Delete button - visible on desktop only */}
-            <div className="hidden md:block">
-              {deleteButton}
-            </div>
+            {/* Delete button */}
+            {deleteButton}
           </div>
         )}
       </div>
