@@ -1,62 +1,45 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { LanguageProvider } from './context/LanguageContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header';
-import PATPrompt from './components/PATPrompt';
+import AdminInitialSetup from './components/AdminInitialSetup';
+import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
+import FirstLoginPasswordChange from './components/FirstLoginPasswordChange';
 import ScheduleForm from './components/ScheduleForm';
 import MembersList from './components/MembersList';
 import OptimalScheduleCalendar from './components/OptimalScheduleCalendar';
+import AdminDashboard from './components/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 import { Loader2 } from 'lucide-react';
 import { useLanguage } from './context/LanguageContext';
 
 function AppContent() {
   const { t } = useLanguage();
-  const [appState, setAppState] = useState('loading'); // loading, auth, ready
+  const { currentUser, loading, authInitialized, refreshAuthStatus } = useAuth();
+  const [showRegister, setShowRegister] = useState(false);
 
-  useEffect(() => {
-    initializeApp();
-  }, []);
+  // Step 1: Auth system not initialized - show admin setup
+  if (!authInitialized) {
+    return <AdminInitialSetup onComplete={refreshAuthStatus} />;
+  }
 
-  const initializeApp = async () => {
-    try {
-      // Check if PAT is stored in localStorage
-      const pat = localStorage.getItem('tdc_pat');
-
-      if (!pat) {
-        setAppState('auth');
-        return;
-      }
-
-      setAppState('ready');
-    } catch (error) {
-      console.error('Error initializing app:', error);
-      setAppState('auth');
+  // Step 2: User not logged in - show login or register
+  if (!currentUser) {
+    if (showRegister) {
+      return <RegisterForm onShowLogin={() => setShowRegister(false)} />;
     }
-  };
-
-  const handleAuthenticated = () => {
-    setAppState('ready');
-  };
-
-  // Loading state
-  if (appState === 'loading') {
-    return (
-      <div className="min-h-screen bg-creed-darker flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-16 h-16 text-creed-accent animate-spin mx-auto mb-4" />
-          <p className="text-creed-text text-lg font-display tracking-wide">{t('app.initializingSystem')}</p>
-        </div>
-      </div>
-    );
+    return <LoginForm onShowRegister={() => setShowRegister(true)} />;
   }
 
-  // Authentication required
-  if (appState === 'auth') {
-    return <PATPrompt onAuthenticated={handleAuthenticated} />;
+  // Step 3: First login - force password change
+  if (currentUser.firstLogin) {
+    return <FirstLoginPasswordChange />;
   }
 
-  // App ready
+  // Step 4: User authenticated and ready - show main app
   return (
     <Router>
       <div className="min-h-screen bg-creed-dark">
@@ -66,6 +49,14 @@ function AppContent() {
           <Route path="/" element={<ScheduleForm />} />
           <Route path="/members" element={<MembersList />} />
           <Route path="/optimal" element={<OptimalScheduleCalendar />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </Router>
@@ -75,7 +66,9 @@ function AppContent() {
 function App() {
   return (
     <LanguageProvider>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </LanguageProvider>
   );
 }

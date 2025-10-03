@@ -1,13 +1,30 @@
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Users, Calendar, TrendingUp } from 'lucide-react';
+import { Shield, Users, Calendar, TrendingUp, LogOut, User, ChevronDown } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import LanguageToggle from './LanguageToggle';
+import { getRoleDisplay } from '../utils/permissions';
 
 export default function Header() {
   const { t } = useLanguage();
+  const { currentUser, logout, isAdmin } = useAuth();
   const location = useLocation();
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = () => {
+    if (window.confirm(t('userAuth.logoutConfirm'))) {
+      logout();
+    }
+  };
+
+  if (!currentUser) {
+    return null; // Don't show header if not logged in
+  }
+
+  const roleDisplay = getRoleDisplay(currentUser.role);
 
   return (
     <header className="bg-creed-darker border-b border-creed-lighter shadow-tactical">
@@ -81,6 +98,70 @@ export default function Header() {
             <span className="hidden sm:inline">{t('nav.optimalSchedule')}</span>
             <span className="sm:hidden">{t('nav.optimalScheduleShort')}</span>
           </Link>
+
+          {/* Admin Panel Link */}
+          {isAdmin() && (
+            <Link
+              to="/admin"
+              className={`
+                flex-1 lg:flex-none flex items-center justify-center space-x-2 px-4 py-3 rounded-lg
+                font-display font-semibold text-xs sm:text-sm whitespace-nowrap
+                transition-all duration-200 relative overflow-hidden group
+                ${isActive('/admin')
+                  ? 'bg-creed-danger text-white shadow-glow-primary'
+                  : 'text-creed-text hover:bg-creed-lighter hover:text-creed-danger'
+                }
+              `}
+            >
+              <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">{t('nav.adminDashboard')}</span>
+              <span className="sm:hidden">{t('nav.adminDashboardShort')}</span>
+            </Link>
+          )}
+
+          {/* User Menu */}
+          <div className="relative ml-2">
+            <button
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className="flex items-center gap-2 px-4 py-3 rounded-lg
+                       bg-creed-lighter hover:bg-creed-base
+                       border border-creed-lighter hover:border-creed-primary
+                       transition-all group"
+            >
+              <User className="w-4 h-4 text-creed-text" />
+              <span className="hidden md:inline text-creed-text font-display font-semibold text-sm">
+                {currentUser.username}
+              </span>
+              <span className={`px-2 py-0.5 rounded text-xs font-display font-bold uppercase
+                             bg-${roleDisplay.bgColor} text-${roleDisplay.color} border border-${roleDisplay.borderColor}`}>
+                {t(roleDisplay.labelKey)}
+              </span>
+              <ChevronDown className={`w-4 h-4 text-creed-muted transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Menu */}
+            {showUserMenu && (
+              <>
+                {/* Backdrop to close menu */}
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setShowUserMenu(false)}
+                />
+                {/* Menu */}
+                <div className="absolute right-0 mt-2 w-48 bg-creed-light border border-creed-lighter rounded-lg shadow-tactical z-20 overflow-hidden">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-3
+                             hover:bg-creed-base transition-all
+                             text-creed-danger font-display font-semibold text-sm uppercase tracking-wide"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>{t('userAuth.logout')}</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
 
           {/* Language Toggle */}
           <div className="hidden sm:block ml-2">

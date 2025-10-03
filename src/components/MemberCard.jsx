@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { User, Zap, Building2, ChevronDown, Calendar, Clock, Globe, Edit2, Check, X, Loader2, Trash2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
+import { canEditMember, canDeleteMember } from '../utils/permissions';
 import { DAYS_OF_WEEK, getDayDisplayName, getTimeSlotLabel } from '../utils/timeSlots';
 import { getTimezoneDisplay } from '../utils/timezone';
 import { saveMemberSchedule, fetchDataFromAPI, deleteMember } from '../services/github';
@@ -9,6 +11,9 @@ import DeleteMemberModal from './DeleteMemberModal';
 
 export default function MemberCard({ member, onUpdate }) {
   const { t } = useLanguage();
+  const { currentUser } = useAuth();
+  const canEdit = canEditMember(currentUser, member.username);
+  const canDelete = canDeleteMember(currentUser, member.username);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [editedUsername, setEditedUsername] = useState(member.username);
@@ -450,16 +455,18 @@ export default function MemberCard({ member, onUpdate }) {
         <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-creed-accent opacity-50"></div>
 
         {/* Delete Button - Top Right */}
-        <button
-          onClick={handleDeleteClick}
-          disabled={isSaving || isDeleting}
-          className="absolute top-4 right-4 p-2 rounded bg-creed-base border border-creed-danger/30
-                   hover:bg-creed-danger hover:border-creed-danger hover:shadow-glow-primary
-                   transition-all group disabled:opacity-50 disabled:cursor-not-allowed z-10"
-          title={t('memberCard.deleteMember')}
-        >
-          <Trash2 className="w-4 h-4 text-creed-danger group-hover:text-white transition-colors" />
-        </button>
+        {canDelete && (
+          <button
+            onClick={handleDeleteClick}
+            disabled={isSaving || isDeleting}
+            className="absolute top-4 right-4 p-2 rounded bg-creed-base border border-creed-danger/30
+                     hover:bg-creed-danger hover:border-creed-danger hover:shadow-glow-primary
+                     transition-all group disabled:opacity-50 disabled:cursor-not-allowed z-10"
+            title={t('memberCard.deleteMember')}
+          >
+            <Trash2 className="w-4 h-4 text-creed-danger group-hover:text-white transition-colors" />
+          </button>
+        )}
 
       {/* Member Info */}
       <div className="flex items-center justify-between mb-4">
@@ -474,16 +481,18 @@ export default function MemberCard({ member, onUpdate }) {
                 <h3 className="text-xl font-display font-bold text-creed-text uppercase tracking-wide">
                   {member.username}
                 </h3>
-                <button
-                  onClick={handleEditUsername}
-                  disabled={isSaving}
-                  className="p-1 rounded bg-creed-lighter hover:bg-creed-primary/20
-                           border border-creed-primary/30 hover:border-creed-primary
-                           transition-all group disabled:opacity-50"
-                  title={t('memberCard.editUsername')}
-                >
-                  <Edit2 className="w-3 h-3 text-creed-primary group-hover:scale-110 transition-transform" />
-                </button>
+                {canEdit && (
+                  <button
+                    onClick={handleEditUsername}
+                    disabled={isSaving}
+                    className="p-1 rounded bg-creed-lighter hover:bg-creed-primary/20
+                             border border-creed-primary/30 hover:border-creed-primary
+                             transition-all group disabled:opacity-50"
+                    title={t('memberCard.editUsername')}
+                  >
+                    <Edit2 className="w-3 h-3 text-creed-primary group-hover:scale-110 transition-transform" />
+                  </button>
+                )}
               </div>
             ) : (
               <div className="flex items-center gap-2">
@@ -546,16 +555,18 @@ export default function MemberCard({ member, onUpdate }) {
           {!isEditingCarPower ? (
             <div className="flex items-center justify-between">
               <div className="text-lg font-display font-bold text-creed-primary">{member.carPower}M</div>
-              <button
-                onClick={handleEditCarPower}
-                disabled={isSaving}
-                className="p-1.5 rounded bg-creed-lighter hover:bg-creed-primary/20
-                         border border-creed-primary/30 hover:border-creed-primary
-                         transition-all group disabled:opacity-50"
-                title={t('memberCard.editCarPower')}
-              >
-                <Edit2 className="w-3.5 h-3.5 text-creed-primary group-hover:scale-110 transition-transform" />
-              </button>
+              {canEdit && (
+                <button
+                  onClick={handleEditCarPower}
+                  disabled={isSaving}
+                  className="p-1.5 rounded bg-creed-lighter hover:bg-creed-primary/20
+                           border border-creed-primary/30 hover:border-creed-primary
+                           transition-all group disabled:opacity-50"
+                  title={t('memberCard.editCarPower')}
+                >
+                  <Edit2 className="w-3.5 h-3.5 text-creed-primary group-hover:scale-110 transition-transform" />
+                </button>
+              )}
             </div>
           ) : (
             <div className="flex items-center gap-2">
@@ -612,16 +623,18 @@ export default function MemberCard({ member, onUpdate }) {
           {!isEditingTowerLevel ? (
             <div className="flex items-center justify-between">
               <div className="text-lg font-display font-bold text-creed-accent">{member.towerLevel}</div>
-              <button
-                onClick={handleEditTowerLevel}
-                disabled={isSaving}
-                className="p-1.5 rounded bg-creed-lighter hover:bg-creed-accent/20
-                         border border-creed-accent/30 hover:border-creed-accent
-                         transition-all group disabled:opacity-50"
-                title={t('memberCard.editTowerLevel')}
-              >
-                <Edit2 className="w-3.5 h-3.5 text-creed-accent group-hover:scale-110 transition-transform" />
-              </button>
+              {canEdit && (
+                <button
+                  onClick={handleEditTowerLevel}
+                  disabled={isSaving}
+                  className="p-1.5 rounded bg-creed-lighter hover:bg-creed-accent/20
+                           border border-creed-accent/30 hover:border-creed-accent
+                           transition-all group disabled:opacity-50"
+                  title={t('memberCard.editTowerLevel')}
+                >
+                  <Edit2 className="w-3.5 h-3.5 text-creed-accent group-hover:scale-110 transition-transform" />
+                </button>
+              )}
             </div>
           ) : (
             <div className="flex items-center gap-2">

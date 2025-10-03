@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Zap, Building2, Send, Loader2, Calendar, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import TimeSlotPicker from './TimeSlotPicker';
 import { initializeAvailability } from '../utils/timeSlots';
 import { saveMemberSchedule } from '../services/github';
@@ -16,10 +17,10 @@ import {
 
 export default function ScheduleForm() {
   const { t } = useLanguage();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
   const formRef = useRef(null);
   const [formData, setFormData] = useState({
-    username: '',
     carPower: '',
     towerLevel: ''
   });
@@ -46,10 +47,6 @@ export default function ScheduleForm() {
     e.preventDefault();
 
     // Validation
-    if (!formData.username.trim()) {
-      showToast.error(t('scheduleForm.usernameRequired'));
-      return;
-    }
 
     const carPower = parseFloat(formData.carPower);
     if (isNaN(carPower) || carPower <= 0) {
@@ -90,7 +87,7 @@ export default function ScheduleForm() {
 
       const memberData = {
         id: `member-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        username: formData.username.trim(),
+        username: currentUser.username,
         carPower: carPower,
         towerLevel: towerLevel,
         timezone: timezone, // Store user's timezone
@@ -244,25 +241,19 @@ export default function ScheduleForm() {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label htmlFor="username" className="block text-xs font-display font-semibold text-creed-text mb-2 uppercase tracking-wide">
-                    {t('scheduleForm.inGameUsername')}
+                  <label className="block text-xs font-display font-semibold text-creed-text mb-2 uppercase tracking-wide">
+                    {t('scheduleForm.submittingAs')}
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-creed-muted" />
-                    <input
-                      type="text"
-                      id="username"
-                      name="username"
-                      value={formData.username}
-                      onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-2.5 bg-creed-base border border-creed-lighter rounded-lg
-                               focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
-                               text-creed-text placeholder-creed-muted font-body
-                               transition-all duration-200"
-                      placeholder={t('scheduleForm.yourCallsign')}
-                      disabled={loading}
-                    />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-creed-accent" />
+                    <div className="w-full pl-10 pr-4 py-2.5 bg-creed-base/50 border border-creed-accent rounded-lg
+                                 text-creed-accent font-display font-bold text-lg">
+                      {currentUser.username}
+                    </div>
                   </div>
+                  <p className="text-xs text-creed-muted font-body mt-1">
+                    {t('scheduleForm.usernameAutoFilled')}
+                  </p>
                 </div>
 
                 <div>

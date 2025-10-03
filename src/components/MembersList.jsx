@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Users, Loader2, AlertCircle, Filter, Trash2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
+import { canDeleteAllMembers, canManageCSV } from '../utils/permissions';
 import MemberCard from './MemberCard';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import ExportCSVButton from './ExportCSVButton';
@@ -12,6 +14,7 @@ import { showToast } from '../utils/toast';
 
 export default function MembersList() {
   const { t } = useLanguage();
+  const { currentUser } = useAuth();
   const location = useLocation();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -311,13 +314,15 @@ export default function MembersList() {
               />
 
               {/* Import CSV Button */}
-              <ImportCSVButton
-                onClick={handleImportClick}
-                disabled={loading || deleting}
-              />
+              {canManageCSV(currentUser) && (
+                <ImportCSVButton
+                  onClick={handleImportClick}
+                  disabled={loading || deleting}
+                />
+              )}
 
               {/* Delete All Button */}
-              {members.length > 0 && (
+              {members.length > 0 && canDeleteAllMembers(currentUser) && (
                 <button
                   onClick={handleDeleteAllClick}
                   disabled={loading || deleting}
