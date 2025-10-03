@@ -297,35 +297,41 @@ export default function AdminDashboard() {
               <button
                 onClick={() => setFilter('all')}
                 className={`px-4 py-2 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
-                         transition-all ${
+                         transition-all flex items-center gap-2 ${
                            filter === 'all'
                              ? 'bg-gradient-to-r from-creed-primary to-creed-accent text-white shadow-glow-primary'
                              : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-primary'
                          }`}
               >
-                {t('admin.all')} ({users.length})
+                <Users className="w-4 h-4" />
+                <span className="hidden sm:inline">{t('admin.all')}</span>
+                <span>({users.length})</span>
               </button>
               <button
                 onClick={() => setFilter('active')}
                 className={`px-4 py-2 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
-                         transition-all ${
+                         transition-all flex items-center gap-2 ${
                            filter === 'active'
                              ? 'bg-gradient-to-r from-creed-success to-creed-accent text-white'
                              : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-success'
                          }`}
               >
-                {t('admin.active')} ({activeUsers.length})
+                <UserCheck className="w-4 h-4" />
+                <span className="hidden sm:inline">{t('admin.active')}</span>
+                <span>({activeUsers.length})</span>
               </button>
               <button
                 onClick={() => setFilter('pending')}
                 className={`px-4 py-2 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
-                         transition-all ${
+                         transition-all flex items-center gap-2 ${
                            filter === 'pending'
                              ? 'bg-gradient-to-r from-creed-warning to-creed-accent text-creed-darker'
                              : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-warning'
                          }`}
               >
-                {t('admin.pending')} ({pendingUsers.length})
+                <UserX className="w-4 h-4" />
+                <span className="hidden sm:inline">{t('admin.pending')}</span>
+                <span>({pendingUsers.length})</span>
               </button>
               </div>
             </div>
@@ -392,9 +398,9 @@ function PendingUserCard({ user, onApprove, onReject, loading, t }) {
 
   return (
     <div className="bg-creed-base border border-creed-warning/30 rounded-lg p-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
             <h3 className="text-lg font-display font-bold text-creed-text">{user.username}</h3>
             <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
                            bg-${roleDisplay.bgColor} border border-${roleDisplay.borderColor} text-${roleDisplay.color}`}>
@@ -402,7 +408,7 @@ function PendingUserCard({ user, onApprove, onReject, loading, t }) {
             </span>
           </div>
           {user.memberData && (
-            <div className="flex items-center gap-4 text-sm text-creed-muted font-body">
+            <div className="flex items-center gap-4 text-sm text-creed-muted font-body flex-wrap">
               <span>Car: {user.memberData.carPower}M</span>
               <span>Tower: {user.memberData.towerLevel}</span>
               <span>TZ: {user.memberData.timezone}</span>
@@ -412,12 +418,12 @@ function PendingUserCard({ user, onApprove, onReject, loading, t }) {
             Registered: {new Date(user.createdAt).toLocaleString()}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
           <button
             onClick={() => onApprove(user.id, user.username)}
             disabled={loading}
             className="px-4 py-2 bg-creed-success text-white rounded-lg font-display font-semibold
-                     hover:bg-creed-success/80 disabled:opacity-50 transition-all flex items-center gap-2"
+                     hover:bg-creed-success/80 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
             <span>{t('admin.approveUser')}</span>
@@ -426,7 +432,7 @@ function PendingUserCard({ user, onApprove, onReject, loading, t }) {
             onClick={() => onReject(user.id, user.username)}
             disabled={loading}
             className="px-4 py-2 bg-creed-danger text-white rounded-lg font-display font-semibold
-                     hover:bg-creed-danger/80 disabled:opacity-50 transition-all flex items-center gap-2"
+                     hover:bg-creed-danger/80 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
             <span>{t('admin.rejectUser')}</span>
@@ -444,35 +450,56 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
   const isCurrentUser = user.id === currentUser.id;
   const [showRoleTooltip, setShowRoleTooltip] = useState(false);
 
+  const deleteButton = !isCurrentUser && (
+    <button
+      onClick={() => onDelete(user.id, user.username)}
+      disabled={loading}
+      className="p-2 bg-creed-base border border-creed-danger/30 text-creed-danger rounded-lg
+                 hover:bg-creed-danger hover:text-white disabled:opacity-50 transition-all"
+      title={t('admin.deleteUser')}
+    >
+      {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Trash2 className="w-5 h-5" />}
+    </button>
+  );
+
   return (
     <div className={`bg-creed-base border rounded-lg p-4
                    ${isCurrentUser ? 'border-creed-accent' : 'border-creed-lighter'}`}>
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <h3 className="text-lg font-display font-bold text-creed-text">
-              {user.username}
-              {isCurrentUser && (
-                <span className="ml-2 text-xs text-creed-accent font-body">({t('admin.you')})</span>
-              )}
-            </h3>
-            <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
-                           bg-${roleDisplay.bgColor} border border-${roleDisplay.borderColor} text-${roleDisplay.color}`}>
-              {t(roleDisplay.labelKey)}
-            </span>
-            <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
-                           bg-${statusDisplay.bgColor} border border-${statusDisplay.borderColor} text-${statusDisplay.color}`}>
-              {t(statusDisplay.labelKey)}
-            </span>
+      <div className="flex flex-col gap-4">
+        {/* Header row with username, badges, and delete button (mobile) */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
+              <h3 className="text-lg font-display font-bold text-creed-text">
+                {user.username}
+                {isCurrentUser && (
+                  <span className="ml-2 text-xs text-creed-accent font-body">({t('admin.you')})</span>
+                )}
+              </h3>
+              <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
+                             bg-${roleDisplay.bgColor} border border-${roleDisplay.borderColor} text-${roleDisplay.color}`}>
+                {t(roleDisplay.labelKey)}
+              </span>
+              <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
+                             bg-${statusDisplay.bgColor} border border-${statusDisplay.borderColor} text-${statusDisplay.color}`}>
+                {t(statusDisplay.labelKey)}
+              </span>
+            </div>
+            <div className="flex items-center gap-4 text-xs text-creed-muted font-body flex-wrap">
+              <span>Joined: {new Date(user.createdAt).toLocaleDateString()}</span>
+              {user.lastLogin && <span>Last Login: {new Date(user.lastLogin).toLocaleDateString()}</span>}
+            </div>
           </div>
-          <div className="flex items-center gap-4 text-xs text-creed-muted font-body">
-            <span>Joined: {new Date(user.createdAt).toLocaleDateString()}</span>
-            {user.lastLogin && <span>Last Login: {new Date(user.lastLogin).toLocaleDateString()}</span>}
+          {/* Delete button - visible on mobile only */}
+          <div className="md:hidden">
+            {deleteButton}
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {/* Role Select */}
-          {user.status === 'active' && (
+
+        {/* Controls row - role select and delete button (desktop) */}
+        {user.status === 'active' && (
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:justify-end">
+            {/* Role Select */}
             <div className="flex items-center gap-2">
               {/* Role Info Tooltip */}
               <div className="relative">
@@ -485,7 +512,7 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
                   <Info className="w-4 h-4" />
                 </button>
                 {showRoleTooltip && (
-                  <div className="absolute bottom-full right-0 mb-2 w-72 z-30">
+                  <div className="absolute bottom-full left-0 md:right-0 md:left-auto mb-2 w-72 max-w-[calc(100vw-2rem)] z-30">
                     <div className="bg-creed-light border border-creed-accent rounded-lg shadow-tactical p-4">
                       <h4 className="text-xs font-display font-bold text-creed-accent uppercase mb-2">
                         {t('admin.rolePermissions')}
@@ -512,7 +539,7 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
                 value={user.role}
                 onChange={(e) => onRoleChange(user.id, e.target.value, user.username)}
                 disabled={loading}
-                className="px-3 py-2 bg-creed-light border border-creed-lighter rounded-lg
+                className="flex-1 px-3 py-2 bg-creed-light border border-creed-lighter rounded-lg
                          text-creed-text font-display font-semibold text-sm
                          focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
                          disabled:opacity-50 transition-all"
@@ -522,20 +549,12 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
                 <option value="admin">{t('roles.admin')}</option>
               </select>
             </div>
-          )}
-          {/* Delete Button */}
-          {!isCurrentUser && (
-            <button
-              onClick={() => onDelete(user.id, user.username)}
-              disabled={loading}
-              className="p-2 bg-creed-base border border-creed-danger/30 text-creed-danger rounded-lg
-                       hover:bg-creed-danger hover:text-white disabled:opacity-50 transition-all"
-              title={t('admin.deleteUser')}
-            >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Trash2 className="w-5 h-5" />}
-            </button>
-          )}
-        </div>
+            {/* Delete button - visible on desktop only */}
+            <div className="hidden md:block">
+              {deleteButton}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -67,8 +67,7 @@ export default function Header() {
             `}
           >
             <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">{t('nav.submitSchedule')}</span>
-            <span className="sm:hidden">{t('nav.submitScheduleShort')}</span>
+            <span className="hidden md:inline">{t('nav.submitSchedule')}</span>
           </Link>
 
           <Link
@@ -84,8 +83,7 @@ export default function Header() {
             `}
           >
             <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">{t('nav.viewRoster')}</span>
-            <span className="sm:hidden">{t('nav.viewRosterShort')}</span>
+            <span className="hidden md:inline">{t('nav.viewRoster')}</span>
           </Link>
 
           <Link
@@ -101,8 +99,7 @@ export default function Header() {
             `}
           >
             <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">{t('nav.optimalSchedule')}</span>
-            <span className="sm:hidden">{t('nav.optimalScheduleShort')}</span>
+            <span className="hidden md:inline">{t('nav.optimalSchedule')}</span>
           </Link>
 
           {/* Admin Panel Link */}
@@ -120,8 +117,7 @@ export default function Header() {
               `}
             >
               <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="hidden sm:inline">{t('nav.adminDashboard')}</span>
-              <span className="sm:hidden">{t('nav.adminDashboardShort')}</span>
+              <span className="hidden md:inline">{t('nav.adminDashboard')}</span>
             </Link>
           )}
 
@@ -176,7 +172,15 @@ export default function Header() {
         </nav>
 
         {/* Language Toggle - Mobile (below navigation) */}
-        <div className="sm:hidden flex justify-center mt-2">
+        <div className="sm:hidden flex items-center justify-between mt-4 px-2">
+          <div className="flex flex-col">
+            <span className="text-xs text-creed-muted font-display uppercase tracking-wide">
+              {t('nav.welcome')}
+            </span>
+            <span className="text-lg font-display font-bold text-creed-text">
+              {currentUser.username}
+            </span>
+          </div>
           <LanguageToggle />
         </div>
         </div>

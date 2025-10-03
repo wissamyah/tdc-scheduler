@@ -1,0 +1,562 @@
+/** German translations */
+export default {
+    // Common
+    common: {
+      loading: 'Laden...',
+      submit: 'Absenden',
+      cancel: 'Abbrechen',
+      delete: 'Löschen',
+      edit: 'Bearbeiten',
+      save: 'Speichern',
+      close: 'Schließen',
+      confirm: 'Bestätigen',
+      yes: 'Ja',
+      no: 'Nein',
+      goBack: 'Go Back',
+      to: 'to',
+    },
+
+    // Days of the week
+    days: {
+      monday: 'Montag',
+      tuesday: 'Dienstag',
+      wednesday: 'Mittwoch',
+      thursday: 'Donnerstag',
+      friday: 'Freitag',
+      saturday: 'Samstag',
+      sunday: 'Sonntag',
+    },
+
+    // App
+    app: {
+      initializingSystem: 'SYSTEM WIRD INITIALISIERT...',
+    },
+
+    // Header/Navigation
+    nav: {
+      title: 'THE DARK CREED',
+      subtitle: 'ALLIANZ-KOMMANDOZENTRALE',
+      submitSchedule: 'ZEITPLAN EINREICHEN',
+      submitScheduleShort: 'EINREICHEN',
+      viewRoster: 'MITGLIEDERLISTE',
+      viewRosterShort: 'LISTE',
+      optimalSchedule: 'OPTIMALER ZEITPLAN',
+      optimalScheduleShort: 'OPTIMAL',
+      adminDashboard: 'ADMIN PANEL',
+      adminDashboardShort: 'ADMIN',
+      welcome: 'Willkommen',
+    },
+
+    // Authentication
+    auth: {
+      allianceAccess: 'Allianz-Zugang',
+      accessToken: 'Allianz-Zugriffstoken',
+      enterToken: 'Geben Sie Ihr Zugriffstoken ein...',
+      verifying: 'Wird überprüft...',
+      accessScheduler: 'Zum Planer',
+      contactLeader: 'Kontaktieren Sie Ihren Allianzführer, um ein Zugriffstoken zu erhalten',
+      credentialsStored: 'Ihre Anmeldedaten werden lokal für dauerhaften Zugriff gespeichert',
+      enterTokenPrompt: 'Geben Sie Ihr Allianz-Zugriffstoken ein, um den TDC-Planer zu verwenden.',
+      invalidToken: 'Ungültiges Zugriffstoken. Bitte überprüfen Sie Ihre Anmeldedaten.',
+      verificationFailed: 'Überprüfung der Anmeldedaten fehlgeschlagen. Bitte versuchen Sie es erneut.',
+      authRequired: 'Authentifizierung erforderlich. Bitte aktualisieren Sie die Seite.',
+
+      // Password prompt
+      theDarkCreed: 'The Dark Creed',
+      restrictedAccess: 'Eingeschränkter Zugang - Autorisierung Erforderlich',
+      alliancePassword: 'Allianz-Passwort',
+      enterAccessCode: 'Zugangscode eingeben',
+      verifyingAccess: 'Zugriff wird überprüft',
+      accessSystem: 'System Zugreifen',
+      contactCommander: 'Kontaktieren Sie Ihren Allianzkommandanten für Anmeldedaten',
+      accessGranted: 'Zugriff gewährt - Willkommen bei The Dark Creed',
+      accessDenied: 'Zugriff verweigert - Ungültige Anmeldedaten',
+      authSystemFailure: 'Authentifizierungssystemfehler - Versuchen Sie es erneut',
+      enterPassword: 'Bitte geben Sie das Passwort ein',
+    },
+
+    // User Authentication
+    userAuth: {
+      // Login
+      login: 'Anmeldung',
+      username: 'Benutzername',
+      password: 'Passwort',
+      enterUsername: 'Geben Sie Ihren Benutzernamen ein',
+      enterPassword: 'Geben Sie Ihr Passwort ein',
+      loginButton: 'System Zugreifen',
+      loggingIn: 'Anmeldung läuft...',
+      loginSuccessful: 'Willkommen zurück!',
+      invalidCredentials: 'Ungültiger Benutzername oder Passwort',
+      accountPending: 'Ihr Konto wartet auf Admin-Genehmigung',
+      accountInactive: 'Ihr Konto ist nicht aktiv',
+      loginPrompt: 'Geben Sie Ihre Anmeldedaten ein, um auf den TDC-Planer zuzugreifen',
+
+      // Registration
+      register: 'Registrieren',
+      registerButton: 'Konto Erstellen',
+      registering: 'Registrierung läuft...',
+      confirmPassword: 'Passwort Bestätigen',
+      confirmPasswordRequired: 'Bitte bestätigen Sie Ihr Passwort',
+      carPower: 'Fahrzeugstärke (M)',
+      towerLevel: 'Turmstufe (1-35)',
+      timezone: 'Zeitzone',
+      selectTimezone: 'Bitte wählen Sie Ihre Zeitzone',
+      registrationSuccess: 'Registrierung eingereicht! Warten auf Admin-Genehmigung.',
+      registrationFailed: 'Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.',
+      usernameExists: 'Benutzername bereits vergeben',
+      usernameTooShort: 'Benutzername muss mindestens 3 Zeichen lang sein',
+      usernameTooLong: 'Benutzername darf maximal 20 Zeichen lang sein',
+      usernameInvalid: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten',
+      usernameHint: '3-20 Zeichen, nur Buchstaben, Zahlen und Unterstriche',
+      passwordMismatch: 'Passwörter stimmen nicht überein',
+      weakPassword: 'Passwort muss mindestens 8 Zeichen lang sein',
+      dontHaveAccount: 'Noch kein Konto?',
+      alreadyHaveAccount: 'Bereits ein Konto?',
+      backToLogin: 'Zurück zur Anmeldung',
+      awaitingApproval: 'Warten auf Genehmigung',
+      registrationPending: 'Ihre Registrierung wartet auf Admin-Genehmigung. Sie können sich anmelden, sobald Sie genehmigt wurden.',
+      approvalNote: 'Ein Administrator wird Ihre Registrierung in Kürze überprüfen.',
+      registerPrompt: 'Erstellen Sie ein Konto, um der TDC-Allianz beizutreten. Ihre Registrierung wird von einem Administrator überprüft.',
+
+      // Password Change
+      changePassword: 'Passwort Ändern',
+      changePasswordButton: 'Passwort Aktualisieren',
+      oldPassword: 'Aktuelles Passwort',
+      newPassword: 'Neues Passwort',
+      tempPassword: 'Temporäres Passwort',
+      enterOldPassword: 'Geben Sie Ihr aktuelles Passwort ein',
+      enterNewPassword: 'Geben Sie Ihr neues Passwort ein',
+      enterTempPassword: 'Geben Sie das temporäre Passwort ein',
+      confirmNewPassword: 'Neues Passwort Bestätigen',
+      firstLoginTitle: 'Erste Anmeldung - Setzen Sie Ihr Passwort',
+      firstLoginMessage: 'Bitte ändern Sie Ihr temporäres Passwort, um fortzufahren.',
+      passwordChanged: 'Passwort erfolgreich geändert',
+      passwordChangeFailed: 'Passwortänderung fehlgeschlagen',
+      incorrectOldPassword: 'Aktuelles Passwort ist falsch',
+      newPasswordSameAsOld: 'Neues Passwort muss sich vom aktuellen Passwort unterscheiden',
+      updating: 'Aktualisierung läuft...',
+      securityRequired: 'Sicherheitsupdate Erforderlich',
+      changePasswordNote: 'Zu Ihrer Sicherheit müssen Sie Ihr temporäres Passwort ändern, bevor Sie auf das System zugreifen.',
+      loggedInAs: 'Angemeldet als',
+      cannotSkipPassword: 'Sie müssen Ihr Passwort ändern, um fortzufahren',
+
+      // Logout
+      logout: 'Abmelden',
+      logoutConfirm: 'Sind Sie sicher, dass Sie sich abmelden möchten?',
+      logoutSuccess: 'Erfolgreich abgemeldet'
+    },
+
+    // Access Gate
+    accessGate: {
+      title: 'Plattformzugang',
+      subtitle: 'Einmaliger Zugriffsschlüssel erforderlich',
+      oneTimeOnly: 'Einmalige Einrichtung',
+      explanation: 'Sie müssen diesen Zugriffsschlüssel nur einmal eingeben. Er wird sicher in Ihrem Browser gespeichert.',
+      reason1: 'Ermöglicht sichere Datenspeicherung und -abruf',
+      reason2: 'Erforderlich für Zeitplan-Einreichungen und Updates',
+      reason3: 'Muss auf diesem Gerät nie wieder eingegeben werden',
+      accessToken: 'Allianz-Zugriffsschlüssel',
+      enterToken: 'Zugriffsschlüssel eingeben...',
+      contactAdmin: 'Kontaktieren Sie Ihren Allianz-Administrator, um den Zugriffsschlüssel zu erhalten',
+      unlockAccess: 'Zugriff Freischalten',
+      verifying: 'Überprüfung läuft...',
+      accessGranted: 'Zugriff gewährt! Willkommen bei The Dark Creed',
+      invalidToken: 'Ungültiger Zugriffsschlüssel. Bitte überprüfen und erneut versuchen.',
+      tokenRequired: 'Bitte geben Sie den Zugriffsschlüssel ein',
+      securityNote: 'Ihr Zugriffsschlüssel wird lokal gespeichert und niemals anderswohin übertragen',
+    },
+
+    // Admin Dashboard
+    admin: {
+      // Dashboard
+      dashboard: 'Admin Dashboard',
+      userManagement: 'User Management',
+      pendingApprovals: 'Pending Approvals',
+      statistics: 'Statistics',
+      loadingUsers: 'Loading users...',
+      searchUsers: 'Search users...',
+
+      // Users
+      allUsers: 'All Users',
+      activeUsers: 'Active Users',
+      totalUsers: 'Total Users',
+      pendingUsers: 'Pending Users',
+      admins: 'Administrators',
+      all: 'All',
+      active: 'Active',
+      pending: 'Pending',
+      noUsersFound: 'No users found',
+      you: 'You',
+
+      // Actions
+      approveUser: 'Approve',
+      rejectUser: 'Reject',
+      deleteUser: 'Delete User',
+      changeRole: 'Change Role',
+      userApproved: 'User approved successfully',
+      userRejected: 'User rejected successfully',
+      userDeleted: 'User deleted successfully',
+      roleUpdated: 'Role updated successfully',
+      cannotDeleteSelf: 'Cannot delete your own account',
+
+      // Confirmations
+      approveConfirm: 'Approve this user registration?',
+      rejectConfirm: 'Reject and delete this registration?',
+      deleteConfirm: 'Permanently delete this user account for',
+      changeRoleConfirm: 'Change role for',
+
+      // Errors
+      approveFailed: 'Failed to approve user',
+      rejectFailed: 'Failed to reject user',
+      deleteFailed: 'Failed to delete user',
+      roleUpdateFailed: 'Failed to update role',
+      failedToLoadUsers: 'Failed to load users',
+
+      // Role Permissions
+      rolePermissions: 'Role Permissions',
+      adminPermissions: 'Full access - manage users, roles, approvals, delete all, export/import CSV',
+      officerPermissions: 'Import CSV files, manage own schedule',
+      memberPermissions: 'View roster, submit own schedule, manage own data',
+
+    },
+
+    // Member Migration
+    migration: {
+      migrateExistingMembers: 'Migrate Existing Members',
+      memberMigrationTool: 'Member Migration Tool',
+      toolDescription: 'Bulk create user accounts for existing members',
+      howItWorks: 'How it works',
+      step1: 'Loads all members from data.json',
+      step2: 'Creates user accounts with temporary password',
+      step3: 'All users start as "Member" role, auto-approved',
+      step4: 'Users must change password on first login',
+      temporaryPassword: 'Temporary Password',
+      passwordNote: 'All migrated users will receive this password',
+      membersFound: 'Members Found',
+      noMembersFound: 'No members found in data.json',
+      membersLoaded: 'Loaded {count} members from data.json',
+      failedToLoadMembers: 'Failed to load members',
+      noMembersToMigrate: 'No members to migrate',
+      confirmMigration: 'Create accounts for {count} members?',
+      migrating: 'Migrating members...',
+      migrationSuccess: 'Created {created} of {total} accounts successfully',
+      migrationFailed: 'Migration failed',
+      noAccountsCreated: 'No new accounts created (all may already exist)',
+      totalMembers: 'Total',
+      accountsCreated: 'Created',
+      skipped: 'Skipped',
+      createdAccounts: 'Successfully Created',
+      errors: 'Errors',
+      successMessage: 'All users can now login with password: {password}',
+      startMigration: 'Start Migration',
+    },
+
+    // Roles
+    roles: {
+      admin: 'Admin',
+      officer: 'Officer',
+      member: 'Member'
+    },
+
+    // Status
+    status: {
+      active: 'Active',
+      pending: 'Pending',
+      inactive: 'Inactive'
+    },
+
+    // Setup
+    setup: {
+      // Initial Setup
+      firstTimeSetup: 'First-Time Setup',
+      initializeAuthentication: 'Initialize Authentication System',
+      githubPAT: 'GitHub PAT',
+      adminAccount: 'Admin Account',
+      githubAccessToken: 'GitHub Access Token',
+      enterPATPlaceholder: 'ghp_...',
+      patDescription: 'Enter your GitHub Personal Access Token to enable data storage for the authentication system.',
+      patSecurityNote: 'This token will be stored locally and used for all authentication operations.',
+      patVerified: 'GitHub token verified successfully',
+      invalidPAT: 'Invalid GitHub token',
+      patVerificationFailed: 'Failed to verify token',
+      verifying: 'Verifying...',
+      verifyAndContinue: 'Verify & Continue',
+
+      // Admin Creation
+      createAdminDescription: 'Create your administrator account. You will use this to manage users and access the admin panel.',
+      adminPrivileges: 'Administrators have full access to all features and can approve new user registrations.',
+      adminUsername: 'Admin Username',
+      enterAdminUsername: 'Choose a username',
+      adminPassword: 'Admin Password',
+      enterAdminPassword: 'Choose a strong password',
+      confirmPassword: 'Confirm Password',
+      reenterPassword: 'Re-enter your password',
+      passwordRequirements: 'Minimum 8 characters',
+      usernameLength: 'Username must be 3-20 characters',
+      passwordLength: 'Password must be at least 8 characters',
+      passwordMismatch: 'Passwords do not match',
+      enterUsername: 'Please enter a username',
+      enterPassword: 'Please enter a password',
+      enterPAT: 'Please enter a GitHub PAT',
+      initializing: 'Initializing...',
+      completeSetup: 'Complete Setup',
+      systemInitialized: 'System initialized successfully! Welcome.',
+      initializingSystem: 'Initializing authentication system...',
+      initializationFailed: 'Initialization failed. Please try again.'
+    },
+
+    // Errors
+    errors: {
+      accessDenied: 'Access Denied',
+      insufficientPermissions: 'You do not have permission to access this page.',
+      requiredRole: 'Required Role:',
+      yourRole: 'Your Role:',
+      goBack: 'Go Back',
+      to: 'to'
+    },
+
+    // Schedule Form
+    scheduleForm: {
+      submitSchedule: 'Zeitplan Einreichen',
+      timezoneConfig: 'Zeitzonenkonfiguration',
+      timezoneImportant: 'Wichtig:',
+      timezoneDescription: 'Wählen Sie Ihre lokale Zeitzone. Die Zeiten werden in Ihrer Zeitzone angezeigt und dann automatisch in die Spielserverzeit (UTC-2) umgerechnet.',
+      yourTimezone: 'Ihre Zeitzone',
+      detectingTimezone: 'Zeitzone wird erkannt...',
+      selected: 'Ausgewählt:',
+      serverTime: 'Serverzeit:',
+      serverTimeValue: 'UTC-2 (Spielserver)',
+      operatorInfo: 'Operatorinformationen',
+      inGameUsername: 'Spielername *',
+      yourCallsign: 'Ihr Rufzeichen',
+      carPower: 'Fahrzeugmacht (M) *',
+      carPowerPlaceholder: 'z.B., 2.5',
+      towerLevel: 'Turmstufe (1-35) *',
+      towerLevelPlaceholder: 'z.B., 25',
+      availabilitySchedule: 'Verfügbarkeitszeitplan',
+      timesInLocalTimezone: 'Die unten angezeigten Zeiten sind in',
+      yourLocalTimezone: 'Ihrer lokalen Zeitzone',
+      autoConverted: 'Sie werden beim Speichern automatisch in die Serverzeit (UTC-2) umgerechnet.',
+      submitting: 'Wird eingereicht',
+      processingSubmission: 'Einreichung wird Verarbeitet...',
+      doNotClose: 'Bitte schließen Sie dieses Fenster nicht',
+      savingAndVerifying: 'Daten werden gespeichert und überprüft...',
+
+      // Validations
+      usernameRequired: 'Spielername ist erforderlich',
+      validCarPowerRequired: 'Gültige Fahrzeugmacht erforderlich (in Millionen)',
+      towerLevelRange: 'Turmstufe muss zwischen 1 und 35 liegen',
+      selectTimeSlot: 'Wählen Sie mindestens einen Zeitslot',
+
+      // Toast messages
+      submittingSchedule: 'Zeitplan wird eingereicht...',
+      verifyingData: 'Gespeicherte Daten werden überprüft...',
+      scheduleSubmitted: 'Zeitplan erfolgreich eingereicht und überprüft!',
+      submissionFailed: 'Einreichung fehlgeschlagen - Versuchen Sie es erneut',
+      couldNotVerify: 'Speicherung der Daten konnte nicht überprüft werden. Bitte überprüfen Sie die Mitgliederliste manuell.',
+    },
+
+    // Time Slot Picker
+    timeSlotPicker: {
+      missionBrief: 'Missionsbesprechung:',
+      instructions: 'Wählen Sie alle Zeitfenster aus, in denen Sie für Einsätze verfügbar sind. Es können mehrere Slots pro Tag ausgewählt werden.',
+    },
+
+    // Member Card
+    memberCard: {
+      updated: 'Aktualisiert:',
+      carPower: 'Fahrzeugmacht',
+      tower: 'Turm',
+      editCarPower: 'Fahrzeugmacht bearbeiten',
+      editTowerLevel: 'Turmstufe bearbeiten',
+      save: 'Speichern',
+      cancel: 'Abbrechen',
+      timezone: 'Zeitzone:',
+      hideSchedule: 'Verbergen',
+      showSchedule: 'Anzeigen',
+      schedule: 'Zeitplan',
+      timesInServerTime: 'Zeiten angezeigt in',
+      serverTimeUTC2: 'Serverzeit (UTC-2)',
+      noAvailability: 'Keine Verfügbarkeitsdaten',
+
+      // Validations
+      invalidCarPower: 'Ungültiger Fahrzeugmachtwert',
+      invalidTowerLevel: 'Ungültige Turmstufe (1-35)',
+
+      // Toast messages
+      updatingCarPower: 'Fahrzeugmacht wird aktualisiert...',
+      updatingTowerLevel: 'Turmstufe wird aktualisiert...',
+      verifyingUpdate: 'Aktualisierung wird überprüft...',
+      carPowerUpdated: 'Fahrzeugmacht erfolgreich aktualisiert!',
+      towerLevelUpdated: 'Turmstufe erfolgreich aktualisiert!',
+      updateFailed: 'Aktualisierung fehlgeschlagen',
+      failedToUpdateCarPower: 'Fahrzeugmacht-Aktualisierung fehlgeschlagen',
+      failedToUpdateTowerLevel: 'Turmstufen-Aktualisierung fehlgeschlagen',
+      couldNotVerifyUpdate: 'Aktualisierung konnte nicht überprüft werden. Bitte manuell aktualisieren.',
+
+      // Delete member
+      deleteMember: 'Mitglied löschen',
+      deletingMember: 'Mitglied wird gelöscht...',
+      verifyingDeletion: 'Löschung wird überprüft...',
+      memberDeleted: 'Mitglied erfolgreich gelöscht!',
+      failedToDeleteMember: 'Mitglied-Löschung fehlgeschlagen',
+      couldNotVerifyDeletion: 'Löschung konnte nicht überprüft werden. Bitte manuell aktualisieren.',
+
+      // Edit username
+      editUsername: 'Edit username',
+      updatingUsername: 'Updating username...',
+      usernameUpdated: 'Username updated successfully!',
+      failedToUpdateUsername: 'Failed to update username',
+      invalidUsername: 'Invalid username',
+      usernameTooLong: 'Username too long',
+    },
+
+    // Members List
+    membersList: {
+      allianceRoster: 'Allianz-Mitgliederliste',
+      totalOperatives: 'Gesamte Einsatzkräfte:',
+      deleteAll: 'Alle Löschen',
+      loadingRoster: 'Mitgliederliste wird geladen...',
+      noOperatives: 'Keine Einsatzkräfte Registriert',
+      beFirstToSubmit: 'Seien Sie der Erste, der seinen Zeitplan einreicht',
+      sortBy: 'Sortieren Nach:',
+      username: 'Benutzername',
+      carPower: 'Fahrzeugmacht',
+      towerLevel: 'Turmstufe',
+      deletingAllMembers: 'Alle Mitglieder werden Gelöscht...',
+      criticalOperation: 'Kritischer Vorgang läuft...',
+
+      // Toast messages
+      failedToLoad: 'Laden der Mitgliederliste fehlgeschlagen',
+      deletingMembers: 'Alle Mitglieder werden gelöscht...',
+      verifyingDeletion: 'Löschung wird überprüft...',
+      allMembersDeleted: 'Alle Mitglieder erfolgreich gelöscht!',
+      deleteFailed: 'Löschen der Mitglieder fehlgeschlagen - Versuchen Sie es erneut',
+      couldNotVerifyDeletion: 'Löschung konnte nicht überprüft werden. Bitte manuell aktualisieren.',
+    },
+
+    // Delete Confirmation Modal
+    deleteModal: {
+      criticalWarning: 'Kritische Warnung',
+      deleteAllMembers: 'ALLE LÖSCHEN',
+      members: 'MITGLIEDER',
+      youAreAboutToDelete: 'Sie sind dabei',
+      fromRoster: 'aus der Allianz-Mitgliederliste zu löschen.',
+      cannotBeUndone: 'Diese Aktion KANN NICHT rückgängig gemacht werden!',
+      enterPasswordToConfirm: 'Passwort zur Bestätigung der Löschung Eingeben',
+      enterPasswordPlaceholder: 'Passwort eingeben...',
+      typeRequired: 'Geben Sie das erforderliche Passwort ein, um diesen kritischen Vorgang zu autorisieren',
+      incorrectPassword: 'Falsches Passwort. Löschung abgebrochen.',
+      cancel: 'Abbrechen',
+      deleteAll: 'Alle Löschen',
+    },
+
+    // Delete Member Modal
+    deleteMemberModal: {
+      criticalWarning: 'Kritische Warnung',
+      youAreAboutToDelete: 'Sie sind dabei zu löschen',
+      fromRoster: 'aus der Allianz-Mitgliederliste.',
+      cannotBeUndone: 'Diese Aktion KANN NICHT rückgängig gemacht werden!',
+      enterPasswordToConfirm: 'Passwort zur Bestätigung der Löschung Eingeben',
+      enterPasswordPlaceholder: 'Passwort eingeben...',
+      typeRequired: 'Geben Sie das erforderliche Passwort ein, um diesen kritischen Vorgang zu autorisieren',
+      incorrectPassword: 'Falsches Passwort. Löschung abgebrochen.',
+      cancel: 'Abbrechen',
+      deleteMember: 'Mitglied Löschen',
+    },
+
+    // Optimal Schedule Calendar
+    optimalSchedule: {
+      optimalEventSchedule: 'Optimaler Ereigniszeitplan',
+      bestTimeSlotsBasedOn: 'Beste Zeitfenster basierend auf',
+      member: 'Mitglied',
+      members: 'Mitglieder',
+      availability: 'Verfügbarkeit',
+      allTimesShownIn: 'Alle Zeiten angezeigt in',
+      recommendedEventTime: 'Empfohlene Ereigniszeit',
+      availabilityPercentage: 'Verfügbarkeit',
+      availabilityLegend: 'Verfügbarkeitslegende',
+      excellent: 'Ausgezeichnet',
+      good: 'Gut',
+      moderate: 'Moderat',
+      low: 'Niedrig',
+      veryLow: 'Sehr Niedrig',
+      peak: 'Spitze:',
+      analyzingData: 'Verfügbarkeitsdaten werden Analysiert...',
+      noMemberData: 'Keine Mitgliederdaten Verfügbar',
+      submitSchedulesFirst: 'Mitglieder müssen zuerst ihre Zeitpläne einreichen',
+      membersAvailable: 'Mitglieder',
+      availableMembers: 'Verfügbare Mitglieder',
+      available: 'verfügbar',
+      sortedByCarPower: 'Sortiert nach Fahrzeugmacht (höchste bis niedrigste)',
+    },
+
+    // Timezone
+    timezone: {
+      serverTime: 'Serverzeit (UTC-2)',
+    },
+
+    // Language
+    language: {
+      english: 'English',
+      french: 'Français',
+      german: 'Deutsch',
+      spanish: 'Español',
+      portuguese: 'Português',
+      italian: 'Italiano',
+    },
+
+    // CSV Import/Export
+    csv: {
+      export: 'Als CSV Exportieren',
+      import: 'Aus CSV Importieren',
+      exportSuccess: '{count} Mitglieder erfolgreich exportiert',
+      exportFailed: 'CSV-Export fehlgeschlagen',
+      importSuccess: '{count} Mitglieder erfolgreich importiert',
+      importFailed: 'CSV-Import fehlgeschlagen',
+      importing: 'Mitglieder werden importiert...',
+      verifyingImport: 'Import wird überprüft...',
+      couldNotVerifyImport: 'Import konnte nicht überprüft werden. Bitte manuell aktualisieren.',
+      dragDropArea: 'CSV-Datei hier ablegen oder klicken zum Durchsuchen',
+      selectFile: 'CSV-Datei Auswählen',
+      supportedFormat: 'Unterstütztes Format: .csv',
+      validating: 'CSV-Daten werden validiert...',
+      validationSuccess: 'Validierung Erfolgreich',
+      validationFailed: 'Validierung Fehlgeschlagen',
+      foundValidMembers: '{count} gültige Mitglieder gefunden',
+      previewTitle: 'Import-Vorschau',
+      selectImportMode: 'Import-Modus Auswählen',
+      importNote: 'Alle Zeiten sind in Serverzeit (UTC-2)',
+      members: 'Mitglieder',
+      new: 'Neu',
+      exists: 'Existiert',
+      status: 'Status',
+      destructive: 'Destruktiv',
+      recommended: 'Empfohlen',
+      safe: 'Sicher',
+      willDelete: 'Löscht {count} bestehende Mitglieder',
+      willUpdate: 'Aktualisiert: {count}',
+      willAdd: 'Fügt hinzu: {count}',
+      willSkip: 'Überspringt: {count}',
+      errors: {
+        noMembers: 'Keine Mitglieder zum Exportieren',
+        noData: 'Keine Daten zum Importieren',
+        invalidFile: 'Ungültiges Dateiformat. Bitte laden Sie eine CSV-Datei hoch.',
+        invalidStructure: 'Ungültige CSV-Struktur. Erforderliche Spalten fehlen.',
+        emptyFile: 'CSV-Datei ist leer',
+      },
+      importModes: {
+        replace: 'Alle Ersetzen',
+        replaceDesc: 'Alle bestehenden Mitglieder löschen und neue importieren',
+        merge: 'Zusammenführen & Aktualisieren',
+        mergeDesc: 'Bestehende Mitglieder aktualisieren und neue hinzufügen',
+        addOnly: 'Nur Neue Hinzufügen',
+        addOnlyDesc: 'Nur Mitglieder hinzufügen, die nicht existieren (Duplikate überspringen)',
+      },
+      conflicts: {
+        title: 'Konflikte Erkannt',
+        existing: '{count} bestehende Mitglieder werden betroffen sein',
+      },
+    }
+  };
+
