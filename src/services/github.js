@@ -412,6 +412,94 @@ export async function deleteMember(pat, username) {
 }
 
 /**
+ * Bulk import members (replace all members with new list)
+ * @param {Array<Object>} members - Array of member objects to import
+ * @param {string} pat - GitHub Personal Access Token
+ * @param {string} mode - Import mode: 'replace', 'merge', 'add-only'
+ * @returns {Promise<boolean>} True if successful
+ */
+export async function bulkImportMembers(members, pat, mode = 'merge') {
+  try {
+    // First, fetch the current file to get its SHA and auth data
+    const fileUrl = `https://api.github.com/repos/${DATA_REPO_OWNER}/${DATA_REPO_NAME}/contents/${DATA_FILE_PATH}`;
+    const cacheBustUrl = `${fileUrl}?ref=main&_t=${Date.now()}`;
+
+    const getResponse = await fetch(cacheBustUrl, {
+      headers: {
+        'Authorization': `token ${pat}`,
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      cache: 'no-store'
+    });
+
+    let currentSha = null;
+    let currentData = {
+      auth: {
+        passwordHash: null,
+        initialized: false,
+        initDate: null
+      },
+      members: []
+    };
+
+    if (getResponse.ok) {
+      const fileData = await getResponse.json();
+      currentSha = fileData.sha;
+
+      // Decode base64 content with proper UTF-8 support
+      const base64 = fileData.content.replace(/\n/g, '');
+      const binaryString = atob(base64);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const content = new TextDecoder('utf-8').decode(bytes);
+      currentData = JSON.parse(content);
+    }
+
+    // Create updated data (keep auth, replace/merge members based on mode)
+    const updatedData = {
+      auth: currentData.auth,
+      members: members // Members already processed by processImport function
+    };
+
+    // Encode the updated content as base64 with proper UTF-8 support
+    const jsonString = JSON.stringify(updatedData, null, 2);
+    const encoder = new TextEncoder();
+    const encodedBytes = encoder.encode(jsonString);
+    const encodedBinaryString = Array.from(encodedBytes, byte => String.fromCharCode(byte)).join('');
+    const updatedContent = btoa(encodedBinaryString);
+
+    // Update the file
+    const updateResponse = await fetch(fileUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${pat}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: `Bulk import: ${mode} mode (${members.length} members)`,
+        content: updatedContent,
+        sha: currentSha,
+        branch: 'main'
+      })
+    });
+
+    if (!updateResponse.ok) {
+      const errorData = await updateResponse.json();
+      console.error('Failed to bulk import:', errorData);
+      throw new Error(`Failed to bulk import: ${errorData.message || updateResponse.statusText}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error in bulk import:', error);
+    throw error;
+  }
+}
+
+/**
  * Verify GitHub PAT has correct permissions
  * @param {string} pat - GitHub Personal Access Token
  * @returns {Promise<boolean>} True if PAT is valid

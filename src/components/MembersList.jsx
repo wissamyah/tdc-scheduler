@@ -4,7 +4,10 @@ import { Users, Loader2, AlertCircle, Filter, Trash2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import MemberCard from './MemberCard';
 import DeleteConfirmModal from './DeleteConfirmModal';
-import { fetchData, fetchDataFromAPI, deleteAllMembers } from '../services/github';
+import ExportCSVButton from './ExportCSVButton';
+import ImportCSVButton from './ImportCSVButton';
+import ImportCSVModal from './ImportCSVModal';
+import { fetchData, fetchDataFromAPI, deleteAllMembers, bulkImportMembers } from '../services/github';
 import { showToast } from '../utils/toast';
 
 export default function MembersList() {
@@ -14,6 +17,7 @@ export default function MembersList() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [sortBy, setSortBy] = useState('carPower'); // username, carPower, towerLevel
   const previousLocationKey = useRef(location.key);
 
@@ -153,6 +157,72 @@ export default function MembersList() {
     setShowDeleteModal(false);
   };
 
+  const handleImportClick = () => {
+    setShowImportModal(true);
+  };
+
+  const handleImport = async (importedMembers, summary, mode) => {
+    const toastId = showToast.loading(t('csv.importing'));
+
+    try {
+      // Get PAT from localStorage
+      const pat = localStorage.getItem('tdc_pat');
+
+      if (!pat) {
+        showToast.dismiss(toastId);
+        showToast.error(t('auth.authRequired'));
+        return;
+      }
+
+      // Bulk import to GitHub
+      await bulkImportMembers(importedMembers, pat, mode);
+
+      showToast.loading(t('csv.verifyingImport'), { id: toastId });
+
+      // Verify import by polling
+      const maxAttempts = 15;
+      let attempts = 0;
+      let importVerified = false;
+
+      // Add initial delay before first verification
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      while (attempts < maxAttempts && !importVerified) {
+        attempts++;
+
+        try {
+          const data = await fetchDataFromAPI(pat);
+
+          // Check if import was successful
+          if (data.members.length === importedMembers.length) {
+            importVerified = true;
+            setMembers(data.members);
+            break;
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        } catch (error) {
+          console.error('Error verifying import:', error);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
+
+      if (!importVerified) {
+        showToast.dismiss(toastId);
+        showToast.error(t('csv.couldNotVerifyImport'));
+        // Still refresh the list
+        loadMembersFromAPI();
+        return;
+      }
+
+      showToast.dismiss(toastId);
+    } catch (error) {
+      console.error('Import error:', error);
+      showToast.dismiss(toastId);
+      showToast.error(t('csv.importFailed'));
+    }
+  };
+
   const sortedMembers = [...members].sort((a, b) => {
     switch (sortBy) {
       case 'carPower':
@@ -186,6 +256,14 @@ export default function MembersList() {
         onConfirm={handleDeleteAllConfirm}
         onCancel={handleDeleteAllCancel}
         memberCount={members.length}
+      />
+
+      {/* Import CSV Modal */}
+      <ImportCSVModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        existingMembers={members}
+        onImport={handleImport}
       />
 
       {/* Deleting Overlay - Prevents all interaction during deletion */}
@@ -225,21 +303,36 @@ export default function MembersList() {
                 <span className="font-display font-bold text-creed-accent">{members.length}</span>
               </p>
             </div>
-            {members.length > 0 && (
-              <button
-                onClick={handleDeleteAllClick}
+            <div className="flex items-center gap-3 flex-wrap">
+              {/* Export CSV Button */}
+              <ExportCSVButton
+                members={members}
                 disabled={loading || deleting}
-                className="flex items-center gap-2 px-4 py-2.5
-                         bg-creed-base border border-creed-danger
-                         text-creed-danger rounded-lg
-                         hover:bg-creed-danger hover:text-white hover:shadow-glow-primary
-                         disabled:opacity-50 disabled:cursor-not-allowed
-                         transition-all font-display font-semibold uppercase tracking-wide"
-              >
-                <Trash2 className="w-5 h-5" />
-                <span>{t('membersList.deleteAll')}</span>
-              </button>
-            )}
+              />
+
+              {/* Import CSV Button */}
+              <ImportCSVButton
+                onClick={handleImportClick}
+                disabled={loading || deleting}
+              />
+
+              {/* Delete All Button */}
+              {members.length > 0 && (
+                <button
+                  onClick={handleDeleteAllClick}
+                  disabled={loading || deleting}
+                  className="flex items-center gap-2 px-4 py-2.5
+                           bg-creed-base border border-creed-danger
+                           text-creed-danger rounded-lg
+                           hover:bg-creed-danger hover:text-white hover:shadow-glow-primary
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-all font-display font-semibold uppercase tracking-wide"
+                >
+                  <Trash2 className="w-5 h-5" />
+                  <span>{t('membersList.deleteAll')}</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
