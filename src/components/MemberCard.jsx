@@ -8,6 +8,7 @@ import { getTimezoneDisplay } from '../utils/timezone';
 import { saveMemberSchedule, fetchDataFromAPI, deleteMember } from '../services/github';
 import { showToast } from '../utils/toast';
 import DeleteMemberModal from './DeleteMemberModal';
+import { formatDate } from '../utils/dateFormat';
 
 export default function MemberCard({ member, onUpdate }) {
   const { t } = useLanguage();
@@ -538,7 +539,7 @@ export default function MemberCard({ member, onUpdate }) {
               </div>
             )}
             <p className="text-xs text-creed-muted font-body mt-1">
-              {member.lastUpdated && `${t('memberCard.updated')} ${new Date(member.lastUpdated).toLocaleDateString()}`}
+              {member.lastUpdated && `${t('memberCard.updated')} ${formatDate(member.lastUpdated)}`}
             </p>
           </div>
         </div>

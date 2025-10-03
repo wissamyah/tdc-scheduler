@@ -2,7 +2,18 @@
   "permissions": {
     "allow": [
       "Bash(do echo \"=== $file ===\")",
-      "Read(//c/**)"
+      "Read(//c/**)",
+      "Bash(do echo \"Processing $lang...\")",
+      "Bash(for lang in es pt it)",
+      "Bash(do)",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(npm start)",
+      "Bash(npm run dev:*)",
+      "Bash(for lang in de es pt it)",
+      "Bash(do echo \"=== $lang ===\")",
+      "Bash(git log:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

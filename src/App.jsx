@@ -12,6 +12,7 @@ import FirstLoginPasswordChange from './components/FirstLoginPasswordChange';
 import ScheduleForm from './components/ScheduleForm';
 import MembersList from './components/MembersList';
 import OptimalScheduleCalendar from './components/OptimalScheduleCalendar';
+import EventsPage from './components/EventsPage';
 import AdminDashboard from './components/AdminDashboard';
 import Settings from './components/Settings';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -69,6 +70,7 @@ function AppContent() {
           <Route path="/" element={<ScheduleForm />} />
           <Route path="/members" element={<MembersList />} />
           <Route path="/optimal" element={<OptimalScheduleCalendar />} />
+          <Route path="/events" element={<EventsPage />} />
           <Route path="/settings" element={<Settings />} />
           <Route
             path="/admin"

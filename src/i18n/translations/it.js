@@ -14,6 +14,9 @@ export default {
       no: 'No',
       goBack: 'Go Back',
       to: 'to',
+      optional: 'Opzionale',
+      saving: 'Salvataggio...',
+      creating: 'Creazione...',
     },
 
     // Days of the week
@@ -42,6 +45,8 @@ export default {
       viewRosterShort: 'LISTA',
       optimalSchedule: 'ORARIO OTTIMALE',
       optimalScheduleShort: 'OTTIMALE',
+      events: 'EVENTI',
+      eventsShort: 'EVENTI',
       adminDashboard: 'ADMIN PANEL',
       adminDashboardShort: 'ADMIN',
       welcome: 'Benvenuto',
@@ -185,8 +190,14 @@ export default {
       all: 'All',
       active: 'Active',
       pending: 'Pending',
+      neverLoggedIn: 'Mai Connesso',
       noUsersFound: 'No users found',
       you: 'You',
+      copyUsername: 'Copia nome utente',
+      usernameCopied: 'Nome utente copiato negli appunti!',
+      copyAll: 'Copia Tutti',
+      copyAllUsernames: 'Copia tutti i nomi utente',
+      allUsernamesCopied: '{count} nomi utente copiati negli appunti!',
 
       // Actions
       approveUser: 'Approve',
@@ -335,6 +346,8 @@ export default {
       serverTime: 'Ora del Server:',
       serverTimeValue: 'UTC-2 (Server di Gioco)',
       operatorInfo: 'Informazioni Operatore',
+      submittingAs: 'Invio come',
+      usernameAutoFilled: 'Compilato automaticamente dal tuo account',
       inGameUsername: 'Nome Utente nel Gioco *',
       yourCallsign: 'Il tuo nominativo',
       carPower: 'Potenza Veicolo (M) *',
@@ -574,6 +587,11 @@ export default {
       refresh: 'Aggiorna',
       manualRefresh: 'Clicca per aggiornare ora',
       updating: 'Aggiornamento...',
+    },
+
+    // Events
+    events: {
+      events: 'Eventi', upcomingEvents: 'Prossimi Eventi', pastEvents: 'Eventi Passati', createEvent: 'Crea Evento', editEvent: 'Modifica Evento', eventDetails: 'Dettagli Evento', noEvents: 'Nessun evento trovato', noUpcomingEvents: 'Nessun evento in programma', noPastEvents: 'Nessun evento passato', eventName: 'Nome Evento', eventDate: 'Data Evento', startTime: 'Ora Inizio', endTime: 'Ora Fine', description: 'Descrizione', createdBy: 'Creato da', rsvp: 'RSVP', going: 'Parteciperò', maybe: 'Forse', notGoing: 'Non Parteciperò', noResponse: 'Nessuna Risposta', rsvpStatus: 'Il Tuo RSVP', updateRSVP: 'Aggiorna RSVP', memberList: 'Lista Membri', rsvpSummary: 'Riepilogo RSVP', totalResponses: 'Risposte Totali', members: 'membri', deleteEvent: 'Elimina Evento', confirmDelete: 'Sei sicuro di voler eliminare questo evento?', eventDeleted: 'Evento eliminato con successo', eventCreated: 'Evento creato con successo', eventUpdated: 'Evento aggiornato con successo', rsvpUpdated: 'RSVP aggiornato con successo', pastEvent: 'Evento Passato', createEventPrompt: 'Clicca il pulsante sopra per creare il tuo primo evento', serverTime: 'Ora Server', eventNameRequired: 'Il nome dell\'evento è obbligatorio', eventDateRequired: 'La data dell\'evento è obbligatoria', startTimeRequired: 'L\'ora di inizio è obbligatoria', endTimeRequired: 'L\'ora di fine è obbligatoria', endTimeAfterStart: 'L\'ora di fine deve essere successiva all\'ora di inizio', futureDate: 'La data dell\'evento deve essere futura',
     },
   };
 

@@ -14,6 +14,9 @@ export default {
       no: 'No',
       goBack: 'Go Back',
       to: 'to',
+      optional: 'Optional',
+      saving: 'Saving...',
+      creating: 'Creating...',
     },
 
     // Days of the week
@@ -42,6 +45,8 @@ export default {
       viewRosterShort: 'ROSTER',
       optimalSchedule: 'OPTIMAL SCHEDULE',
       optimalScheduleShort: 'OPTIMAL',
+      events: 'EVENTS',
+      eventsShort: 'EVENTS',
       adminDashboard: 'ADMIN PANEL',
       adminDashboardShort: 'ADMIN',
       welcome: 'Welcome',
@@ -185,8 +190,14 @@ export default {
       all: 'All',
       active: 'Active',
       pending: 'Pending',
+      neverLoggedIn: 'Never Logged In',
       noUsersFound: 'No users found',
       you: 'You',
+      copyUsername: 'Copy username',
+      usernameCopied: 'Username copied to clipboard!',
+      copyAll: 'Copy All',
+      copyAllUsernames: 'Copy all usernames',
+      allUsernamesCopied: '{count} usernames copied to clipboard!',
 
       // Actions
       approveUser: 'Approve',
@@ -335,6 +346,8 @@ export default {
       serverTime: 'Server Time:',
       serverTimeValue: 'UTC-2 (Game Server)',
       operatorInfo: 'Operator Information',
+      submittingAs: 'Submitting As',
+      usernameAutoFilled: 'Auto-filled from your account',
       inGameUsername: 'In-Game Username *',
       yourCallsign: 'Your callsign',
       carPower: 'Car Power (M) *',
@@ -620,6 +633,69 @@ export default {
       refresh: 'Refresh',
       manualRefresh: 'Click to refresh now',
       updating: 'Updating...',
+    },
+
+    // Events
+    events: {
+      // General
+      events: 'Events',
+      upcomingEvents: 'Upcoming Events',
+      pastEvents: 'Past Events',
+      noEvents: 'No events',
+      createEvent: 'Create Event',
+      editEvent: 'Edit Event',
+      deleteEvent: 'Delete Event',
+      filter: 'Filter',
+      all: 'All',
+      upcoming: 'Upcoming',
+      past: 'Past',
+
+      // Event Details
+      eventName: 'Event Name',
+      eventDate: 'Date',
+      startTime: 'Start Time',
+      endTime: 'End Time',
+      description: 'Description',
+      createdBy: 'Created by',
+      serverTime: 'Server Time',
+      timesInServerTime: 'All times shown in server time',
+
+      // RSVP
+      rsvp: 'RSVP',
+      going: 'Going',
+      maybe: 'Maybe',
+      notGoing: 'Not Going',
+      noResponse: 'No Response',
+      yourResponse: 'Your Response',
+      rsvpUpdated: 'RSVP updated',
+      rsvpFailed: 'Failed to update RSVP',
+
+      // Messages
+      loadingEvents: 'Loading events...',
+      loadFailed: 'Failed to load events',
+      eventCreated: 'Event created successfully',
+      eventUpdated: 'Event updated successfully',
+      eventDeleted: 'Event deleted',
+      createFailed: 'Failed to create event',
+      updateFailed: 'Failed to update event',
+      deleteFailed: 'Failed to delete event',
+      deleteConfirm: 'Delete this event and all RSVPs?',
+      noUpcomingEvents: 'No upcoming events scheduled',
+      noPastEvents: 'No past events',
+      noEventsYet: 'No events have been created yet',
+      createFirstEvent: 'Create First Event',
+      manageEventsAndRSVPs: 'Manage alliance events and track RSVPs',
+      noMembersInCategory: 'No members in this category',
+
+      // Form
+      eventNamePlaceholder: 'e.g., Saturday Night Raid',
+      descriptionPlaceholder: 'Add event details or instructions...',
+      nameRequired: 'Event name is required',
+      dateRequired: 'Date is required',
+      startTimeRequired: 'Start time is required',
+      endTimeRequired: 'End time is required',
+      endTimeAfterStart: 'End time must be after start time',
+      dateInFuture: 'Date must be in the future',
     },
   };
 

@@ -119,6 +119,18 @@ export function canViewOptimalSchedule(currentUser) {
 }
 
 /**
+ * Check if user can create events
+ * @param {Object} currentUser - Current logged-in user
+ * @returns {boolean} Permission status
+ */
+export function canCreateEvent(currentUser) {
+  if (!currentUser) return false;
+
+  // Admins and officers can create events
+  return currentUser.role === 'admin' || currentUser.role === 'officer';
+}
+
+/**
  * Get role display name with styling
  * @param {string} role - User role
  * @returns {Object} Role display info with color and label

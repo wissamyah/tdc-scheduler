@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Shield, Users, CheckCircle, XCircle, Trash2, Loader2, AlertCircle, UserCheck, UserX, Settings, Search, X, Info, RefreshCw } from 'lucide-react';
+import { Shield, Users, CheckCircle, XCircle, Trash2, Loader2, AlertCircle, UserCheck, UserX, Settings, Search, X, Info, RefreshCw, Copy, Check, ClipboardList } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { showToast } from '../utils/toast';
@@ -7,16 +7,18 @@ import { getAllUsers, approveUser, rejectUser, updateUserRole, deleteUser } from
 import { getRoleDisplay, getStatusDisplay } from '../utils/permissions';
 import ConfirmModal from './ConfirmModal';
 import { useAutoRefresh } from '../hooks/useAutoRefresh';
+import { formatDate, formatDateTime } from '../utils/dateFormat';
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
   const { currentUser, refreshAuthStatus } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all'); // all, pending, active
+  const [filter, setFilter] = useState('all'); // all, pending, active, never_logged_in
   const [searchQuery, setSearchQuery] = useState('');
   const [actionLoading, setActionLoading] = useState(null);
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, type: null, data: null });
+  const [bulkCopied, setBulkCopied] = useState(false);
 
   useEffect(() => {
     loadUsers();
@@ -155,6 +157,15 @@ export default function AdminDashboard() {
 
   const pendingUsers = users.filter(u => u.status === 'pending');
   const activeUsers = users.filter(u => u.status === 'active');
+  const neverLoggedInUsers = activeUsers.filter(u => !u.lastLogin);
+
+  const handleBulkCopyUsernames = () => {
+    const usernames = neverLoggedInUsers.map(u => u.username).join(', ');
+    navigator.clipboard.writeText(usernames);
+    showToast.success(t('admin.allUsernamesCopied', { count: neverLoggedInUsers.length }));
+    setBulkCopied(true);
+    setTimeout(() => setBulkCopied(false), 1500);
+  };
 
   // Sort users by role hierarchy: admin > officer > member
   const roleOrder = { admin: 1, officer: 2, member: 3 };
@@ -164,6 +175,7 @@ export default function AdminDashboard() {
       // Filter by status
       if (filter === 'pending' && u.status !== 'pending') return false;
       if (filter === 'active' && u.status !== 'active') return false;
+      if (filter === 'never_logged_in' && (u.status !== 'active' || u.lastLogin)) return false;
 
       // Filter by search query
       if (searchQuery.trim()) {
@@ -312,46 +324,78 @@ export default function AdminDashboard() {
               </div>
 
               {/* Filter Buttons */}
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setFilter('all')}
-                className={`px-4 py-2 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
-                         transition-all flex items-center gap-2 ${
+                className={`min-w-[120px] h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                         transition-all flex items-center justify-center gap-2 ${
                            filter === 'all'
                              ? 'bg-gradient-to-r from-creed-primary to-creed-accent text-white shadow-glow-primary'
                              : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-primary'
                          }`}
               >
-                <Users className="w-4 h-4" />
+                <Users className="w-4 h-4 flex-shrink-0" />
                 <span className="hidden sm:inline">{t('admin.all')}</span>
                 <span>({users.length})</span>
               </button>
               <button
                 onClick={() => setFilter('active')}
-                className={`px-4 py-2 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
-                         transition-all flex items-center gap-2 ${
+                className={`min-w-[120px] h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                         transition-all flex items-center justify-center gap-2 ${
                            filter === 'active'
                              ? 'bg-gradient-to-r from-creed-success to-creed-accent text-white'
                              : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-success'
                          }`}
               >
-                <UserCheck className="w-4 h-4" />
+                <UserCheck className="w-4 h-4 flex-shrink-0" />
                 <span className="hidden sm:inline">{t('admin.active')}</span>
                 <span>({activeUsers.length})</span>
               </button>
               <button
                 onClick={() => setFilter('pending')}
-                className={`px-4 py-2 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
-                         transition-all flex items-center gap-2 ${
+                className={`min-w-[120px] h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                         transition-all flex items-center justify-center gap-2 ${
                            filter === 'pending'
                              ? 'bg-gradient-to-r from-creed-warning to-creed-accent text-creed-darker'
                              : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-warning'
                          }`}
               >
-                <UserX className="w-4 h-4" />
+                <UserX className="w-4 h-4 flex-shrink-0" />
                 <span className="hidden sm:inline">{t('admin.pending')}</span>
                 <span>({pendingUsers.length})</span>
               </button>
+              <button
+                onClick={() => setFilter('never_logged_in')}
+                className={`min-w-[120px] h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                         transition-all flex items-center justify-center gap-2 ${
+                           filter === 'never_logged_in'
+                             ? 'bg-gradient-to-r from-creed-warning to-creed-accent text-creed-darker'
+                             : 'bg-creed-base border border-creed-lighter text-creed-text hover:border-creed-warning'
+                         }`}
+              >
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline">{t('admin.neverLoggedIn')}</span>
+                <span>({neverLoggedInUsers.length})</span>
+              </button>
+              {neverLoggedInUsers.length > 0 && (
+                <button
+                  onClick={handleBulkCopyUsernames}
+                  className="min-w-[120px] h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                           bg-creed-warning/10 border border-creed-warning text-creed-warning
+                           hover:bg-creed-warning hover:text-white transition-all flex items-center justify-center gap-2"
+                  title={t('admin.copyAllUsernames')}
+                >
+                  <div className="relative w-4 h-4">
+                    <ClipboardList className={`w-4 h-4 absolute transition-all duration-300 ${
+                      bulkCopied ? 'opacity-0 scale-0 rotate-90' : 'opacity-100 scale-100 rotate-0'
+                    }`} />
+                    <Check className={`w-4 h-4 absolute transition-all duration-300 ${
+                      bulkCopied ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-0 -rotate-90'
+                    }`} />
+                  </div>
+                  <span className="hidden md:inline">{t('admin.copyAll')}</span>
+                </button>
+              )}
               </div>
             </div>
           </div>
@@ -363,7 +407,7 @@ export default function AdminDashboard() {
               <p className="text-creed-muted font-body">{t('admin.noUsersFound')}</p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-3">
               {filteredUsers.map(user => (
                 <UserRow
                   key={user.id}
@@ -434,7 +478,7 @@ function PendingUserCard({ user, onApprove, onReject, loading, t }) {
             </div>
           )}
           <p className="text-xs text-creed-muted font-body mt-1">
-            Registered: {new Date(user.createdAt).toLocaleString()}
+            Registered: {formatDateTime(user.createdAt)}
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
@@ -468,6 +512,7 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
   const statusDisplay = getStatusDisplay(user.status);
   const isCurrentUser = user.id === currentUser.id;
   const [showRoleTooltip, setShowRoleTooltip] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const deleteButton = !isCurrentUser && (
     <button
@@ -488,24 +533,49 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
         {/* User info section */}
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2 flex-wrap">
-            <h3 className="text-lg font-display font-bold text-creed-text">
-              {user.username}
-              {isCurrentUser && (
-                <span className="ml-2 text-xs text-creed-accent font-body">({t('admin.you')})</span>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-display font-bold text-creed-text">
+                {user.username}
+                {isCurrentUser && (
+                  <span className="ml-2 text-xs text-creed-accent font-body">({t('admin.you')})</span>
+                )}
+              </h3>
+              {!user.lastLogin && user.status === 'active' && (
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(user.username);
+                    showToast.success(t('admin.usernameCopied'));
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 1500);
+                  }}
+                  className="p-1 rounded bg-creed-warning/10 border border-creed-warning text-creed-warning
+                            hover:bg-creed-warning hover:text-white transition-all"
+                  title={t('admin.copyUsername')}
+                >
+                  <div className="relative w-3.5 h-3.5">
+                    <Copy className={`w-3.5 h-3.5 absolute transition-all duration-300 ${
+                      copied ? 'opacity-0 scale-0 rotate-90' : 'opacity-100 scale-100 rotate-0'
+                    }`} />
+                    <Check className={`w-3.5 h-3.5 absolute transition-all duration-300 ${
+                      copied ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-0 -rotate-90'
+                    }`} />
+                  </div>
+                </button>
               )}
-            </h3>
+            </div>
             <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
                            bg-${roleDisplay.bgColor} border border-${roleDisplay.borderColor} text-${roleDisplay.color}`}>
               {t(roleDisplay.labelKey)}
             </span>
-            <span className={`px-2 py-1 rounded text-xs font-display font-bold uppercase
-                           bg-${statusDisplay.bgColor} border border-${statusDisplay.borderColor} text-${statusDisplay.color}`}>
-              {t(statusDisplay.labelKey)}
-            </span>
+            {!user.lastLogin && user.status === 'active' && (
+              <span className="px-2 py-1 rounded text-xs font-display font-bold uppercase bg-creed-warning/20 border border-creed-warning text-creed-warning">
+                {t('admin.neverLoggedIn')}
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-4 text-xs text-creed-muted font-body flex-wrap">
-            <span>Joined: {new Date(user.createdAt).toLocaleDateString()}</span>
-            {user.lastLogin && <span>Last Login: {new Date(user.lastLogin).toLocaleDateString()}</span>}
+            <span>Joined: {formatDate(user.createdAt)}</span>
+            {user.lastLogin && <span>Last Login: {formatDate(user.lastLogin)}</span>}
           </div>
         </div>
 

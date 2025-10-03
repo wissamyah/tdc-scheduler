@@ -365,9 +365,10 @@ export default function MembersList() {
                            hover:bg-creed-danger hover:text-white hover:shadow-glow-primary
                            disabled:opacity-50 disabled:cursor-not-allowed
                            transition-all font-display font-semibold uppercase tracking-wide"
+                  title={t('membersList.deleteAll')}
                 >
                   <Trash2 className="w-5 h-5" />
-                  <span>{t('membersList.deleteAll')}</span>
+                  <span className="hidden sm:inline">{t('membersList.deleteAll')}</span>
                 </button>
               )}
             </div>

@@ -22,9 +22,19 @@ export function LanguageProvider({ children }) {
     }
   }, []);
 
-  // Get translation function
-  const t = useCallback((key, defaultValue = key) => {
-    return getNestedValue(translations[language], key, defaultValue);
+  // Get translation function with variable interpolation support
+  const t = useCallback((key, params = {}) => {
+    const defaultValue = typeof params === 'string' ? params : key;
+    const translation = getNestedValue(translations[language], key, defaultValue);
+
+    // If params is an object and translation contains placeholders, interpolate
+    if (typeof params === 'object' && params !== null && typeof translation === 'string') {
+      return translation.replace(/\{(\w+)\}/g, (match, placeholder) => {
+        return params[placeholder] !== undefined ? params[placeholder] : match;
+      });
+    }
+
+    return translation;
   }, [language]);
 
   const value = useMemo(() => ({
