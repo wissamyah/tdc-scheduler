@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Users, Calendar, TrendingUp, LogOut, User, ChevronDown } from 'lucide-react';
+import { Shield, Users, Calendar, TrendingUp, LogOut, User, ChevronDown, Settings as SettingsIcon } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import LanguageToggle from './LanguageToggle';
@@ -125,13 +125,13 @@ export default function Header() {
           <div className="relative ml-2">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2 px-4 py-3 rounded-lg
-                       bg-creed-lighter hover:bg-creed-base
-                       border border-creed-lighter hover:border-creed-primary
+              className="flex items-center gap-2 px-3 py-2 rounded-lg
+                       bg-transparent hover:bg-creed-lighter/50
+                       border border-transparent hover:border-creed-lighter
                        transition-all group"
             >
-              <User className="w-4 h-4 text-creed-text" />
-              <span className="hidden md:inline text-creed-text font-display font-semibold text-sm">
+              <User className="w-5 h-5 text-creed-muted group-hover:text-creed-text transition-colors" />
+              <span className="hidden md:inline text-creed-muted group-hover:text-creed-text font-display font-medium text-sm transition-colors">
                 {currentUser.username}
               </span>
               <span className={`px-2 py-0.5 rounded text-xs font-display font-bold uppercase
@@ -151,6 +151,17 @@ export default function Header() {
                 />
                 {/* Menu */}
                 <div className="absolute right-0 mt-2 w-48 bg-creed-light border border-creed-lighter rounded-lg shadow-tactical z-20 overflow-hidden">
+                  <Link
+                    to="/settings"
+                    onClick={() => setShowUserMenu(false)}
+                    className="w-full flex items-center gap-3 px-4 py-3
+                             hover:bg-creed-base transition-all
+                             text-creed-text font-display font-semibold text-sm uppercase tracking-wide"
+                  >
+                    <SettingsIcon className="w-4 h-4" />
+                    <span>{t('settings.settings')}</span>
+                  </Link>
+                  <div className="h-px bg-creed-lighter"></div>
                   <button
                     onClick={handleLogoutClick}
                     className="w-full flex items-center gap-3 px-4 py-3

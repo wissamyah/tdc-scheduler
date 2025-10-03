@@ -305,6 +305,14 @@ export default {
       initializationFailed: 'Initialization failed. Please try again.'
     },
 
+    // Settings
+    settings: {
+      title: 'Einstellungen',
+      subtitle: 'Kontoeinstellungen verwalten',
+      settings: 'Einstellungen',
+      passwordChangeInfo: 'Aus Sicherheitsgründen können Sie Ihr Passwort jederzeit ändern. Wählen Sie ein sicheres Passwort, das Sie noch nicht anderswo verwendet haben.',
+    },
+
     // Errors
     errors: {
       accessDenied: 'Access Denied',

@@ -305,6 +305,14 @@ export default {
       initializationFailed: 'Initialization failed. Please try again.'
     },
 
+    // Settings
+    settings: {
+      title: 'Configurações',
+      subtitle: 'Gerenciar as configurações da sua conta',
+      settings: 'Configurações',
+      passwordChangeInfo: 'Por razões de segurança, pode atualizar a sua senha a qualquer momento. Escolha uma senha forte que não tenha usado noutro lugar.',
+    },
+
     // Errors
     errors: {
       accessDenied: 'Access Denied',

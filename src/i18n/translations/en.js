@@ -305,6 +305,14 @@ export default {
       initializationFailed: 'Initialization failed. Please try again.'
     },
 
+    // Settings
+    settings: {
+      title: 'Settings',
+      subtitle: 'Manage your account settings',
+      settings: 'Settings',
+      passwordChangeInfo: 'For security purposes, you can update your password at any time. Choose a strong password that you haven\'t used elsewhere.',
+    },
+
     // Errors
     errors: {
       accessDenied: 'Access Denied',
@@ -557,6 +565,52 @@ export default {
         title: 'Conflicts Detected',
         existing: '{count} existing members will be affected',
       },
+    },
+
+    // Onboarding Guide
+    onboarding: {
+      title: 'Getting Started',
+      loginTitle: 'Login Steps',
+      passwordTitle: 'Final Step',
+
+      // Step titles
+      step1Title: 'Enter Access Token',
+      step2Title: 'Login with Credentials',
+      step3Title: 'Change Your Password',
+
+      // Step descriptions
+      step1Desc: 'Contact your alliance administrator to get the GitHub access token. Enter it once - it will be saved.',
+      step2Desc: 'Use the EXACT username you submitted when you first registered on the web app, and the temporary password below.',
+      step2Password: 'Temporary Password: TDC2025',
+      step3Desc: 'After first login, you will be required to change your password immediately.',
+
+      // Login page specific
+      loginStep2Desc: 'Enter the EXACT username you used when registering (case-sensitive), and use the temporary password below.',
+      loginStep3Desc: 'You will be automatically redirected to change your password after login.',
+      tempPassword: 'Temporary Password',
+
+      // Password page specific
+      passwordStep3Desc: 'Enter the temporary password (TDC2025) and create your new secure password.',
+      tempPasswordReminder: 'Use this temporary password',
+      almostDone: 'Almost Done!',
+      passwordCompleteDesc: 'After changing your password, you can access all features of the TDC Scheduler.',
+
+      // Important notes
+      important: 'Important',
+      importantNote: 'Your username is case-sensitive. Make sure it matches exactly.',
+      usernameCase: 'Username is CASE-SENSITIVE! Use the exact username you submitted when you first registered.',
+
+      // Tips
+      tip: 'Tip',
+      loginTip: 'Use the same username spelling you used when you first submitted your schedule to the web app.',
+      passwordTips: 'Password Tips',
+      passwordTip1: 'Minimum 8 characters',
+      passwordTip2: 'Choose something memorable',
+      passwordTip3: 'Avoid using TDC2025',
+
+      // Remember
+      remember: 'Remember',
+      passwordRemember: 'Save your new password securely. You will need it for all future logins.',
     }
   };
 

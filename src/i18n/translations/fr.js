@@ -305,6 +305,14 @@ export default {
       initializationFailed: 'Initialization failed. Please try again.'
     },
 
+    // Settings
+    settings: {
+      title: 'Paramètres',
+      subtitle: 'Gérer les paramètres de votre compte',
+      settings: 'Paramètres',
+      passwordChangeInfo: 'Pour des raisons de sécurité, vous pouvez mettre à jour votre mot de passe à tout moment. Choisissez un mot de passe fort que vous n\'avez pas utilisé ailleurs.',
+    },
+
     // Errors
     errors: {
       accessDenied: 'Access Denied',

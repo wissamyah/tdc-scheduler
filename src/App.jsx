@@ -13,6 +13,7 @@ import ScheduleForm from './components/ScheduleForm';
 import MembersList from './components/MembersList';
 import OptimalScheduleCalendar from './components/OptimalScheduleCalendar';
 import AdminDashboard from './components/AdminDashboard';
+import Settings from './components/Settings';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Loader2 } from 'lucide-react';
 import { useLanguage } from './context/LanguageContext';
@@ -68,6 +69,7 @@ function AppContent() {
           <Route path="/" element={<ScheduleForm />} />
           <Route path="/members" element={<MembersList />} />
           <Route path="/optimal" element={<OptimalScheduleCalendar />} />
+          <Route path="/settings" element={<Settings />} />
           <Route
             path="/admin"
             element={

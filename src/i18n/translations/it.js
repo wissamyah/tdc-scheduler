@@ -305,6 +305,14 @@ export default {
       initializationFailed: 'Initialization failed. Please try again.'
     },
 
+    // Settings
+    settings: {
+      title: 'Impostazioni',
+      subtitle: 'Gestisci le impostazioni del tuo account',
+      settings: 'Impostazioni',
+      passwordChangeInfo: 'Per motivi di sicurezza, puoi aggiornare la tua password in qualsiasi momento. Scegli una password forte che non hai utilizzato altrove.',
+    },
+
     // Errors
     errors: {
       accessDenied: 'Access Denied',
