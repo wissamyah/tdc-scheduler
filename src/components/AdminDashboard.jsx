@@ -323,11 +323,11 @@ export default function AdminDashboard() {
                 )}
               </div>
 
-              {/* Filter Buttons */}
-              <div className="flex gap-2 flex-wrap">
+              {/* Filter Buttons - Horizontal scroll on mobile */}
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide md:flex-wrap md:pb-0">
               <button
                 onClick={() => setFilter('all')}
-                className={`min-w-[120px] h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                className={`flex-shrink-0 h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
                          transition-all flex items-center justify-center gap-2 ${
                            filter === 'all'
                              ? 'bg-gradient-to-r from-creed-primary to-creed-accent text-white shadow-glow-primary'
@@ -335,12 +335,11 @@ export default function AdminDashboard() {
                          }`}
               >
                 <Users className="w-4 h-4 flex-shrink-0" />
-                <span className="hidden sm:inline">{t('admin.all')}</span>
-                <span>({users.length})</span>
+                <span className="whitespace-nowrap">{t('admin.all')} ({users.length})</span>
               </button>
               <button
                 onClick={() => setFilter('active')}
-                className={`min-w-[120px] h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                className={`flex-shrink-0 h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
                          transition-all flex items-center justify-center gap-2 ${
                            filter === 'active'
                              ? 'bg-gradient-to-r from-creed-success to-creed-accent text-white'
@@ -348,12 +347,11 @@ export default function AdminDashboard() {
                          }`}
               >
                 <UserCheck className="w-4 h-4 flex-shrink-0" />
-                <span className="hidden sm:inline">{t('admin.active')}</span>
-                <span>({activeUsers.length})</span>
+                <span className="whitespace-nowrap">{t('admin.active')} ({activeUsers.length})</span>
               </button>
               <button
                 onClick={() => setFilter('pending')}
-                className={`min-w-[120px] h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                className={`flex-shrink-0 h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
                          transition-all flex items-center justify-center gap-2 ${
                            filter === 'pending'
                              ? 'bg-gradient-to-r from-creed-warning to-creed-accent text-creed-darker'
@@ -361,12 +359,11 @@ export default function AdminDashboard() {
                          }`}
               >
                 <UserX className="w-4 h-4 flex-shrink-0" />
-                <span className="hidden sm:inline">{t('admin.pending')}</span>
-                <span>({pendingUsers.length})</span>
+                <span className="whitespace-nowrap">{t('admin.pending')} ({pendingUsers.length})</span>
               </button>
               <button
                 onClick={() => setFilter('never_logged_in')}
-                className={`min-w-[120px] h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                className={`flex-shrink-0 h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
                          transition-all flex items-center justify-center gap-2 ${
                            filter === 'never_logged_in'
                              ? 'bg-gradient-to-r from-creed-warning to-creed-accent text-creed-darker'
@@ -374,13 +371,12 @@ export default function AdminDashboard() {
                          }`}
               >
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                <span className="hidden sm:inline">{t('admin.neverLoggedIn')}</span>
-                <span>({neverLoggedInUsers.length})</span>
+                <span className="whitespace-nowrap">{t('admin.neverLoggedIn')} ({neverLoggedInUsers.length})</span>
               </button>
               {neverLoggedInUsers.length > 0 && (
                 <button
                   onClick={handleBulkCopyUsernames}
-                  className="min-w-[120px] h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
+                  className="flex-shrink-0 h-[42px] px-4 py-2.5 rounded-lg text-sm font-display font-semibold uppercase tracking-wide
                            bg-creed-warning/10 border border-creed-warning text-creed-warning
                            hover:bg-creed-warning hover:text-white transition-all flex items-center justify-center gap-2"
                   title={t('admin.copyAllUsernames')}
@@ -393,7 +389,7 @@ export default function AdminDashboard() {
                       bulkCopied ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-0 -rotate-90'
                     }`} />
                   </div>
-                  <span className="hidden md:inline">{t('admin.copyAll')}</span>
+                  <span className="whitespace-nowrap">{t('admin.copyAll')}</span>
                 </button>
               )}
               </div>
@@ -527,12 +523,24 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
   );
 
   return (
-    <div className={`bg-creed-base border rounded-lg p-4
-                   ${isCurrentUser ? 'border-creed-accent' : 'border-creed-lighter'}`}>
+    <div className={`bg-creed-base border rounded-lg p-4 relative ${
+      isCurrentUser
+        ? 'border-creed-accent'
+        : (!user.lastLogin && user.status === 'active'
+          ? 'border-creed-warning'
+          : 'border-creed-lighter')
+    }`}>
+      {/* Delete button - Top right on mobile, inline on larger screens */}
+      {user.status === 'active' && !isCurrentUser && (
+        <div className="absolute top-4 right-4 md:hidden">
+          {deleteButton}
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         {/* User info section */}
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2 flex-wrap">
+        <div className="flex-1 pr-12 md:pr-0">
+          <div className="flex items-center gap-3 flex-wrap">
             <div className="flex items-center gap-2">
               <h3 className="text-lg font-display font-bold text-creed-text">
                 {user.username}
@@ -567,15 +575,6 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
                            bg-${roleDisplay.bgColor} border border-${roleDisplay.borderColor} text-${roleDisplay.color}`}>
               {t(roleDisplay.labelKey)}
             </span>
-            {!user.lastLogin && user.status === 'active' && (
-              <span className="px-2 py-1 rounded text-xs font-display font-bold uppercase bg-creed-warning/20 border border-creed-warning text-creed-warning">
-                {t('admin.neverLoggedIn')}
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-4 text-xs text-creed-muted font-body flex-wrap">
-            <span>Joined: {formatDate(user.createdAt)}</span>
-            {user.lastLogin && <span>Last Login: {formatDate(user.lastLogin)}</span>}
           </div>
         </div>
 
@@ -632,8 +631,10 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
                 <option value="admin">{t('roles.admin')}</option>
               </select>
             </div>
-            {/* Delete button */}
-            {deleteButton}
+            {/* Delete button - Only show on medium screens and up (hidden on mobile since it's in top right) */}
+            <div className="hidden md:block">
+              {deleteButton}
+            </div>
           </div>
         )}
       </div>
