@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { translations, getNestedValue } from '../i18n/translations';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { translations, getNestedValue } from '../i18n/translations/index';
 
 const LanguageContext = createContext();
 
@@ -15,23 +15,23 @@ export function LanguageProvider({ children }) {
   }, []);
 
   // Save language preference when it changes
-  const changeLanguage = (newLanguage) => {
+  const changeLanguage = useCallback((newLanguage) => {
     if (newLanguage === 'en' || newLanguage === 'fr' || newLanguage === 'de' || newLanguage === 'es' || newLanguage === 'pt' || newLanguage === 'it') {
       setLanguage(newLanguage);
       localStorage.setItem('tdc_language', newLanguage);
     }
-  };
+  }, []);
 
   // Get translation function
-  const t = (key, defaultValue = key) => {
+  const t = useCallback((key, defaultValue = key) => {
     return getNestedValue(translations[language], key, defaultValue);
-  };
+  }, [language]);
 
-  const value = {
+  const value = useMemo(() => ({
     language,
     changeLanguage,
     t,
-  };
+  }), [language, changeLanguage, t]);
 
   return (
     <LanguageContext.Provider value={value}>

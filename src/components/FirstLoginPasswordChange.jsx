@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Lock, AlertCircle, Loader2, CheckCircle, Shield } from 'lucide-react';
+import { Lock, AlertCircle, Loader2, CheckCircle, Shield, Info } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { showToast } from '../utils/toast';
+import LanguageToggle from './LanguageToggle';
 
 export default function FirstLoginPasswordChange() {
   const { t } = useLanguage();
@@ -81,8 +82,15 @@ export default function FirstLoginPasswordChange() {
 
   return (
     <div className="fixed inset-0 bg-creed-darker/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <div className="bg-creed-light border-2 border-creed-warning rounded-lg shadow-tactical p-8">
+      {/* Language Toggle */}
+      <div className="absolute top-4 right-4 z-10">
+        <LanguageToggle />
+      </div>
+
+      <div className="max-w-4xl w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Password Change Card */}
+          <div className="lg:col-span-2 bg-creed-light border-2 border-creed-warning rounded-lg shadow-tactical p-8">
           {/* Header */}
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="w-12 h-12 rounded-full bg-creed-warning/20 border-2 border-creed-warning flex items-center justify-center">
@@ -241,11 +249,81 @@ export default function FirstLoginPasswordChange() {
             </button>
           </form>
 
-          {/* Security Note */}
-          <div className="mt-6 pt-6 border-t border-creed-lighter">
-            <p className="text-creed-muted text-xs font-body text-center">
-              {t('userAuth.cannotSkipPassword')}
-            </p>
+            {/* Security Note */}
+            <div className="mt-6 pt-6 border-t border-creed-lighter">
+              <p className="text-creed-muted text-xs font-body text-center">
+                {t('userAuth.cannotSkipPassword')}
+              </p>
+            </div>
+          </div>
+
+          {/* Onboarding Guide Sidebar */}
+          <div className="bg-creed-light border border-creed-success/30 rounded-lg shadow-tactical p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Info className="w-5 h-5 text-creed-success" />
+              <h2 className="text-lg font-display font-bold text-creed-text uppercase">
+                {t('onboarding.passwordTitle')}
+              </h2>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              {/* Current Step */}
+              <div className="relative pl-6 pb-4 border-l-2 border-creed-success">
+                <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-creed-success border-2 border-creed-light flex items-center justify-center">
+                  <span className="text-xs font-bold text-white">3</span>
+                </div>
+                <h3 className="text-sm font-display font-bold text-creed-success mb-1">
+                  {t('onboarding.step3Title')}
+                </h3>
+                <p className="text-xs text-creed-muted font-body mb-2">
+                  {t('onboarding.passwordStep3Desc')}
+                </p>
+                <div className="bg-creed-base rounded px-2 py-1 mb-2">
+                  <p className="text-xs font-display font-bold text-creed-text mb-1">
+                    {t('onboarding.tempPasswordReminder')}:
+                  </p>
+                  <p className="text-sm font-mono text-creed-accent">
+                    TDC2025
+                  </p>
+                </div>
+              </div>
+
+              {/* Next Step */}
+              <div className="relative pl-6">
+                <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-creed-primary border-2 border-creed-light flex items-center justify-center">
+                  <span className="text-xs font-bold text-white">✓</span>
+                </div>
+                <h3 className="text-sm font-display font-bold text-creed-text mb-1">
+                  {t('onboarding.almostDone')}
+                </h3>
+                <p className="text-xs text-creed-muted font-body">
+                  {t('onboarding.passwordCompleteDesc')}
+                </p>
+              </div>
+            </div>
+
+            {/* Important Notes */}
+            <div className="space-y-3">
+              <div className="bg-creed-success/10 border border-creed-success/30 rounded-lg p-3">
+                <p className="text-xs font-display font-bold text-creed-success mb-1">
+                  ✓ {t('onboarding.passwordTips')}
+                </p>
+                <ul className="text-xs text-creed-muted font-body space-y-1 list-disc list-inside">
+                  <li>{t('onboarding.passwordTip1')}</li>
+                  <li>{t('onboarding.passwordTip2')}</li>
+                  <li>{t('onboarding.passwordTip3')}</li>
+                </ul>
+              </div>
+
+              <div className="bg-creed-warning/10 border border-creed-warning/30 rounded-lg p-3">
+                <p className="text-xs font-display font-bold text-creed-warning mb-1">
+                  ⚠️ {t('onboarding.remember')}
+                </p>
+                <p className="text-xs text-creed-muted font-body">
+                  {t('onboarding.passwordRemember')}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

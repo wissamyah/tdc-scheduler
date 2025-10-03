@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Shield, User, Lock, Zap, Building2, Globe, Loader2, AlertCircle, LogIn, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Shield, User, Lock, Loader2, AlertCircle, LogIn, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { showToast } from '../utils/toast';
-import { getUserTimezone, getCommonTimezones, getTimezoneDisplay } from '../utils/timezone';
+import LanguageToggle from './LanguageToggle';
 
 export default function RegisterForm({ onShowLogin }) {
   const { t } = useLanguage();
@@ -11,20 +11,11 @@ export default function RegisterForm({ onShowLogin }) {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    confirmPassword: '',
-    carPower: '',
-    towerLevel: '',
-    timezone: ''
+    confirmPassword: ''
   });
   const [loading, setLoading] = useState(false);
   const [registered, setRegistered] = useState(false);
   const [errors, setErrors] = useState({});
-
-  // Auto-detect timezone on mount
-  useEffect(() => {
-    const detectedTimezone = getUserTimezone();
-    setFormData(prev => ({ ...prev, timezone: detectedTimezone }));
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,27 +52,6 @@ export default function RegisterForm({ onShowLogin }) {
       newErrors.confirmPassword = t('userAuth.passwordMismatch');
     }
 
-    // Car power validation
-    const carPower = parseFloat(formData.carPower);
-    if (!formData.carPower) {
-      newErrors.carPower = t('scheduleForm.validCarPowerRequired');
-    } else if (isNaN(carPower) || carPower <= 0) {
-      newErrors.carPower = t('scheduleForm.validCarPowerRequired');
-    }
-
-    // Tower level validation
-    const towerLevel = parseInt(formData.towerLevel);
-    if (!formData.towerLevel) {
-      newErrors.towerLevel = t('scheduleForm.towerLevelRange');
-    } else if (isNaN(towerLevel) || towerLevel < 1 || towerLevel > 35) {
-      newErrors.towerLevel = t('scheduleForm.towerLevelRange');
-    }
-
-    // Timezone validation
-    if (!formData.timezone) {
-      newErrors.timezone = t('userAuth.selectTimezone');
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -98,10 +68,7 @@ export default function RegisterForm({ onShowLogin }) {
     try {
       await register({
         username: formData.username.trim(),
-        password: formData.password,
-        carPower: parseFloat(formData.carPower),
-        towerLevel: parseInt(formData.towerLevel),
-        timezone: formData.timezone
+        password: formData.password
       });
 
       setRegistered(true);
@@ -123,7 +90,12 @@ export default function RegisterForm({ onShowLogin }) {
   // Show success state after registration
   if (registered) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base flex items-center justify-center p-4 relative">
+        {/* Language Toggle */}
+        <div className="absolute top-4 right-4">
+          <LanguageToggle />
+        </div>
+
         <div className="max-w-md w-full">
           <div className="bg-creed-light border border-creed-success rounded-lg shadow-tactical p-8">
             {/* Success Icon */}
@@ -170,8 +142,13 @@ export default function RegisterForm({ onShowLogin }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
+    <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base flex items-center justify-center p-4 relative">
+      {/* Language Toggle */}
+      <div className="absolute top-4 right-4">
+        <LanguageToggle />
+      </div>
+
+      <div className="max-w-md w-full mt-16 sm:mt-0">
         <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical p-8">
           {/* Header */}
           <div className="flex items-center justify-center gap-3 mb-6">
@@ -290,107 +267,6 @@ export default function RegisterForm({ onShowLogin }) {
               </div>
               {errors.confirmPassword && (
                 <p className="text-creed-danger text-xs font-body mt-1">{errors.confirmPassword}</p>
-              )}
-            </div>
-
-            {/* Car Power & Tower Level */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Car Power */}
-              <div>
-                <label
-                  htmlFor="carPower"
-                  className="block text-sm font-display font-semibold text-creed-text mb-2 uppercase tracking-wide"
-                >
-                  {t('userAuth.carPower')} *
-                </label>
-                <div className="relative">
-                  <Zap className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-creed-muted" />
-                  <input
-                    type="number"
-                    id="carPower"
-                    name="carPower"
-                    value={formData.carPower}
-                    onChange={handleChange}
-                    step="0.1"
-                    min="0"
-                    className={`w-full pl-11 pr-4 py-3 bg-creed-base border rounded-lg
-                             focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
-                             text-creed-text placeholder-creed-muted font-body
-                             transition-all duration-200
-                             ${errors.carPower ? 'border-creed-danger' : 'border-creed-lighter'}`}
-                    placeholder="2.5"
-                    disabled={loading}
-                  />
-                </div>
-                {errors.carPower && (
-                  <p className="text-creed-danger text-xs font-body mt-1">{errors.carPower}</p>
-                )}
-              </div>
-
-              {/* Tower Level */}
-              <div>
-                <label
-                  htmlFor="towerLevel"
-                  className="block text-sm font-display font-semibold text-creed-text mb-2 uppercase tracking-wide"
-                >
-                  {t('userAuth.towerLevel')} *
-                </label>
-                <div className="relative">
-                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-creed-muted" />
-                  <input
-                    type="number"
-                    id="towerLevel"
-                    name="towerLevel"
-                    value={formData.towerLevel}
-                    onChange={handleChange}
-                    min="1"
-                    max="35"
-                    className={`w-full pl-11 pr-4 py-3 bg-creed-base border rounded-lg
-                             focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
-                             text-creed-text placeholder-creed-muted font-body
-                             transition-all duration-200
-                             ${errors.towerLevel ? 'border-creed-danger' : 'border-creed-lighter'}`}
-                    placeholder="25"
-                    disabled={loading}
-                  />
-                </div>
-                {errors.towerLevel && (
-                  <p className="text-creed-danger text-xs font-body mt-1">{errors.towerLevel}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Timezone */}
-            <div>
-              <label
-                htmlFor="timezone"
-                className="block text-sm font-display font-semibold text-creed-text mb-2 uppercase tracking-wide"
-              >
-                {t('userAuth.timezone')} *
-              </label>
-              <div className="relative">
-                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-creed-muted" />
-                <select
-                  id="timezone"
-                  name="timezone"
-                  value={formData.timezone}
-                  onChange={handleChange}
-                  className={`w-full pl-11 pr-4 py-3 bg-creed-base border rounded-lg
-                           focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
-                           text-creed-text font-body transition-all duration-200
-                           ${errors.timezone ? 'border-creed-danger' : 'border-creed-lighter'}`}
-                  disabled={loading}
-                >
-                  <option value="">{t('scheduleForm.detectingTimezone')}</option>
-                  {getCommonTimezones().map(tz => (
-                    <option key={tz.value} value={tz.value}>
-                      {tz.label} - {getTimezoneDisplay(tz.value)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {errors.timezone && (
-                <p className="text-creed-danger text-xs font-body mt-1">{errors.timezone}</p>
               )}
             </div>
 

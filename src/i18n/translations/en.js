@@ -611,6 +611,15 @@ export default {
       // Remember
       remember: 'Remember',
       passwordRemember: 'Save your new password securely. You will need it for all future logins.',
-    }
+    },
+
+    // Auto-refresh
+    autoRefresh: {
+      enabled: 'Auto-refresh enabled',
+      disabled: 'Auto-refresh disabled',
+      refresh: 'Refresh',
+      manualRefresh: 'Click to refresh now',
+      updating: 'Updating...',
+    },
   };
 

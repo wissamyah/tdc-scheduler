@@ -565,6 +565,15 @@ export default {
         title: 'Conflitti Rilevati',
         existing: '{count} membri esistenti saranno interessati',
       },
-    }
+    },
+
+    // Auto-refresh
+    autoRefresh: {
+      enabled: 'Aggiornamento automatico attivato',
+      disabled: 'Aggiornamento automatico disattivato',
+      refresh: 'Aggiorna',
+      manualRefresh: 'Clicca per aggiornare ora',
+      updating: 'Aggiornamento...',
+    },
   };
 

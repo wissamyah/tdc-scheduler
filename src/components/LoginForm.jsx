@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Shield, User, Lock, Loader2, AlertCircle, UserPlus } from 'lucide-react';
+import { Shield, User, Lock, Loader2, AlertCircle, UserPlus, Info } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { showToast } from '../utils/toast';
+import LanguageToggle from './LanguageToggle';
 
 export default function LoginForm({ onShowRegister }) {
   const { t } = useLanguage();
@@ -55,9 +56,16 @@ export default function LoginForm({ onShowRegister }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <div className="bg-creed-light border border-creed-lighter rounded-lg shadow-tactical p-8">
+    <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base flex items-center justify-center p-4 pt-20 relative">
+      {/* Language Toggle */}
+      <div className="absolute top-4 right-4">
+        <LanguageToggle />
+      </div>
+
+      <div className="max-w-4xl w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Login Card */}
+          <div className="lg:col-span-2 bg-creed-light border border-creed-lighter rounded-lg shadow-tactical p-8">
           {/* Header */}
           <div className="flex items-center justify-center gap-3 mb-6">
             <Shield className="w-10 h-10 text-creed-accent" />
@@ -165,22 +173,90 @@ export default function LoginForm({ onShowRegister }) {
             </button>
           </form>
 
-          {/* Register Link */}
-          <div className="mt-6 pt-6 border-t border-creed-lighter text-center">
-            <p className="text-creed-muted text-sm font-body mb-3">
-              {t('userAuth.dontHaveAccount')}
-            </p>
-            <button
-              onClick={onShowRegister}
-              disabled={loading}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-creed-base border border-creed-primary/30
-                       text-creed-primary rounded-lg font-display font-semibold uppercase tracking-wide text-sm
-                       hover:bg-creed-primary/10 hover:border-creed-primary transition-all
-                       disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <UserPlus className="w-4 h-4" />
-              <span>{t('userAuth.registerButton')}</span>
-            </button>
+            {/* Register Link */}
+            <div className="mt-6 pt-6 border-t border-creed-lighter text-center">
+              <p className="text-creed-muted text-sm font-body mb-3">
+                {t('userAuth.dontHaveAccount')}
+              </p>
+              <button
+                onClick={onShowRegister}
+                disabled={loading}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-creed-base border border-creed-primary/30
+                         text-creed-primary rounded-lg font-display font-semibold uppercase tracking-wide text-sm
+                         hover:bg-creed-primary/10 hover:border-creed-primary transition-all
+                         disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <UserPlus className="w-4 h-4" />
+                <span>{t('userAuth.registerButton')}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Onboarding Guide Sidebar */}
+          <div className="bg-creed-light border border-creed-accent/30 rounded-lg shadow-tactical p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Info className="w-5 h-5 text-creed-accent" />
+              <h2 className="text-lg font-display font-bold text-creed-text uppercase">
+                {t('onboarding.loginTitle')}
+              </h2>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              {/* Current Step */}
+              <div className="relative pl-6 pb-4 border-l-2 border-creed-accent">
+                <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-creed-accent border-2 border-creed-light flex items-center justify-center">
+                  <span className="text-xs font-bold text-white">2</span>
+                </div>
+                <h3 className="text-sm font-display font-bold text-creed-accent mb-1">
+                  {t('onboarding.step2Title')}
+                </h3>
+                <p className="text-xs text-creed-muted font-body mb-2">
+                  {t('onboarding.loginStep2Desc')}
+                </p>
+                <div className="bg-creed-base rounded px-2 py-1 mb-2">
+                  <p className="text-xs font-display font-bold text-creed-text mb-1">
+                    {t('onboarding.tempPassword')}:
+                  </p>
+                  <p className="text-sm font-mono text-creed-accent">
+                    TDC2025
+                  </p>
+                </div>
+              </div>
+
+              {/* Next Step */}
+              <div className="relative pl-6">
+                <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-creed-muted border-2 border-creed-light flex items-center justify-center">
+                  <span className="text-xs font-bold text-creed-darker">3</span>
+                </div>
+                <h3 className="text-sm font-display font-bold text-creed-text mb-1">
+                  {t('onboarding.step3Title')}
+                </h3>
+                <p className="text-xs text-creed-muted font-body">
+                  {t('onboarding.loginStep3Desc')}
+                </p>
+              </div>
+            </div>
+
+            {/* Important Notes */}
+            <div className="space-y-3">
+              <div className="bg-creed-warning/10 border border-creed-warning/30 rounded-lg p-3">
+                <p className="text-xs font-display font-bold text-creed-warning mb-1">
+                  ⚠️ {t('onboarding.important')}
+                </p>
+                <p className="text-xs text-creed-muted font-body">
+                  {t('onboarding.usernameCase')}
+                </p>
+              </div>
+
+              <div className="bg-creed-primary/10 border border-creed-primary/30 rounded-lg p-3">
+                <p className="text-xs font-display font-bold text-creed-primary mb-1">
+                  💡 {t('onboarding.tip')}
+                </p>
+                <p className="text-xs text-creed-muted font-body">
+                  {t('onboarding.loginTip')}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -565,6 +565,15 @@ export default {
         title: 'Conflictos Detectados',
         existing: '{count} miembros existentes se verán afectados',
       },
-    }
+    },
+
+    // Auto-refresh
+    autoRefresh: {
+      enabled: 'Actualización automática activada',
+      disabled: 'Actualización automática desactivada',
+      refresh: 'Actualizar',
+      manualRefresh: 'Haga clic para actualizar ahora',
+      updating: 'Actualizando...',
+    },
   };
 

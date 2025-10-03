@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Shield, Key, Lock, CheckCircle } from 'lucide-react';
+import { Shield, Key, Lock, CheckCircle, Info } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { showToast } from '../utils/toast';
+import LanguageToggle from './LanguageToggle';
 
 const DATA_REPO_OWNER = 'wissamyah';
 const DATA_REPO_NAME = 'tdc-scheduler-data';
@@ -58,48 +59,54 @@ export default function AccessGate({ onAccessGranted }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base flex items-center justify-center p-4">
-      <div className="max-w-xl w-full">
-        {/* Card */}
-        <div className="bg-creed-light border-2 border-creed-accent rounded-lg shadow-tactical p-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="relative">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-creed-accent to-creed-primary
-                             flex items-center justify-center shadow-glow-accent">
-                  <Lock className="w-10 h-10 text-white" />
-                </div>
-                <div className="absolute inset-0 bg-creed-accent opacity-20 blur-xl rounded-full"></div>
-              </div>
-            </div>
-            <h1 className="text-3xl font-display font-bold text-creed-text uppercase tracking-wide mb-2">
-              {t('accessGate.title')}
-            </h1>
-            <p className="text-creed-muted font-body text-sm">
-              {t('accessGate.subtitle')}
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-creed-darker via-creed-dark to-creed-base flex items-center justify-center p-4 relative">
+      {/* Language Toggle */}
+      <div className="absolute top-4 right-4">
+        <LanguageToggle />
+      </div>
 
-          {/* Info Box */}
-          <div className="bg-creed-base border border-creed-accent/30 rounded-lg p-4 mb-6">
-            <div className="flex items-start gap-3">
-              <Shield className="w-5 h-5 text-creed-accent flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 className="text-sm font-display font-bold text-creed-accent uppercase mb-2">
-                  {t('accessGate.oneTimeOnly')}
-                </h3>
-                <p className="text-xs text-creed-muted font-body mb-2">
-                  {t('accessGate.explanation')}
-                </p>
-                <ul className="text-xs text-creed-muted font-body space-y-1 list-disc list-inside">
-                  <li>{t('accessGate.reason1')}</li>
-                  <li>{t('accessGate.reason2')}</li>
-                  <li>{t('accessGate.reason3')}</li>
-                </ul>
+      <div className="max-w-4xl w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Card */}
+          <div className="lg:col-span-2 bg-creed-light border-2 border-creed-accent rounded-lg shadow-tactical p-8">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="flex justify-center mb-4">
+                <div className="relative">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-creed-accent to-creed-primary
+                               flex items-center justify-center shadow-glow-accent">
+                    <Lock className="w-10 h-10 text-white" />
+                  </div>
+                  <div className="absolute inset-0 bg-creed-accent opacity-20 blur-xl rounded-full"></div>
+                </div>
+              </div>
+              <h1 className="text-3xl font-display font-bold text-creed-text uppercase tracking-wide mb-2">
+                {t('accessGate.title')}
+              </h1>
+              <p className="text-creed-muted font-body text-sm">
+                {t('accessGate.subtitle')}
+              </p>
+            </div>
+
+            {/* Info Box */}
+            <div className="bg-creed-base border border-creed-accent/30 rounded-lg p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <Shield className="w-5 h-5 text-creed-accent flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-display font-bold text-creed-accent uppercase mb-2">
+                    {t('accessGate.oneTimeOnly')}
+                  </h3>
+                  <p className="text-xs text-creed-muted font-body mb-2">
+                    {t('accessGate.explanation')}
+                  </p>
+                  <ul className="text-xs text-creed-muted font-body space-y-1 list-disc list-inside">
+                    <li>{t('accessGate.reason1')}</li>
+                    <li>{t('accessGate.reason2')}</li>
+                    <li>{t('accessGate.reason3')}</li>
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
 
           {/* Form */}
           <form onSubmit={handleVerifyAccess}>
@@ -150,11 +157,78 @@ export default function AccessGate({ onAccessGranted }) {
             </button>
           </form>
 
-          {/* Footer Note */}
-          <div className="mt-6 text-center">
-            <p className="text-xs text-creed-muted font-body">
-              {t('accessGate.securityNote')}
-            </p>
+            {/* Footer Note */}
+            <div className="mt-6 text-center">
+              <p className="text-xs text-creed-muted font-body">
+                {t('accessGate.securityNote')}
+              </p>
+            </div>
+          </div>
+
+          {/* Step-by-Step Guide Sidebar */}
+          <div className="bg-creed-light border border-creed-primary/30 rounded-lg shadow-tactical p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Info className="w-5 h-5 text-creed-primary" />
+              <h2 className="text-lg font-display font-bold text-creed-text uppercase">
+                {t('onboarding.title')}
+              </h2>
+            </div>
+
+            <div className="space-y-4">
+              {/* Step 1 */}
+              <div className="relative pl-6 pb-4 border-l-2 border-creed-primary">
+                <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-creed-primary border-2 border-creed-light flex items-center justify-center">
+                  <span className="text-xs font-bold text-white">1</span>
+                </div>
+                <h3 className="text-sm font-display font-bold text-creed-primary mb-1">
+                  {t('onboarding.step1Title')}
+                </h3>
+                <p className="text-xs text-creed-muted font-body">
+                  {t('onboarding.step1Desc')}
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="relative pl-6 pb-4 border-l-2 border-creed-muted">
+                <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-creed-muted border-2 border-creed-light flex items-center justify-center">
+                  <span className="text-xs font-bold text-creed-darker">2</span>
+                </div>
+                <h3 className="text-sm font-display font-bold text-creed-text mb-1">
+                  {t('onboarding.step2Title')}
+                </h3>
+                <p className="text-xs text-creed-muted font-body mb-2">
+                  {t('onboarding.step2Desc')}
+                </p>
+                <div className="bg-creed-base rounded px-2 py-1">
+                  <p className="text-xs font-mono text-creed-accent">
+                    {t('onboarding.step2Password')}
+                  </p>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="relative pl-6">
+                <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-creed-muted border-2 border-creed-light flex items-center justify-center">
+                  <span className="text-xs font-bold text-creed-darker">3</span>
+                </div>
+                <h3 className="text-sm font-display font-bold text-creed-text mb-1">
+                  {t('onboarding.step3Title')}
+                </h3>
+                <p className="text-xs text-creed-muted font-body">
+                  {t('onboarding.step3Desc')}
+                </p>
+              </div>
+            </div>
+
+            {/* Important Note */}
+            <div className="mt-6 bg-creed-warning/10 border border-creed-warning/30 rounded-lg p-3">
+              <p className="text-xs font-display font-bold text-creed-warning mb-1">
+                ⚠️ {t('onboarding.important')}
+              </p>
+              <p className="text-xs text-creed-muted font-body">
+                {t('onboarding.importantNote')}
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -565,6 +565,15 @@ export default {
         title: 'Konflikte Erkannt',
         existing: '{count} bestehende Mitglieder werden betroffen sein',
       },
-    }
+    },
+
+    // Auto-refresh
+    autoRefresh: {
+      enabled: 'Automatische Aktualisierung aktiviert',
+      disabled: 'Automatische Aktualisierung deaktiviert',
+      refresh: 'Aktualisieren',
+      manualRefresh: 'Klicken Sie hier, um jetzt zu aktualisieren',
+      updating: 'Aktualisierung...',
+    },
   };
 

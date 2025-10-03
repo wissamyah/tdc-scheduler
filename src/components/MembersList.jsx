@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Users, Loader2, AlertCircle, Filter, Trash2 } from 'lucide-react';
+import { Users, Loader2, AlertCircle, Filter, Trash2, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { canDeleteAllMembers, canManageCSV } from '../utils/permissions';
@@ -11,6 +11,7 @@ import ImportCSVButton from './ImportCSVButton';
 import ImportCSVModal from './ImportCSVModal';
 import { fetchData, fetchDataFromAPI, deleteAllMembers, bulkImportMembers } from '../services/github';
 import { showToast } from '../utils/toast';
+import { useAutoRefresh } from '../hooks/useAutoRefresh';
 
 export default function MembersList() {
   const { t } = useLanguage();
@@ -61,20 +62,27 @@ export default function MembersList() {
     }
   };
 
-  const loadMembersFromAPI = async () => {
+  const loadMembersFromAPI = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const pat = localStorage.getItem('tdc_system_pat');
       const data = await fetchDataFromAPI(pat);
       setMembers(data.members || []);
     } catch (err) {
       console.error('Error loading members from API:', err);
       // Fallback to CDN fetch
-      loadMembers();
+      if (!silent) loadMembers();
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
+
+  // Auto-refresh setup - silent refresh every 60 seconds
+  const { isRefreshing, lastRefreshTime, isEnabled, toggleAutoRefresh, manualRefresh } = useAutoRefresh(
+    () => loadMembersFromAPI(true), // Silent refresh (no loading spinner)
+    60000, // 60 seconds
+    true // Enabled by default
+  );
 
   const handleDeleteAllClick = () => {
     setShowDeleteModal(true);
@@ -307,6 +315,29 @@ export default function MembersList() {
               </p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
+              {/* Auto-refresh indicator and toggle */}
+              <div className="flex items-center gap-2 px-3 py-2 bg-creed-base border border-creed-lighter rounded-lg">
+                <button
+                  onClick={toggleAutoRefresh}
+                  className={`p-1.5 rounded-lg transition-all ${
+                    isEnabled
+                      ? 'bg-creed-success/20 text-creed-success hover:bg-creed-success/30'
+                      : 'bg-creed-muted/20 text-creed-muted hover:bg-creed-muted/30'
+                  }`}
+                  title={isEnabled ? t('autoRefresh.enabled') : t('autoRefresh.disabled')}
+                >
+                  <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                </button>
+                <button
+                  onClick={manualRefresh}
+                  disabled={isRefreshing}
+                  className="text-xs text-creed-text hover:text-creed-primary transition-colors font-display font-semibold uppercase tracking-wide disabled:opacity-50"
+                  title={t('autoRefresh.manualRefresh')}
+                >
+                  {t('autoRefresh.refresh')}
+                </button>
+              </div>
+
               {/* Export CSV Button */}
               {canDeleteAllMembers(currentUser) && (
                 <ExportCSVButton

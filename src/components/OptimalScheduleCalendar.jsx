@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Calendar, Users, TrendingUp, Clock, Loader2, AlertCircle, Globe } from 'lucide-react';
+import { Calendar, Users, TrendingUp, Clock, Loader2, AlertCircle, Globe, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { fetchDataFromAPI } from '../services/github';
 import { DAYS_OF_WEEK, generateTimeSlots, getDayDisplayName } from '../utils/timeSlots';
 import { showToast } from '../utils/toast';
 import { getServerTimezoneDisplay } from '../utils/timezone';
 import AvailableMembersModal from './AvailableMembersModal';
+import { useAutoRefresh } from '../hooks/useAutoRefresh';
 
 export default function OptimalScheduleCalendar() {
   const { t } = useLanguage();
@@ -19,19 +20,26 @@ export default function OptimalScheduleCalendar() {
     loadMembers();
   }, []);
 
-  const loadMembers = async () => {
+  const loadMembers = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const pat = localStorage.getItem('tdc_system_pat');
       const data = await fetchDataFromAPI(pat);
       setMembers(data.members || []);
     } catch (err) {
       console.error('Error loading members:', err);
-      showToast.error(t('membersList.failedToLoad'));
+      if (!silent) showToast.error(t('membersList.failedToLoad'));
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
+
+  // Auto-refresh setup - silent refresh every 60 seconds
+  const { isRefreshing, lastRefreshTime, isEnabled, toggleAutoRefresh, manualRefresh } = useAutoRefresh(
+    () => loadMembers(true), // Silent refresh (no loading spinner)
+    60000, // 60 seconds
+    true // Enabled by default
+  );
 
   // Calculate optimal time slots
   const optimalSlots = useMemo(() => {
@@ -176,18 +184,29 @@ export default function OptimalScheduleCalendar() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <TrendingUp className="w-8 h-8 text-creed-primary" />
-            <h1 className="text-4xl font-display font-bold text-creed-text uppercase tracking-wide">
-              {t('optimalSchedule.optimalEventSchedule')}
-            </h1>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <TrendingUp className="w-8 h-8 text-creed-primary" />
+                <h1 className="text-4xl font-display font-bold text-creed-text uppercase tracking-wide">
+                  {t('optimalSchedule.optimalEventSchedule')}
+                </h1>
+              </div>
+              <div className="h-0.5 w-64 bg-gradient-to-r from-creed-primary to-transparent mb-2"></div>
+              <p className="text-creed-muted font-body">
+                {t('optimalSchedule.bestTimeSlotsBasedOn')}{' '}
+                <span className="font-display font-bold text-creed-accent">{members.length}</span>{' '}
+                {members.length !== 1 ? t('optimalSchedule.members') : t('optimalSchedule.member')} {t('optimalSchedule.availability')}
+              </p>
+            </div>
+            {/* Subtle auto-refresh indicator */}
+            {isRefreshing && (
+              <div className="flex items-center gap-2 text-creed-muted">
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                <span className="text-xs font-body">{t('autoRefresh.updating')}</span>
+              </div>
+            )}
           </div>
-          <div className="h-0.5 w-64 bg-gradient-to-r from-creed-primary to-transparent mb-2"></div>
-          <p className="text-creed-muted font-body">
-            {t('optimalSchedule.bestTimeSlotsBasedOn')}{' '}
-            <span className="font-display font-bold text-creed-accent">{members.length}</span>{' '}
-            {members.length !== 1 ? t('optimalSchedule.members') : t('optimalSchedule.member')} {t('optimalSchedule.availability')}
-          </p>
           <div className="mt-3 flex items-center gap-2 px-4 py-2 bg-creed-accent/10 border border-creed-accent/30 rounded-lg inline-block">
             <Globe className="w-4 h-4 text-creed-accent" />
             <p className="text-sm text-creed-text font-body">
@@ -242,25 +261,25 @@ export default function OptimalScheduleCalendar() {
           <h3 className="text-sm font-display font-semibold text-creed-text uppercase tracking-wide mb-3">
             {t('optimalSchedule.availabilityLegend')}
           </h3>
-          <div className="flex flex-wrap gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-creed-success/20 border border-creed-success"></div>
+              <div className="w-4 h-4 rounded bg-creed-success/20 border border-creed-success flex-shrink-0"></div>
               <span className="text-xs font-body text-creed-muted">80%+ ({t('optimalSchedule.excellent')})</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-creed-accent/20 border border-creed-accent"></div>
+              <div className="w-4 h-4 rounded bg-creed-accent/20 border border-creed-accent flex-shrink-0"></div>
               <span className="text-xs font-body text-creed-muted">60-79% ({t('optimalSchedule.good')})</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-creed-warning/20 border border-creed-warning"></div>
+              <div className="w-4 h-4 rounded bg-creed-warning/20 border border-creed-warning flex-shrink-0"></div>
               <span className="text-xs font-body text-creed-muted">40-59% ({t('optimalSchedule.moderate')})</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-creed-secondary/20 border border-creed-secondary"></div>
+              <div className="w-4 h-4 rounded bg-creed-secondary/20 border border-creed-secondary flex-shrink-0"></div>
               <span className="text-xs font-body text-creed-muted">20-39% ({t('optimalSchedule.low')})</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-creed-lighter/20 border border-creed-lighter"></div>
+              <div className="w-4 h-4 rounded bg-creed-lighter/20 border border-creed-lighter flex-shrink-0"></div>
               <span className="text-xs font-body text-creed-muted">&lt;20% ({t('optimalSchedule.veryLow')})</span>
             </div>
           </div>

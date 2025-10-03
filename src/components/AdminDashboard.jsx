@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Shield, Users, CheckCircle, XCircle, Trash2, Loader2, AlertCircle, UserCheck, UserX, Settings, Search, X, Info } from 'lucide-react';
+import { Shield, Users, CheckCircle, XCircle, Trash2, Loader2, AlertCircle, UserCheck, UserX, Settings, Search, X, Info, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { showToast } from '../utils/toast';
 import { getAllUsers, approveUser, rejectUser, updateUserRole, deleteUser } from '../services/userAuth';
 import { getRoleDisplay, getStatusDisplay } from '../utils/permissions';
 import ConfirmModal from './ConfirmModal';
+import { useAutoRefresh } from '../hooks/useAutoRefresh';
 
 export default function AdminDashboard() {
   const { t } = useLanguage();
@@ -21,18 +22,25 @@ export default function AdminDashboard() {
     loadUsers();
   }, []);
 
-  const loadUsers = async () => {
+  const loadUsers = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const allUsers = await getAllUsers();
       setUsers(allUsers);
     } catch (error) {
       console.error('Error loading users:', error);
-      showToast.error(t('admin.failedToLoadUsers'));
+      if (!silent) showToast.error(t('admin.failedToLoadUsers'));
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
+
+  // Auto-refresh setup - silent refresh every 60 seconds
+  const { isRefreshing, lastRefreshTime, isEnabled, toggleAutoRefresh, manualRefresh } = useAutoRefresh(
+    () => loadUsers(true), // Silent refresh (no loading spinner)
+    60000, // 60 seconds
+    true // Enabled by default
+  );
 
   const handleApprove = (userId, username) => {
     setConfirmModal({
@@ -196,13 +204,24 @@ export default function AdminDashboard() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Shield className="w-8 h-8 text-creed-danger" />
-            <h1 className="text-4xl font-display font-bold text-creed-text uppercase tracking-wide">
-              {t('admin.dashboard')}
-            </h1>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <Shield className="w-8 h-8 text-creed-danger" />
+                <h1 className="text-4xl font-display font-bold text-creed-text uppercase tracking-wide">
+                  {t('admin.dashboard')}
+                </h1>
+              </div>
+              <div className="h-0.5 w-48 bg-gradient-to-r from-creed-danger to-transparent"></div>
+            </div>
+            {/* Subtle auto-refresh indicator */}
+            {isRefreshing && (
+              <div className="flex items-center gap-2 text-creed-muted">
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                <span className="text-xs font-body">{t('autoRefresh.updating')}</span>
+              </div>
+            )}
           </div>
-          <div className="h-0.5 w-48 bg-gradient-to-r from-creed-danger to-transparent"></div>
         </div>
 
         {/* Statistics Cards */}
