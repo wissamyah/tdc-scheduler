@@ -657,7 +657,7 @@ export async function isAuthSystemInitialized() {
 
       // Try to fetch auth.json without authentication (check if repo is public)
       try {
-        const checkUrl = `https://api.github.com/repos/${REPO_OWNER}/${DATA_REPO_NAME}/contents/auth.json`;
+        const checkUrl = `https://api.github.com/repos/${DATA_REPO_OWNER}/${DATA_REPO_NAME}/contents/auth.json`;
         const response = await fetch(`${checkUrl}?t=${Date.now()}`, {
           headers: { 'Accept': 'application/vnd.github.v3+json' },
           cache: 'no-store'

@@ -3,6 +3,9 @@ import { Shield, Key, Lock, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { showToast } from '../utils/toast';
 
+const DATA_REPO_OWNER = 'wissamyah';
+const DATA_REPO_NAME = 'tdc-scheduler-data';
+
 /**
  * AccessGate - One-time PAT entry to unlock platform access
  * This is NOT the admin setup - just unlocking access to login/register
@@ -24,11 +27,8 @@ export default function AccessGate({ onAccessGranted }) {
 
     try {
       // Verify PAT by attempting to access the data repo
-      const REPO_OWNER = import.meta.env.VITE_GITHUB_OWNER;
-      const DATA_REPO_NAME = import.meta.env.VITE_GITHUB_DATA_REPO;
-
       const response = await fetch(
-        `https://api.github.com/repos/${REPO_OWNER}/${DATA_REPO_NAME}`,
+        `https://api.github.com/repos/${DATA_REPO_OWNER}/${DATA_REPO_NAME}`,
         {
           headers: {
             'Authorization': `token ${pat}`,
