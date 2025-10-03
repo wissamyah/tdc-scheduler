@@ -95,7 +95,7 @@ export default function ScheduleForm() {
       };
 
       // Get PAT from localStorage
-      let pat = localStorage.getItem('tdc_pat');
+      let pat = localStorage.getItem('tdc_system_pat');
 
       if (!pat) {
         throw new Error(t('auth.authRequired'));

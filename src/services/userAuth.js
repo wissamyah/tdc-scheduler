@@ -638,23 +638,44 @@ export async function getAllUsers() {
 }
 
 /**
- * Check if authentication system is initialized
+ * Check if authentication system is initialized (publicly readable check)
  * @returns {Promise<boolean>} Initialization status
  */
 export async function isAuthSystemInitialized() {
   try {
+    // First check if PAT exists locally
     const pat = localStorage.getItem('tdc_system_pat');
+
+    // If no PAT, try to check GitHub auth.json WITHOUT authentication
+    // This prevents showing setup screen to users on new devices
     if (!pat) {
-      // Check if old PAT exists
-      const oldPat = localStorage.getItem('tdc_pat');
+      // Check if old PAT exists for migration
+      const oldPat = localStorage.getItem('tdc_system_pat');
       if (oldPat) {
-        // Migrate old PAT
         localStorage.setItem('tdc_system_pat', oldPat);
-        return false; // Still need to initialize auth.json
       }
-      return false;
+
+      // Try to fetch auth.json without authentication (check if repo is public)
+      try {
+        const checkUrl = `https://api.github.com/repos/${REPO_OWNER}/${DATA_REPO_NAME}/contents/auth.json`;
+        const response = await fetch(`${checkUrl}?t=${Date.now()}`, {
+          headers: { 'Accept': 'application/vnd.github.v3+json' },
+          cache: 'no-store'
+        });
+
+        // If auth.json exists (even without authentication), system is initialized
+        if (response.status === 200) {
+          return true; // System initialized, user needs to login
+        }
+      } catch (error) {
+        // If we can't check, assume not initialized
+        console.log('Cannot check auth.json without PAT');
+      }
+
+      return false; // No PAT and can't verify = not initialized
     }
 
+    // If PAT exists, verify with authentication
     const authData = await fetchAuthData(pat);
     return authData.initialized === true;
   } catch (error) {

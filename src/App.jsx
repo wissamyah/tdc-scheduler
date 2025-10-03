@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header';
 import AdminInitialSetup from './components/AdminInitialSetup';
+import AccessGate from './components/AccessGate';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import FirstLoginPasswordChange from './components/FirstLoginPasswordChange';
@@ -20,8 +21,26 @@ function AppContent() {
   const { t } = useLanguage();
   const { currentUser, loading, authInitialized, refreshAuthStatus } = useAuth();
   const [showRegister, setShowRegister] = useState(false);
+  const [hasPAT, setHasPAT] = useState(() => {
+    // Initialize with check on mount
+    const pat = localStorage.getItem('tdc_system_pat');
+    return !!pat;
+  });
 
-  // Step 1: Auth system not initialized - show admin setup
+  // Show nothing while checking auth status (prevents flash)
+  if (loading) {
+    return null;
+  }
+
+  // Step 0: No PAT in localStorage - show access gate (one-time unlock)
+  if (!hasPAT) {
+    return <AccessGate onAccessGranted={() => {
+      setHasPAT(true);
+      refreshAuthStatus();
+    }} />;
+  }
+
+  // Step 1: Auth system not initialized - show admin setup (first-time only)
   if (!authInitialized) {
     return <AdminInitialSetup onComplete={refreshAuthStatus} />;
   }

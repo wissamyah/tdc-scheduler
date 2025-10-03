@@ -150,6 +150,26 @@ export const translations = {
       logoutSuccess: 'Logged out successfully'
     },
 
+    // Access Gate
+    accessGate: {
+      title: 'Platform Access',
+      subtitle: 'One-time access key required',
+      oneTimeOnly: 'One-Time Setup',
+      explanation: 'You only need to enter this access key once. It will be stored securely in your browser.',
+      reason1: 'Enables secure data storage and retrieval',
+      reason2: 'Required for schedule submissions and updates',
+      reason3: 'Never needs to be entered again on this device',
+      accessToken: 'Alliance Access Key',
+      enterToken: 'Enter access key...',
+      contactAdmin: 'Contact your alliance administrator to obtain the access key',
+      unlockAccess: 'Unlock Access',
+      verifying: 'Verifying...',
+      accessGranted: 'Access granted! Welcome to The Dark Creed',
+      invalidToken: 'Invalid access key. Please check and try again.',
+      tokenRequired: 'Please enter the access key',
+      securityNote: 'Your access key is stored locally and never transmitted elsewhere',
+    },
+
     // Admin Dashboard
     admin: {
       // Dashboard
@@ -195,6 +215,12 @@ export const translations = {
       deleteFailed: 'Failed to delete user',
       roleUpdateFailed: 'Failed to update role',
       failedToLoadUsers: 'Failed to load users',
+
+      // Role Permissions
+      rolePermissions: 'Role Permissions',
+      adminPermissions: 'Full access - manage users, roles, approvals, delete all, export/import CSV',
+      officerPermissions: 'Import CSV files, manage own schedule',
+      memberPermissions: 'View roster, submit own schedule, manage own data',
 
     },
 
@@ -685,6 +711,26 @@ export const translations = {
       logoutSuccess: 'Logged out successfully'
     },
 
+    // Access Gate
+    accessGate: {
+      title: 'Platform Access',
+      subtitle: 'One-time access key required',
+      oneTimeOnly: 'One-Time Setup',
+      explanation: 'You only need to enter this access key once. It will be stored securely in your browser.',
+      reason1: 'Enables secure data storage and retrieval',
+      reason2: 'Required for schedule submissions and updates',
+      reason3: 'Never needs to be entered again on this device',
+      accessToken: 'Alliance Access Key',
+      enterToken: 'Enter access key...',
+      contactAdmin: 'Contact your alliance administrator to obtain the access key',
+      unlockAccess: 'Unlock Access',
+      verifying: 'Verifying...',
+      accessGranted: 'Access granted! Welcome to The Dark Creed',
+      invalidToken: 'Invalid access key. Please check and try again.',
+      tokenRequired: 'Please enter the access key',
+      securityNote: 'Your access key is stored locally and never transmitted elsewhere',
+    },
+
     // Admin Dashboard
     admin: {
       // Dashboard
@@ -730,6 +776,12 @@ export const translations = {
       deleteFailed: 'Failed to delete user',
       roleUpdateFailed: 'Failed to update role',
       failedToLoadUsers: 'Failed to load users',
+
+      // Role Permissions
+      rolePermissions: 'Role Permissions',
+      adminPermissions: 'Full access - manage users, roles, approvals, delete all, export/import CSV',
+      officerPermissions: 'Import CSV files, manage own schedule',
+      memberPermissions: 'View roster, submit own schedule, manage own data',
 
     },
 
@@ -1220,6 +1272,26 @@ export const translations = {
       logoutSuccess: 'Logged out successfully'
     },
 
+    // Access Gate
+    accessGate: {
+      title: 'Platform Access',
+      subtitle: 'One-time access key required',
+      oneTimeOnly: 'One-Time Setup',
+      explanation: 'You only need to enter this access key once. It will be stored securely in your browser.',
+      reason1: 'Enables secure data storage and retrieval',
+      reason2: 'Required for schedule submissions and updates',
+      reason3: 'Never needs to be entered again on this device',
+      accessToken: 'Alliance Access Key',
+      enterToken: 'Enter access key...',
+      contactAdmin: 'Contact your alliance administrator to obtain the access key',
+      unlockAccess: 'Unlock Access',
+      verifying: 'Verifying...',
+      accessGranted: 'Access granted! Welcome to The Dark Creed',
+      invalidToken: 'Invalid access key. Please check and try again.',
+      tokenRequired: 'Please enter the access key',
+      securityNote: 'Your access key is stored locally and never transmitted elsewhere',
+    },
+
     // Admin Dashboard
     admin: {
       // Dashboard
@@ -1265,6 +1337,12 @@ export const translations = {
       deleteFailed: 'Failed to delete user',
       roleUpdateFailed: 'Failed to update role',
       failedToLoadUsers: 'Failed to load users',
+
+      // Role Permissions
+      rolePermissions: 'Role Permissions',
+      adminPermissions: 'Full access - manage users, roles, approvals, delete all, export/import CSV',
+      officerPermissions: 'Import CSV files, manage own schedule',
+      memberPermissions: 'View roster, submit own schedule, manage own data',
 
     },
 
@@ -1755,6 +1833,26 @@ export const translations = {
       logoutSuccess: 'Logged out successfully'
     },
 
+    // Access Gate
+    accessGate: {
+      title: 'Platform Access',
+      subtitle: 'One-time access key required',
+      oneTimeOnly: 'One-Time Setup',
+      explanation: 'You only need to enter this access key once. It will be stored securely in your browser.',
+      reason1: 'Enables secure data storage and retrieval',
+      reason2: 'Required for schedule submissions and updates',
+      reason3: 'Never needs to be entered again on this device',
+      accessToken: 'Alliance Access Key',
+      enterToken: 'Enter access key...',
+      contactAdmin: 'Contact your alliance administrator to obtain the access key',
+      unlockAccess: 'Unlock Access',
+      verifying: 'Verifying...',
+      accessGranted: 'Access granted! Welcome to The Dark Creed',
+      invalidToken: 'Invalid access key. Please check and try again.',
+      tokenRequired: 'Please enter the access key',
+      securityNote: 'Your access key is stored locally and never transmitted elsewhere',
+    },
+
     // Admin Dashboard
     admin: {
       // Dashboard
@@ -1800,6 +1898,12 @@ export const translations = {
       deleteFailed: 'Failed to delete user',
       roleUpdateFailed: 'Failed to update role',
       failedToLoadUsers: 'Failed to load users',
+
+      // Role Permissions
+      rolePermissions: 'Role Permissions',
+      adminPermissions: 'Full access - manage users, roles, approvals, delete all, export/import CSV',
+      officerPermissions: 'Import CSV files, manage own schedule',
+      memberPermissions: 'View roster, submit own schedule, manage own data',
 
     },
 
@@ -2290,6 +2394,26 @@ export const translations = {
       logoutSuccess: 'Logged out successfully'
     },
 
+    // Access Gate
+    accessGate: {
+      title: 'Platform Access',
+      subtitle: 'One-time access key required',
+      oneTimeOnly: 'One-Time Setup',
+      explanation: 'You only need to enter this access key once. It will be stored securely in your browser.',
+      reason1: 'Enables secure data storage and retrieval',
+      reason2: 'Required for schedule submissions and updates',
+      reason3: 'Never needs to be entered again on this device',
+      accessToken: 'Alliance Access Key',
+      enterToken: 'Enter access key...',
+      contactAdmin: 'Contact your alliance administrator to obtain the access key',
+      unlockAccess: 'Unlock Access',
+      verifying: 'Verifying...',
+      accessGranted: 'Access granted! Welcome to The Dark Creed',
+      invalidToken: 'Invalid access key. Please check and try again.',
+      tokenRequired: 'Please enter the access key',
+      securityNote: 'Your access key is stored locally and never transmitted elsewhere',
+    },
+
     // Admin Dashboard
     admin: {
       // Dashboard
@@ -2335,6 +2459,12 @@ export const translations = {
       deleteFailed: 'Failed to delete user',
       roleUpdateFailed: 'Failed to update role',
       failedToLoadUsers: 'Failed to load users',
+
+      // Role Permissions
+      rolePermissions: 'Role Permissions',
+      adminPermissions: 'Full access - manage users, roles, approvals, delete all, export/import CSV',
+      officerPermissions: 'Import CSV files, manage own schedule',
+      memberPermissions: 'View roster, submit own schedule, manage own data',
 
     },
 
@@ -2825,6 +2955,26 @@ export const translations = {
       logoutSuccess: 'Logged out successfully'
     },
 
+    // Access Gate
+    accessGate: {
+      title: 'Platform Access',
+      subtitle: 'One-time access key required',
+      oneTimeOnly: 'One-Time Setup',
+      explanation: 'You only need to enter this access key once. It will be stored securely in your browser.',
+      reason1: 'Enables secure data storage and retrieval',
+      reason2: 'Required for schedule submissions and updates',
+      reason3: 'Never needs to be entered again on this device',
+      accessToken: 'Alliance Access Key',
+      enterToken: 'Enter access key...',
+      contactAdmin: 'Contact your alliance administrator to obtain the access key',
+      unlockAccess: 'Unlock Access',
+      verifying: 'Verifying...',
+      accessGranted: 'Access granted! Welcome to The Dark Creed',
+      invalidToken: 'Invalid access key. Please check and try again.',
+      tokenRequired: 'Please enter the access key',
+      securityNote: 'Your access key is stored locally and never transmitted elsewhere',
+    },
+
     // Admin Dashboard
     admin: {
       // Dashboard
@@ -2870,6 +3020,12 @@ export const translations = {
       deleteFailed: 'Failed to delete user',
       roleUpdateFailed: 'Failed to update role',
       failedToLoadUsers: 'Failed to load users',
+
+      // Role Permissions
+      rolePermissions: 'Role Permissions',
+      adminPermissions: 'Full access - manage users, roles, approvals, delete all, export/import CSV',
+      officerPermissions: 'Import CSV files, manage own schedule',
+      memberPermissions: 'View roster, submit own schedule, manage own data',
 
     },
 

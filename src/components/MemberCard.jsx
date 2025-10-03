@@ -62,7 +62,7 @@ export default function MemberCard({ member, onUpdate }) {
     const toastId = showToast.loading(t('memberCard.updatingUsername'));
 
     try {
-      const pat = localStorage.getItem('tdc_pat');
+      const pat = localStorage.getItem('tdc_system_pat');
 
       if (!pat) {
         showToast.dismiss(toastId);
@@ -168,7 +168,7 @@ export default function MemberCard({ member, onUpdate }) {
     const toastId = showToast.loading(t('memberCard.updatingCarPower'));
 
     try {
-      const pat = localStorage.getItem('tdc_pat');
+      const pat = localStorage.getItem('tdc_system_pat');
 
       if (!pat) {
         showToast.dismiss(toastId);
@@ -269,7 +269,7 @@ export default function MemberCard({ member, onUpdate }) {
     const toastId = showToast.loading(t('memberCard.updatingTowerLevel'));
 
     try {
-      const pat = localStorage.getItem('tdc_pat');
+      const pat = localStorage.getItem('tdc_system_pat');
 
       if (!pat) {
         showToast.dismiss(toastId);
@@ -353,7 +353,7 @@ export default function MemberCard({ member, onUpdate }) {
     const toastId = showToast.loading(t('memberCard.deletingMember'));
 
     try {
-      const pat = localStorage.getItem('tdc_pat');
+      const pat = localStorage.getItem('tdc_system_pat');
 
       if (!pat) {
         showToast.dismiss(toastId);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Shield, Users, CheckCircle, XCircle, Trash2, Loader2, AlertCircle, UserCheck, UserX, Settings, Search, X } from 'lucide-react';
+import { Shield, Users, CheckCircle, XCircle, Trash2, Loader2, AlertCircle, UserCheck, UserX, Settings, Search, X, Info } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { showToast } from '../utils/toast';
@@ -442,6 +442,7 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
   const roleDisplay = getRoleDisplay(user.role);
   const statusDisplay = getStatusDisplay(user.status);
   const isCurrentUser = user.id === currentUser.id;
+  const [showRoleTooltip, setShowRoleTooltip] = useState(false);
 
   return (
     <div className={`bg-creed-base border rounded-lg p-4
@@ -472,19 +473,55 @@ function UserRow({ user, currentUser, onRoleChange, onDelete, loading, t }) {
         <div className="flex items-center gap-2">
           {/* Role Select */}
           {user.status === 'active' && (
-            <select
-              value={user.role}
-              onChange={(e) => onRoleChange(user.id, e.target.value, user.username)}
-              disabled={loading}
-              className="px-3 py-2 bg-creed-light border border-creed-lighter rounded-lg
-                       text-creed-text font-display font-semibold text-sm
-                       focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
-                       disabled:opacity-50 transition-all"
-            >
-              <option value="member">{t('roles.member')}</option>
-              <option value="officer">{t('roles.officer')}</option>
-              <option value="admin">{t('roles.admin')}</option>
-            </select>
+            <div className="flex items-center gap-2">
+              {/* Role Info Tooltip */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setShowRoleTooltip(true)}
+                  onMouseLeave={() => setShowRoleTooltip(false)}
+                  className="p-1 text-creed-muted hover:text-creed-accent transition-colors"
+                  type="button"
+                >
+                  <Info className="w-4 h-4" />
+                </button>
+                {showRoleTooltip && (
+                  <div className="absolute bottom-full right-0 mb-2 w-72 z-30">
+                    <div className="bg-creed-light border border-creed-accent rounded-lg shadow-tactical p-4">
+                      <h4 className="text-xs font-display font-bold text-creed-accent uppercase mb-2">
+                        {t('admin.rolePermissions')}
+                      </h4>
+                      <div className="space-y-2 text-xs font-body">
+                        <div>
+                          <span className="font-bold text-creed-danger">{t('roles.admin')}:</span>
+                          <span className="text-creed-muted"> {t('admin.adminPermissions')}</span>
+                        </div>
+                        <div>
+                          <span className="font-bold text-creed-warning">{t('roles.officer')}:</span>
+                          <span className="text-creed-muted"> {t('admin.officerPermissions')}</span>
+                        </div>
+                        <div>
+                          <span className="font-bold text-creed-primary">{t('roles.member')}:</span>
+                          <span className="text-creed-muted"> {t('admin.memberPermissions')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <select
+                value={user.role}
+                onChange={(e) => onRoleChange(user.id, e.target.value, user.username)}
+                disabled={loading}
+                className="px-3 py-2 bg-creed-light border border-creed-lighter rounded-lg
+                         text-creed-text font-display font-semibold text-sm
+                         focus:ring-2 focus:ring-creed-primary focus:border-creed-primary
+                         disabled:opacity-50 transition-all"
+              >
+                <option value="member">{t('roles.member')}</option>
+                <option value="officer">{t('roles.officer')}</option>
+                <option value="admin">{t('roles.admin')}</option>
+              </select>
+            </div>
           )}
           {/* Delete Button */}
           {!isCurrentUser && (

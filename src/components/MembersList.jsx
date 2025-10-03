@@ -64,7 +64,7 @@ export default function MembersList() {
   const loadMembersFromAPI = async () => {
     try {
       setLoading(true);
-      const pat = localStorage.getItem('tdc_pat');
+      const pat = localStorage.getItem('tdc_system_pat');
       const data = await fetchDataFromAPI(pat);
       setMembers(data.members || []);
     } catch (err) {
@@ -94,7 +94,7 @@ export default function MembersList() {
 
     try {
       // Get PAT from localStorage
-      let pat = localStorage.getItem('tdc_pat');
+      let pat = localStorage.getItem('tdc_system_pat');
 
       if (!pat) {
         showToast.dismiss(toastId);
@@ -169,7 +169,7 @@ export default function MembersList() {
 
     try {
       // Get PAT from localStorage
-      const pat = localStorage.getItem('tdc_pat');
+      const pat = localStorage.getItem('tdc_system_pat');
 
       if (!pat) {
         showToast.dismiss(toastId);
@@ -308,10 +308,12 @@ export default function MembersList() {
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               {/* Export CSV Button */}
-              <ExportCSVButton
-                members={members}
-                disabled={loading || deleting}
-              />
+              {canDeleteAllMembers(currentUser) && (
+                <ExportCSVButton
+                  members={members}
+                  disabled={loading || deleting}
+                />
+              )}
 
               {/* Import CSV Button */}
               {canManageCSV(currentUser) && (

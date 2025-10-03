@@ -22,7 +22,7 @@ export default function OptimalScheduleCalendar() {
   const loadMembers = async () => {
     try {
       setLoading(true);
-      const pat = localStorage.getItem('tdc_pat');
+      const pat = localStorage.getItem('tdc_system_pat');
       const data = await fetchDataFromAPI(pat);
       setMembers(data.members || []);
     } catch (err) {

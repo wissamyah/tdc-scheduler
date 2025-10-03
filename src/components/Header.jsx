@@ -4,6 +4,7 @@ import { Shield, Users, Calendar, TrendingUp, LogOut, User, ChevronDown } from '
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import LanguageToggle from './LanguageToggle';
+import ConfirmModal from './ConfirmModal';
 import { getRoleDisplay } from '../utils/permissions';
 
 export default function Header() {
@@ -11,13 +12,18 @@ export default function Header() {
   const { currentUser, logout, isAdmin } = useAuth();
   const location = useLocation();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const isActive = (path) => location.pathname === path;
 
-  const handleLogout = () => {
-    if (window.confirm(t('userAuth.logoutConfirm'))) {
-      logout();
-    }
+  const handleLogoutClick = () => {
+    setShowUserMenu(false);
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutModal(false);
+    logout();
   };
 
   if (!currentUser) {
@@ -150,7 +156,7 @@ export default function Header() {
                 {/* Menu */}
                 <div className="absolute right-0 mt-2 w-48 bg-creed-light border border-creed-lighter rounded-lg shadow-tactical z-20 overflow-hidden">
                   <button
-                    onClick={handleLogout}
+                    onClick={handleLogoutClick}
                     className="w-full flex items-center gap-3 px-4 py-3
                              hover:bg-creed-base transition-all
                              text-creed-danger font-display font-semibold text-sm uppercase tracking-wide"
@@ -175,6 +181,18 @@ export default function Header() {
         </div>
         </div>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleConfirmLogout}
+        title={t('userAuth.logout')}
+        message={t('userAuth.logoutConfirm')}
+        confirmText={t('userAuth.logout')}
+        cancelText={t('common.cancel')}
+        type="warning"
+      />
     </header>
   );
 }
