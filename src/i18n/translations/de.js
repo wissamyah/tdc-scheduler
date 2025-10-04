@@ -580,6 +580,52 @@ export default {
       },
     },
 
+    // Onboarding Guide
+    onboarding: {
+      title: 'Erste Schritte',
+      loginTitle: 'Anmeldeschritte',
+      passwordTitle: 'Letzter Schritt',
+
+      // Step titles
+      step1Title: 'Zugriffstoken Eingeben',
+      step2Title: 'Mit Anmeldedaten Anmelden',
+      step3Title: 'Passwort Ändern',
+
+      // Step descriptions
+      step1Desc: 'Kontaktieren Sie Ihren Allianz-Administrator, um das GitHub-Zugriffstoken zu erhalten. Geben Sie es einmal ein - es wird gespeichert.',
+      step2Desc: 'Verwenden Sie den EXAKTEN Benutzernamen, den Sie bei der ersten Registrierung in der Web-App gesendet haben, und das temporäre Passwort unten.',
+      step2Password: 'Temporäres Passwort: TDC2025',
+      step3Desc: 'Nach der ersten Anmeldung werden Sie aufgefordert, Ihr Passwort sofort zu ändern.',
+
+      // Login page specific
+      loginStep2Desc: 'Geben Sie den EXAKTEN Benutzernamen ein, den Sie bei der Registrierung verwendet haben (Groß-/Kleinschreibung beachten), und verwenden Sie das temporäre Passwort unten.',
+      loginStep3Desc: 'Sie werden nach der Anmeldung automatisch zur Passwortänderung weitergeleitet.',
+      tempPassword: 'Temporäres Passwort',
+
+      // Password page specific
+      passwordStep3Desc: 'Geben Sie das temporäre Passwort (TDC2025) ein und erstellen Sie Ihr neues sicheres Passwort.',
+      tempPasswordReminder: 'Verwenden Sie dieses temporäre Passwort',
+      almostDone: 'Fast Fertig!',
+      passwordCompleteDesc: 'Nach dem Ändern Ihres Passworts können Sie auf alle Funktionen des TDC-Planers zugreifen.',
+
+      // Important notes
+      important: 'Wichtig',
+      importantNote: 'Ihr Benutzername unterscheidet Groß- und Kleinschreibung. Stellen Sie sicher, dass er genau übereinstimmt.',
+      usernameCase: 'Benutzername unterscheidet GROSS-/KLEINSCHREIBUNG! Verwenden Sie den exakten Benutzernamen, den Sie bei der ersten Registrierung gesendet haben.',
+
+      // Tips
+      tip: 'Tipp',
+      loginTip: 'Verwenden Sie die gleiche Schreibweise des Benutzernamens, die Sie verwendet haben, als Sie Ihren Zeitplan zum ersten Mal in der Web-App eingereicht haben.',
+      passwordTips: 'Passwort-Tipps',
+      passwordTip1: 'Mindestens 8 Zeichen',
+      passwordTip2: 'Wählen Sie etwas Einprägsames',
+      passwordTip3: 'Vermeiden Sie die Verwendung von TDC2025',
+
+      // Remember
+      remember: 'Merken',
+      passwordRemember: 'Speichern Sie Ihr neues Passwort sicher. Sie benötigen es für alle zukünftigen Anmeldungen.',
+    },
+
     // Auto-refresh
     autoRefresh: {
       enabled: 'Automatische Aktualisierung aktiviert',

@@ -580,6 +580,52 @@ export default {
       },
     },
 
+    // Onboarding Guide
+    onboarding: {
+      title: 'Primi Passi',
+      loginTitle: 'Passaggi di Login',
+      passwordTitle: 'Passo Finale',
+
+      // Step titles
+      step1Title: 'Inserisci il Token di Accesso',
+      step2Title: 'Accedi con le Credenziali',
+      step3Title: 'Cambia la tua Password',
+
+      // Step descriptions
+      step1Desc: 'Contatta l\'amministratore dell\'alleanza per ottenere il token di accesso GitHub. Inseriscilo una volta - verrà salvato.',
+      step2Desc: 'Usa il nome utente ESATTO che hai inviato quando ti sei registrato per la prima volta sull\'app web, e la password temporanea sotto.',
+      step2Password: 'Password Temporanea: TDC2025',
+      step3Desc: 'Dopo il primo accesso, ti verrà richiesto di cambiare immediatamente la tua password.',
+
+      // Login page specific
+      loginStep2Desc: 'Inserisci il nome utente ESATTO che hai usato durante la registrazione (sensibile alle maiuscole), e usa la password temporanea sotto.',
+      loginStep3Desc: 'Verrai automaticamente reindirizzato per cambiare la tua password dopo il login.',
+      tempPassword: 'Password Temporanea',
+
+      // Password page specific
+      passwordStep3Desc: 'Inserisci la password temporanea (TDC2025) e crea la tua nuova password sicura.',
+      tempPasswordReminder: 'Usa questa password temporanea',
+      almostDone: 'Quasi Fatto!',
+      passwordCompleteDesc: 'Dopo aver cambiato la tua password, puoi accedere a tutte le funzionalità dello Scheduler TDC.',
+
+      // Important notes
+      important: 'Importante',
+      importantNote: 'Il tuo nome utente è sensibile alle maiuscole. Assicurati che corrisponda esattamente.',
+      usernameCase: 'Il nome utente è SENSIBILE ALLE MAIUSCOLE! Usa il nome utente esatto che hai inviato quando ti sei registrato per la prima volta.',
+
+      // Tips
+      tip: 'Suggerimento',
+      loginTip: 'Usa la stessa ortografia del nome utente che hai usato quando hai inviato per la prima volta il tuo programma all\'app web.',
+      passwordTips: 'Suggerimenti per la Password',
+      passwordTip1: 'Minimo 8 caratteri',
+      passwordTip2: 'Scegli qualcosa di memorabile',
+      passwordTip3: 'Evita di usare TDC2025',
+
+      // Remember
+      remember: 'Ricorda',
+      passwordRemember: 'Salva la tua nuova password in modo sicuro. Ne avrai bisogno per tutti i futuri accessi.',
+    },
+
     // Auto-refresh
     autoRefresh: {
       enabled: 'Aggiornamento automatico attivato',
@@ -591,7 +637,65 @@ export default {
 
     // Events
     events: {
-      events: 'Eventi', upcomingEvents: 'Prossimi Eventi', pastEvents: 'Eventi Passati', createEvent: 'Crea Evento', editEvent: 'Modifica Evento', eventDetails: 'Dettagli Evento', noEvents: 'Nessun evento trovato', noUpcomingEvents: 'Nessun evento in programma', noPastEvents: 'Nessun evento passato', eventName: 'Nome Evento', eventDate: 'Data Evento', startTime: 'Ora Inizio', endTime: 'Ora Fine', description: 'Descrizione', createdBy: 'Creato da', rsvp: 'RSVP', going: 'Parteciperò', maybe: 'Forse', notGoing: 'Non Parteciperò', noResponse: 'Nessuna Risposta', rsvpStatus: 'Il Tuo RSVP', updateRSVP: 'Aggiorna RSVP', memberList: 'Lista Membri', rsvpSummary: 'Riepilogo RSVP', totalResponses: 'Risposte Totali', members: 'membri', deleteEvent: 'Elimina Evento', confirmDelete: 'Sei sicuro di voler eliminare questo evento?', eventDeleted: 'Evento eliminato con successo', eventCreated: 'Evento creato con successo', eventUpdated: 'Evento aggiornato con successo', rsvpUpdated: 'RSVP aggiornato con successo', pastEvent: 'Evento Passato', createEventPrompt: 'Clicca il pulsante sopra per creare il tuo primo evento', serverTime: 'Ora Server', eventNameRequired: 'Il nome dell\'evento è obbligatorio', eventDateRequired: 'La data dell\'evento è obbligatoria', startTimeRequired: 'L\'ora di inizio è obbligatoria', endTimeRequired: 'L\'ora di fine è obbligatoria', endTimeAfterStart: 'L\'ora di fine deve essere successiva all\'ora di inizio', futureDate: 'La data dell\'evento deve essere futura',
+      // General
+      events: 'Eventi',
+      upcomingEvents: 'Prossimi Eventi',
+      pastEvents: 'Eventi Passati',
+      noEvents: 'Nessun evento',
+      createEvent: 'Crea Evento',
+      editEvent: 'Modifica Evento',
+      deleteEvent: 'Elimina Evento',
+      filter: 'Filtro',
+      all: 'Tutti',
+      upcoming: 'Prossimi',
+      past: 'Passati',
+
+      // Event Details
+      eventName: 'Nome Evento',
+      eventDate: 'Data',
+      startTime: 'Ora Inizio',
+      endTime: 'Ora Fine',
+      description: 'Descrizione',
+      createdBy: 'Creato da',
+      serverTime: 'Ora Server',
+      timesInServerTime: 'Tutti gli orari mostrati nell\'ora del server',
+
+      // RSVP
+      rsvp: 'RSVP',
+      going: 'Parteciperò',
+      maybe: 'Forse',
+      notGoing: 'Non Parteciperò',
+      noResponse: 'Nessuna Risposta',
+      yourResponse: 'La Tua Risposta',
+      rsvpUpdated: 'RSVP aggiornato',
+      rsvpFailed: 'Aggiornamento RSVP fallito',
+
+      // Messages
+      loadingEvents: 'Caricamento eventi...',
+      loadFailed: 'Caricamento eventi fallito',
+      eventCreated: 'Evento creato con successo',
+      eventUpdated: 'Evento aggiornato con successo',
+      eventDeleted: 'Evento eliminato',
+      createFailed: 'Creazione evento fallita',
+      updateFailed: 'Aggiornamento evento fallito',
+      deleteFailed: 'Eliminazione evento fallita',
+      deleteConfirm: 'Eliminare questo evento e tutti gli RSVP?',
+      noUpcomingEvents: 'Nessun evento in programma',
+      noPastEvents: 'Nessun evento passato',
+      noEventsYet: 'Nessun evento è stato ancora creato',
+      createFirstEvent: 'Crea Primo Evento',
+      manageEventsAndRSVPs: 'Gestisci eventi dell\'alleanza e traccia gli RSVP',
+      noMembersInCategory: 'Nessun membro in questa categoria',
+
+      // Form
+      eventNamePlaceholder: 'es., Raid del Sabato Sera',
+      descriptionPlaceholder: 'Aggiungi dettagli o istruzioni dell\'evento...',
+      nameRequired: 'Il nome dell\'evento è obbligatorio',
+      dateRequired: 'La data è obbligatoria',
+      startTimeRequired: 'L\'ora di inizio è obbligatoria',
+      endTimeRequired: 'L\'ora di fine è obbligatoria',
+      endTimeAfterStart: 'L\'ora di fine deve essere successiva all\'ora di inizio',
+      dateInFuture: 'La data deve essere nel futuro',
     },
   };
 

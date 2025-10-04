@@ -12,8 +12,11 @@ export default {
       confirm: 'Confirmar',
       yes: 'Sí',
       no: 'No',
-      goBack: 'Go Back',
-      to: 'to',
+      goBack: 'Volver',
+      to: 'a',
+      optional: 'Opcional',
+      saving: 'Guardando...',
+      creating: 'Creando...',
     },
 
     // Days of the week
@@ -577,6 +580,52 @@ export default {
       },
     },
 
+    // Onboarding Guide
+    onboarding: {
+      title: 'Primeros Pasos',
+      loginTitle: 'Pasos de Inicio de Sesión',
+      passwordTitle: 'Paso Final',
+
+      // Step titles
+      step1Title: 'Ingrese el Token de Acceso',
+      step2Title: 'Inicie Sesión con Credenciales',
+      step3Title: 'Cambie su Contraseña',
+
+      // Step descriptions
+      step1Desc: 'Contacte a su administrador de alianza para obtener el token de acceso de GitHub. Ingréselo una vez - se guardará.',
+      step2Desc: 'Use el nombre de usuario EXACTO que envió cuando se registró por primera vez en la aplicación web, y la contraseña temporal a continuación.',
+      step2Password: 'Contraseña Temporal: TDC2025',
+      step3Desc: 'Después del primer inicio de sesión, se le pedirá que cambie su contraseña inmediatamente.',
+
+      // Login page specific
+      loginStep2Desc: 'Ingrese el nombre de usuario EXACTO que usó al registrarse (distingue mayúsculas de minúsculas), y use la contraseña temporal a continuación.',
+      loginStep3Desc: 'Será redirigido automáticamente para cambiar su contraseña después del inicio de sesión.',
+      tempPassword: 'Contraseña Temporal',
+
+      // Password page specific
+      passwordStep3Desc: 'Ingrese la contraseña temporal (TDC2025) y cree su nueva contraseña segura.',
+      tempPasswordReminder: 'Use esta contraseña temporal',
+      almostDone: '¡Casi Listo!',
+      passwordCompleteDesc: 'Después de cambiar su contraseña, puede acceder a todas las funciones del Programador TDC.',
+
+      // Important notes
+      important: 'Importante',
+      importantNote: 'Su nombre de usuario distingue mayúsculas de minúsculas. Asegúrese de que coincida exactamente.',
+      usernameCase: '¡El nombre de usuario DISTINGUE MAYÚSCULAS! Use el nombre de usuario exacto que envió cuando se registró por primera vez.',
+
+      // Tips
+      tip: 'Consejo',
+      loginTip: 'Use la misma ortografía de nombre de usuario que usó cuando envió su horario por primera vez a la aplicación web.',
+      passwordTips: 'Consejos de Contraseña',
+      passwordTip1: 'Mínimo 8 caracteres',
+      passwordTip2: 'Elija algo memorable',
+      passwordTip3: 'Evite usar TDC2025',
+
+      // Remember
+      remember: 'Recuerde',
+      passwordRemember: 'Guarde su nueva contraseña de forma segura. La necesitará para todos los inicios de sesión futuros.',
+    },
+
     // Auto-refresh
     autoRefresh: {
       enabled: 'Actualización automática activada',
@@ -588,25 +637,63 @@ export default {
 
     // Events
     events: {
-      events: 'Eventos', upcomingEvents: 'Próximos Eventos', pastEvents: 'Eventos Pasados',
-      noEvents: 'Sin eventos', createEvent: 'Crear Evento', editEvent: 'Editar Evento',
-      deleteEvent: 'Eliminar Evento', filter: 'Filtrar', all: 'Todos', upcoming: 'Próximos',
-      past: 'Pasados', eventName: 'Nombre del Evento', eventDate: 'Fecha', startTime: 'Hora de Inicio',
-      endTime: 'Hora de Fin', description: 'Descripción', createdBy: 'Creado por',
-      serverTime: 'Hora del Servidor', timesInServerTime: 'Todas las horas mostradas en hora del servidor',
-      rsvp: 'RSVP', going: 'Asistiré', maybe: 'Tal vez', notGoing: 'No asistiré',
-      noResponse: 'Sin Respuesta', yourResponse: 'Tu Respuesta', rsvpUpdated: 'RSVP actualizado',
-      rsvpFailed: 'Error al actualizar RSVP', loadingEvents: 'Cargando eventos...', loadFailed: 'Error al cargar eventos',
-      eventCreated: 'Evento creado exitosamente', eventUpdated: 'Evento actualizado exitosamente',
-      eventDeleted: 'Evento eliminado', createFailed: 'Error al crear evento', updateFailed: 'Error al actualizar evento',
-      deleteFailed: 'Error al eliminar evento', deleteConfirm: '¿Eliminar este evento y todos los RSVPs?',
-      noUpcomingEvents: 'No hay eventos próximos', noPastEvents: 'No hay eventos pasados',
-      noEventsYet: 'Aún no se han creado eventos', createFirstEvent: 'Crear Primer Evento',
+      // General
+      events: 'Eventos',
+      upcomingEvents: 'Próximos Eventos',
+      pastEvents: 'Eventos Pasados',
+      noEvents: 'Sin eventos',
+      createEvent: 'Crear Evento',
+      editEvent: 'Editar Evento',
+      deleteEvent: 'Eliminar Evento',
+      filter: 'Filtrar',
+      all: 'Todos',
+      upcoming: 'Próximos',
+      past: 'Pasados',
+
+      // Event Details
+      eventName: 'Nombre del Evento',
+      eventDate: 'Fecha',
+      startTime: 'Hora de Inicio',
+      endTime: 'Hora de Fin',
+      description: 'Descripción',
+      createdBy: 'Creado por',
+      serverTime: 'Hora del Servidor',
+      timesInServerTime: 'Todas las horas mostradas en hora del servidor',
+
+      // RSVP
+      rsvp: 'RSVP',
+      going: 'Asistiré',
+      maybe: 'Tal vez',
+      notGoing: 'No asistiré',
+      noResponse: 'Sin Respuesta',
+      yourResponse: 'Tu Respuesta',
+      rsvpUpdated: 'RSVP actualizado',
+      rsvpFailed: 'Error al actualizar RSVP',
+
+      // Messages
+      loadingEvents: 'Cargando eventos...',
+      loadFailed: 'Error al cargar eventos',
+      eventCreated: 'Evento creado exitosamente',
+      eventUpdated: 'Evento actualizado exitosamente',
+      eventDeleted: 'Evento eliminado',
+      createFailed: 'Error al crear evento',
+      updateFailed: 'Error al actualizar evento',
+      deleteFailed: 'Error al eliminar evento',
+      deleteConfirm: '¿Eliminar este evento y todos los RSVPs?',
+      noUpcomingEvents: 'No hay eventos próximos',
+      noPastEvents: 'No hay eventos pasados',
+      noEventsYet: 'Aún no se han creado eventos',
+      createFirstEvent: 'Crear Primer Evento',
       manageEventsAndRSVPs: 'Gestionar eventos de la alianza y seguir RSVPs',
-      noMembersInCategory: 'No hay miembros en esta categoría', eventNamePlaceholder: 'ej., Raid del Sábado por la Noche',
+      noMembersInCategory: 'No hay miembros en esta categoría',
+
+      // Form
+      eventNamePlaceholder: 'ej., Raid del Sábado por la Noche',
       descriptionPlaceholder: 'Agregar detalles o instrucciones del evento...',
-      nameRequired: 'El nombre del evento es obligatorio', dateRequired: 'La fecha es obligatoria',
-      startTimeRequired: 'La hora de inicio es obligatoria', endTimeRequired: 'La hora de fin es obligatoria',
+      nameRequired: 'El nombre del evento es obligatorio',
+      dateRequired: 'La fecha es obligatoria',
+      startTimeRequired: 'La hora de inicio es obligatoria',
+      endTimeRequired: 'La hora de fin es obligatoria',
       endTimeAfterStart: 'La hora de fin debe ser después de la hora de inicio',
       dateInFuture: 'La fecha debe ser en el futuro',
     },

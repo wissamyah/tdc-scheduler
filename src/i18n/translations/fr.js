@@ -580,6 +580,52 @@ export default {
       },
     },
 
+    // Onboarding Guide
+    onboarding: {
+      title: 'Premiers Pas',
+      loginTitle: 'Étapes de Connexion',
+      passwordTitle: 'Étape Finale',
+
+      // Step titles
+      step1Title: 'Entrez le Jeton d\'Accès',
+      step2Title: 'Connectez-vous avec vos Identifiants',
+      step3Title: 'Changez votre Mot de Passe',
+
+      // Step descriptions
+      step1Desc: 'Contactez votre administrateur d\'alliance pour obtenir le jeton d\'accès GitHub. Entrez-le une fois - il sera enregistré.',
+      step2Desc: 'Utilisez le nom d\'utilisateur EXACT que vous avez envoyé lors de votre première inscription sur l\'application web, et le mot de passe temporaire ci-dessous.',
+      step2Password: 'Mot de Passe Temporaire : TDC2025',
+      step3Desc: 'Après la première connexion, vous serez invité à changer immédiatement votre mot de passe.',
+
+      // Login page specific
+      loginStep2Desc: 'Entrez le nom d\'utilisateur EXACT que vous avez utilisé lors de l\'inscription (sensible à la casse), et utilisez le mot de passe temporaire ci-dessous.',
+      loginStep3Desc: 'Vous serez automatiquement redirigé pour changer votre mot de passe après la connexion.',
+      tempPassword: 'Mot de Passe Temporaire',
+
+      // Password page specific
+      passwordStep3Desc: 'Entrez le mot de passe temporaire (TDC2025) et créez votre nouveau mot de passe sécurisé.',
+      tempPasswordReminder: 'Utilisez ce mot de passe temporaire',
+      almostDone: 'Presque Terminé !',
+      passwordCompleteDesc: 'Après avoir changé votre mot de passe, vous pouvez accéder à toutes les fonctionnalités du Planificateur TDC.',
+
+      // Important notes
+      important: 'Important',
+      importantNote: 'Votre nom d\'utilisateur est sensible à la casse. Assurez-vous qu\'il correspond exactement.',
+      usernameCase: 'Le nom d\'utilisateur est SENSIBLE À LA CASSE ! Utilisez le nom d\'utilisateur exact que vous avez envoyé lors de votre première inscription.',
+
+      // Tips
+      tip: 'Astuce',
+      loginTip: 'Utilisez la même orthographe du nom d\'utilisateur que vous avez utilisée lorsque vous avez soumis pour la première fois votre horaire à l\'application web.',
+      passwordTips: 'Conseils pour le Mot de Passe',
+      passwordTip1: 'Minimum 8 caractères',
+      passwordTip2: 'Choisissez quelque chose de mémorable',
+      passwordTip3: 'Évitez d\'utiliser TDC2025',
+
+      // Remember
+      remember: 'N\'oubliez pas',
+      passwordRemember: 'Enregistrez votre nouveau mot de passe en toute sécurité. Vous en aurez besoin pour toutes les connexions futures.',
+    },
+
     // Auto-refresh
     autoRefresh: {
       enabled: 'Actualisation automatique activée',
