@@ -42,6 +42,8 @@ export default {
       viewRosterShort: 'LISTA',
       optimalSchedule: 'HORARIO ÓPTIMO',
       optimalScheduleShort: 'ÓPTIMO',
+      events: 'EVENTOS',
+      eventsShort: 'EVENTOS',
       adminDashboard: 'ADMIN PANEL',
       adminDashboardShort: 'ADMIN',
       welcome: 'Bienvenido',
